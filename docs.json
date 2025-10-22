@@ -1,7 +1,7 @@
 {
   "name": "AetherLock Protocol",
-  "logo": "/logo.png",
-  "favicon": "/favicon.ico",
+  "logo": "/assets/logo.png",
+  "favicon": "/assets/favicon.ico",
   "colors": {
     "primary": "#9333ea",
     "light": "#06b6d4",
@@ -10,17 +10,27 @@
       "dark": "#000000"
     }
   },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/De-real-iManuel/aetherlock"
+    },
+    {
+      "name": "Demo",
+      "url": "https://aetherlockprotocol.mintlify.app"
+    }
+  ],
   "navigation": [
     {
-      "group": "Introduction",
+      "group": "Overview",
       "pages": ["introduction", "glossary"]
     },
     {
       "group": "Requirements",
       "pages": [
-        "requirements/escrow-creation",
-        "requirements/ai-verification",
-        "requirements/zk-kyc",
+        "requirements/escrow-creation-and-fund-management",
+        "requirements/ai-powered-verification",
+        "requirements/zero-knowledge-kyc",
         "requirements/dispute-resolution",
         "requirements/frontend-dashboard",
         "requirements/evidence-storage"
@@ -31,14 +41,16 @@
       "pages": [
         "design/overview",
         "design/architecture",
-        "design/components",
-        "design/frontend",
+        "design/solana-escrow-contract",
+        "design/ai-agent",
+        "design/zkme-integration",
+        "design/frontend-design",
         "design/data-models",
         "design/error-handling",
-        "design/testing",
-        "design/security",
+        "design/testing-strategy",
+        "design/security-considerations",
         "design/zetachain-integration",
-        "design/deployment"
+        "design/deployment-architecture"
       ]
     },
     {
