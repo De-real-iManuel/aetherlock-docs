@@ -1,0 +1,126 @@
+# Error Handling
+
+## Error Codes by Layer
+
+### Smart Contract Errors (Solana)
+
+```rust
+#[error_code]
+pub enum EscrowError {
+    #[msg("Invalid escrow status for this operation")]
+    InvalidStatus = 6000,
+    #[msg("Deadline has been exceeded")]
+    DeadlineExceeded = 6001,
+    #[msg("Insufficient funds for escrow amount")]
+    InsufficientFunds = 6002,
+    #[msg("Unauthorized operation")]
+    Unauthorized = 6003,
+    #[msg("KYC verification required")]
+    KycRequired = 6004,
+    #[msg("Invalid verification result")]
+    InvalidVerification = 6005,
+    #[msg("Escrow amount below minimum threshold")]
+    AmountTooLow = 6006,
+    #[msg("Invalid deadline - must be in future")]
+    InvalidDeadline = 6007,
+    #[msg("Evidence hash already submitted")]
+    DuplicateEvidence = 6008,
+    #[msg("Dispute resolution in progress")]
+    DisputeInProgress = 6009,
+}
+```
+
+### AI Verification Errors
+
+```typescript
+enum AIVerificationError {
+  BEDROCK_API_ERROR = 'BEDROCK_API_ERROR',
+  INVALID_EVIDENCE_FORMAT = 'INVALID_EVIDENCE_FORMAT',
+  EVIDENCE_TOO_LARGE = 'EVIDENCE_TOO_LARGE',
+  CONFIDENCE_THRESHOLD_NOT_MET = 'CONFIDENCE_THRESHOLD_NOT_MET',
+  ANALYSIS_TIMEOUT = 'ANALYSIS_TIMEOUT',
+  RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
+  MODEL_UNAVAILABLE = 'MODEL_UNAVAILABLE',
+  CONTENT_POLICY_VIOLATION = 'CONTENT_POLICY_VIOLATION'
+}
+
+class AIVerificationException extends Error {
+  constructor(
+    public code: AIVerificationError,
+    public message: string,
+    public escrowId: string,
+    public retryable: boolean = false
+  ) {
+    super(message);
+    this.name = 'AIVerificationException';
+  }
+}
+```
+
+### Frontend Error Handling
+
+```typescript
+enum FrontendError {
+  WALLET_NOT_CONNECTED = 'WALLET_NOT_CONNECTED',
+  NETWORK_MISMATCH = 'NETWORK_MISMATCH',
+  TRANSACTION_REJECTED = 'TRANSACTION_REJECTED',
+  INSUFFICIENT_BALANCE = 'INSUFFICIENT_BALANCE',
+  FILE_UPLOAD_FAILED = 'FILE_UPLOAD_FAILED',
+  IPFS_UNAVAILABLE = 'IPFS_UNAVAILABLE',
+  WEBSOCKET_DISCONNECTED = 'WEBSOCKET_DISCONNECTED',
+  KYC_VERIFICATION_FAILED = 'KYC_VERIFICATION_FAILED'
+}
+
+class ErrorBoundary extends React.Component {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('AetherLock Error:', error, errorInfo);
+    // Send to monitoring service
+    this.reportError(error, errorInfo);
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return <CyberpunkErrorDisplay error={this.state.error} />;
+    }
+    return this.props.children;
+  }
+}
+```
+
+### Cross-Chain Integration Errors
+
+```typescript
+enum CrossChainError {
+  ZETACHAIN_UNAVAILABLE = 'ZETACHAIN_UNAVAILABLE',
+  MESSAGE_VERIFICATION_FAILED = 'MESSAGE_VERIFICATION_FAILED',
+  CROSS_CHAIN_TIMEOUT = 'CROSS_CHAIN_TIMEOUT',
+  INVALID_CHAIN_ID = 'INVALID_CHAIN_ID',
+  BRIDGE_CONGESTION = 'BRIDGE_CONGESTION',
+  GAS_ESTIMATION_FAILED = 'GAS_ESTIMATION_FAILED'
+}
+```
+
+## Error Recovery Strategies
+
+### Automatic Retry Logic
+```typescript
+class RetryHandler {
+  async executeWithRetry<T>(
+    operation: () => Promise<T>,
+    maxRetries: number = 3,
+    backoffMs: number = 1000
+  ): Promise<T> {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        if (attempt === maxRetries || !this.isRetryable(error)) {
+          throw error;
+        }
+        await this.delay(backoffMs * Math.pow(2, attempt - 1));
+      }
+    }
+    throw new Error('Max retries exceeded');
+  }
+}
+```

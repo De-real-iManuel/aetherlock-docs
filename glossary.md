@@ -1,0 +1,34 @@
+# Glossary
+
+## Core Terms
+
+- **AetherLock**: AI-driven escrow protocol on Solana with zero-knowledge privacy features
+- **Escrow Account**: Smart contract holding funds until conditions are met and verified by AI
+- **AI Verification**: AWS Bedrock Claude analysis of task completion evidence
+- **zkMe**: Zero-knowledge identity verification protocol integrated via ZetaChain
+- **ZetaChain**: Omnichain platform enabling cross-chain zkMe KYC integration
+- **IPFS**: InterPlanetary File System for decentralized evidence storage
+- **Anchor**: Solana framework for building secure smart contracts in Rust
+- **Bedrock**: AWS managed service providing foundation model APIs (Claude, etc.)
+- **Treasury Fee**: 2% protocol fee collected on successful escrow completions
+
+## Technical Terms
+
+- **Program Derived Address (PDA)**: Deterministic Solana account addresses derived from seeds
+- **Cross-Program Invocation (CPI)**: Solana mechanism for programs to call other programs
+- **Zero-Knowledge Proof**: Cryptographic method proving knowledge without revealing information
+- **Omnichain**: Cross-chain interoperability enabling multi-blockchain functionality
+- **Web3.Storage**: IPFS pinning service for decentralized file storage
+- **Devnet**: Solana development network for testing applications
+- **Framer Motion**: React animation library for smooth UI transitions
+- **Three.js**: JavaScript 3D graphics library for immersive web experiences
+
+## Business Terms
+
+- **Dispute Resolution**: AI-assisted process for resolving escrow conflicts
+- **Task Verification**: Automated validation of work completion using AI analysis
+- **Evidence Submission**: Process of uploading proof materials to IPFS
+- **Cyberpunk UI**: Dark-themed interface with neon accents and futuristic aesthetics
+- **Multi-Chain**: Protocol capability to operate across multiple blockchain networks
+- **Trustless**: System requiring no intermediary trust between parties
+- **Global Vibe Hackathon**: AWS AI coding competition showcasing innovative integrations

@@ -1,0 +1,37 @@
+# AetherLock Protocol
+
+AetherLock is a next-generation AI-driven escrow protocol built on Solana, designed to revolutionize trustless transactions through intelligent automation and zero-knowledge privacy. By combining AWS Bedrock's advanced AI capabilities with zkMe's privacy-preserving KYC and Solana's high-performance blockchain, AetherLock creates a seamless, secure, and intelligent escrow experience.
+
+## Overview
+
+AetherLock Protocol introduces a new paradigm in decentralized escrow services by leveraging artificial intelligence to automate task verification, dispute resolution, and compliance checks. The protocol ensures complete transparency while maintaining user privacy through zero-knowledge proofs and provides a cyberpunk-inspired user interface that makes complex blockchain interactions intuitive.
+
+### Key Features
+
+- **AI-Powered Verification**: AWS Bedrock Claude integration for intelligent task validation
+- **Zero-Knowledge KYC**: Privacy-preserving identity verification via zkMe on ZetaChain
+- **Multi-Chain Architecture**: Solana MVP with planned expansion to other chains
+- **IPFS Evidence Storage**: Decentralized storage for dispute resolution materials
+- **Automated Dispute Resolution**: AI-assisted conflict resolution with human oversight
+- **Cyberpunk Dashboard**: Immersive React interface with Framer Motion animations
+
+### AWS Global Vibe: AI Coding Hackathon 2025
+
+**Demo Status**: Solana devnet escrow with Bedrock AI mock verification ready for demonstration.
+
+This documentation represents AetherLock's submission to the AWS Global Vibe: AI Coding Hackathon 2025, showcasing the integration of AWS services (Bedrock, S3) with blockchain technology to create innovative financial infrastructure.
+
+**Live Demo**: [https://aetherlock.vercel.app](https://aetherlock.vercel.app)
+**Solana Explorer**: View transactions on Solana devnet
+**GitHub**: [https://github.com/De-real-iManuel/aetherlock](https://github.com/De-real-iManuel/aetherlock)
+
+### Architecture Highlights
+
+- **Smart Contracts**: Rust-based Anchor programs on Solana
+- **AI Integration**: AWS Bedrock for natural language task verification
+- **Privacy Layer**: zkMe integration on ZetaChain testnet
+- **Storage**: IPFS via Web3.Storage for evidence and metadata
+- **Frontend**: React with Three.js and Framer Motion for immersive UX
+- **Treasury**: 2% protocol fee for sustainable development
+
+AetherLock represents the future of trustless commerce, where AI and blockchain converge to create truly autonomous financial infrastructure.

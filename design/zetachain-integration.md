@@ -1,0 +1,58 @@
+# ZetaChain Integration
+
+## Universal App Interface
+
+```solidity
+contract AetherLockUniversal {
+    mapping(uint256 => CrossChainEscrow) public escrows;
+    
+    struct CrossChainEscrow {
+        uint256 sourceChain;
+        uint256 destinationChain;
+        address payer;
+        address payee;
+        uint256 amount;
+        bytes32 kycHash;
+        EscrowStatus status;
+    }
+    
+    function createCrossChainEscrow(
+        uint256 destinationChain,
+        address payee,
+        uint256 amount,
+        bytes calldata kycProof
+    ) external payable {
+        // Verify KYC proof
+        require(verifyKYCProof(msg.sender, kycProof), "Invalid KYC");
+        
+        // Create escrow record
+        escrows[nextEscrowId] = CrossChainEscrow({
+            sourceChain: block.chainid,
+            destinationChain: destinationChain,
+            payer: msg.sender,
+            payee: payee,
+            amount: amount,
+            kycHash: keccak256(kycProof),
+            status: EscrowStatus.Created
+        });
+        
+        // Send cross-chain message
+        _sendMessage(destinationChain, abi.encode(escrows[nextEscrowId]));
+        
+        nextEscrowId++;
+    }
+}
+```
+
+## Cross-Chain Message Flow
+1. **Escrow Creation**: Message sent from source chain
+2. **KYC Verification**: Universal identity check on ZetaChain
+3. **Fund Locking**: Assets locked on source chain
+4. **Status Updates**: Synchronized across all chains
+5. **Settlement**: Final state propagated universally
+
+## Dashboard Visualization
+- **Chain Status**: Real-time network health indicators
+- **Cross-Chain Transactions**: Visual transaction flow
+- **KYC Status**: Universal identity verification display
+- **Gas Optimization**: Multi-chain fee comparison
