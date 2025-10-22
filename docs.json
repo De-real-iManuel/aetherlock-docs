@@ -1,34 +1,49 @@
 {
-  "name": "AetherLock Documentation",
-  "logo": "/logo/aetherlock-logo.svg",
+  "name": "AetherLock Protocol",
+  "logo": "/logo.png",
+  "favicon": "/favicon.ico",
+  "colors": {
+    "primary": "#9333ea",
+    "light": "#06b6d4",
+    "dark": "#10b981",
+    "background": {
+      "dark": "#000000"
+    }
+  },
   "navigation": [
     {
-      "group": "Essentials",
+      "group": "Introduction",
+      "pages": ["introduction", "glossary"]
+    },
+    {
+      "group": "Requirements",
       "pages": [
-        { "name": "Overview", "path": "/essentials/overview" },
-        { "name": "Architecture", "path": "/essentials/architecture" }
+        "requirements/escrow-creation",
+        "requirements/ai-verification",
+        "requirements/zk-kyc",
+        "requirements/dispute-resolution",
+        "requirements/frontend-dashboard",
+        "requirements/evidence-storage"
       ]
     },
     {
-      "group": "Integrations",
+      "group": "Design",
       "pages": [
-        { "name": "ZKMe Integration", "path": "/ai-tools/zkme-integration" },
-        { "name": "ZetaChain Bounty #1", "path": "/ai-tools/zetachain-bounty1" },
-        { "name": "AWS Support", "path": "/ai-tools/aws-support" }
+        "design/overview",
+        "design/architecture",
+        "design/components",
+        "design/frontend",
+        "design/data-models",
+        "design/error-handling",
+        "design/testing",
+        "design/security",
+        "design/zetachain-integration",
+        "design/deployment"
       ]
     },
     {
-      "group": "Development",
-      "pages": [
-        { "name": "Quickstart", "path": "/quickstart" },
-        { "name": "Advanced Setup", "path": "/development" }
-      ]
-    },
-    {
-      "group": "API Reference",
-      "pages": [
-        { "name": "Endpoints", "path": "/api-reference/api" }
-      ]
+      "group": "Implementation",
+      "pages": ["implementation/plan"]
     }
   ]
 }
