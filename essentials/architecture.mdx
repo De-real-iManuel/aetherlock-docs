@@ -1,0 +1,70 @@
+---
+title: Technical Architecture
+description: AetherLock Protocol — Omnichain AI-Powered Escrow with zkKYC Verification
+---
+
+# 🧠 AetherLock Technical Architecture
+
+AetherLock is an AI-driven, agentic escrow and P2P protocol that enables secure, automated transactions with AI-powered verification.  
+It integrates **ZetaChain**, **zkMe (zkKYC)**, **Solana**, and **AWS** to build a trustless, omnichain escrow service for the Web3 ecosystem.
+
+---
+
+## 🧩 System Overview
+
+The AetherLock ecosystem connects multiple core modules:
+
+| Layer | Component | Description |
+|-------|------------|-------------|
+| Blockchain Layer | **Solana / ZetaChain** | Core escrow contract layer + omnichain bridge |
+| Identity Layer | **zkMe (zkKYC)** | Privacy-preserving KYC validation |
+| AI Layer | **AI Agents + Verification Oracle** | Off-chain verification and signature relay |
+| Application Layer | **Kiro IDE Frontend** | Developer environment for integration, testing, and interface design |
+| Infrastructure | **AWS** | Cloud compute and AI model hosting |
+| Treasury | **Protocol Treasury** | Escrow fees and protocol revenue management |
+
+---
+
+## ⚙️ Core Components
+
+### 🧱 Escrow Contract (Solana)
+- Holds funds and manages release/refund logic.
+- Integrates ZetaChain for cross-chain fund control.
+- Emits events to AI verification service.
+
+### 🧠 AI Agent & Verification Oracle
+- Performs off-chain validation of task completion.
+- Signs verification payloads (Ed25519).
+- Relays signed proofs back on-chain through oracle.
+
+### 🛡️ zkMe Integration (ZetaChain)
+- Provides zero-knowledge KYC verification.
+- Stores credential proofs on **ZetaChain testnet**.
+- Allows participation only for verified users without revealing identity data.
+
+### ☁️ AWS Cloud Services
+- Hosts backend AI services and evidence storage API.
+- Enables real-time analytics and monitoring dashboard.
+
+### 🎨 Frontend (Kiro IDE + React)
+- Built using **Kiro IDE** and **React**.
+- Provides intuitive UI for escrow management, verification tracking, and dispute resolution.
+- Integrates Phantom, Solflare, and WalletConnect for wallet interactions.
+
+---
+
+## 🌐 ZetaChain Integration Context
+
+**ZetaChain Bounty #1 — Solana/Sui/TON Universal App (Assigned to Kiro)**
+
+**Objective:**  
+Implement and design the frontend + integration structure for the ZetaChain Universal App within AetherLock’s ecosystem.
+
+**Integration Goals:**
+- Connect Solana and/or Sui/TON ecosystems through ZetaChain.
+- Use ZetaChain contracts & interfaces → `Gateway`, `Universal NFT`.
+- Implement omnichain functions:
+  ```ts
+  onCall()
+  onRevert()
+  onAbort()
