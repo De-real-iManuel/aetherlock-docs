@@ -1,0 +1,5 @@
+{
+  "buildCommand": "mintlify build",
+  "outputDirectory": ".mintlify/_next",
+  "installCommand": "npm install -g mintlify"
+}

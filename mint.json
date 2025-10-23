@@ -2,8 +2,8 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "AetherLock Protocol",
   "logo": {
-    "light": "/assets/logo.png",
-    "dark": "/assets/logo.png"
+    "light": "/assets/aetherlock-logo.png",
+    "dark": "/assets/aetherlock-logo.png"
   },
   "favicon": "/assets/favicon.ico",
   "theme": "quill",
@@ -18,7 +18,7 @@
   "topbarLinks": [
     {
       "name": "GitHub",
-      "url": "https://github.com/De-real-iManuel/aetherlock"
+      "url": "https://github.com/De-real-iManuel/AetherLock-"
     },
     {
       "name": "Demo",
@@ -64,8 +64,8 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/aetherlock",
-    "github": "https://github.com/De-real-iManuel/aetherlock"
+    "twitter": "https://x.com/De_real_iManuel",
+    "github": "https://github.com/De-real-iManuel/AetherLock-"
   },
   "mermaid": true
 }

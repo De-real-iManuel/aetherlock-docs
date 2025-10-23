@@ -15,7 +15,7 @@ mintlify dev
 ## 🔗 Links
 
 - **Live Demo**: [https://aetherlock.vercel.app](https://aetherlock.vercel.app)
-- **GitHub**: [https://github.com/De-real-iManuel/aetherlock](https://github.com/De-real-iManuel/aetherlock)
+- **GitHub**: [https://github.com/De-real-iManuel/AetherLock-](https://github.com/De-real-iManuel/AetherLock-)
 - **Documentation**: [Mintlify Docs](https://mintlify.com)
 
 ## 🏗️ Architecture
@@ -36,6 +36,6 @@ mintlify dev
 
 Built for AWS Global Vibe: AI Coding Hackathon 2025.
 
-## 🤝 Partners
+## 🤝 Official Partners
 
-**zkMe Partnership**: Official integration partner for zero-knowledge identity verification.
+**zkMe Integration Partner**: AetherLock is an official Integration Partner with [zkMe](https://zkme.org), providing enterprise-grade zero-knowledge identity verification for privacy-preserving KYC compliance.
