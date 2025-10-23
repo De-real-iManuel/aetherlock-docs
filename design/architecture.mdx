@@ -1,164 +1,253 @@
 # Architecture
 
-## Data Flow Diagram
+## AetherLock Data Flow
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant Dashboard
-    participant Wallet
-    participant Solana
-    participant AI as AWS Bedrock
-    participant IPFS
+    participant Wallet as Multi-Chain Wallet
+    participant UI as AetherLock UI
+    participant zkMe as zkMe SDK
     participant ZetaChain
-    participant zkMe
+    participant AI as AWS Bedrock AI
+    participant Contract as Smart Contract
+    participant Buyer
+    participant Seller
 
-    Note over User,zkMe: 1. Escrow Creation Flow
-    User->>Dashboard: Create Escrow
-    Dashboard->>Wallet: Connect & Sign
-    Wallet->>Solana: Deploy Contract
-    Solana-->>Dashboard: Contract Address
-    Dashboard->>IPFS: Store Metadata
-    IPFS-->>Solana: Return Hash
-
-    Note over User,zkMe: 2. KYC Verification Flow
-    User->>zkMe: Initiate KYC
+    Note over User,Seller: 1. Wallet Connection & Identity Verification
+    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
+    Wallet-->>UI: Wallet Connected
+    UI->>zkMe: Launch Identity Verification
+    zkMe->>User: KYC Verification Screen
+    User->>zkMe: Submit Identity Documents
     zkMe->>ZetaChain: Generate ZK Proof
-    ZetaChain-->>Solana: Verify Status
-    Solana-->>Dashboard: KYC Confirmed
+    ZetaChain-->>UI: Verification Complete
+    UI-->>User: Access Granted to Escrow Service
 
-    Note over User,zkMe: 3. Evidence Submission Flow
-    User->>Dashboard: Upload Evidence
-    Dashboard->>IPFS: Store Files
-    IPFS-->>Dashboard: File Hashes
-    Dashboard->>Solana: Submit Hashes
-    Solana->>AI: Trigger Verification
+    Note over User,Seller: 2. Escrow Creation & Fund Locking
+    User->>UI: Create Escrow Service
+    UI->>Contract: Initialize Escrow
+    Contract->>Wallet: Request Authorization for Amount
+    Wallet->>User: Confirm Transaction Amount
+    User->>Wallet: Approve Transaction
+    Wallet->>Contract: Lock Funds + 2% Fee
+    Contract-->>UI: Funds Locked Successfully
 
-    Note over User,zkMe: 4. AI Verification Flow
-    AI->>IPFS: Fetch Evidence
-    IPFS-->>AI: Return Files
-    AI->>AI: Analyze Content
-    AI-->>Solana: Verification Result
-    Solana-->>Dashboard: Update Status
-
-    Note over User,zkMe: 5. Fund Release Flow
-    Solana->>Solana: Check Verification
-    Solana->>Wallet: Release Funds
-    Solana->>Dashboard: Emit Events
-    Dashboard-->>User: Transaction Complete
+    Note over User,Seller: 3. AI Verification Process
+    Seller->>UI: Submit Work Evidence (On-Chain Data)
+    Buyer->>UI: Submit Requirements (Off-Chain Data)
+    UI->>AI: Send Both On-Chain & Off-Chain Data
+    AI->>AI: Analyze Combined Data Sources
+    AI->>Contract: Send Verification Result
+    
+    Note over User,Seller: 4. Transaction Completion
+    Contract->>Contract: Check AI Verification Status
+    alt AI Verification Approved
+        Contract->>Buyer: Release Funds to Account
+        Contract->>Contract: Collect 2% Station Fee
+        Contract-->>UI: Transaction Complete
+        UI-->>Seller: Payment Received
+        UI-->>Buyer: Service Delivered
+    else AI Verification Failed
+        Contract->>Seller: Refund Original Amount
+        Contract-->>UI: Transaction Cancelled
+    end
 ```
 
-## System Components
+## Multi-Chain Wallet Integration
 
-### Core Infrastructure
-- **Solana Blockchain**: Smart contracts and fund management
-- **AWS Bedrock**: AI-powered evidence verification
-- **IPFS Network**: Decentralized file storage
-- **ZetaChain**: Cross-chain KYC verification
-- **zkMe Protocol**: Zero-knowledge identity proofs
-
-### Data Flow Patterns
-
-#### 1. Escrow Creation
-```
-User Input → Dashboard → Wallet Signature → Solana Contract → IPFS Metadata → On-Chain Hash
-```
-
-#### 2. KYC Verification
-```
-User Identity → zkMe SDK → ZK Proof → ZetaChain → Cross-Chain Message → Solana Verification
-```
-
-#### 3. Evidence Processing
-```
-File Upload → IPFS Storage → Hash Recording → AI Trigger → Bedrock Analysis → Confidence Score
-```
-
-#### 4. Decision Making
-```
-AI Analysis → Confidence Threshold → Auto-Approve/Review/Reject → Smart Contract Execution
-```
-
-## Technical Implementation
-
-### Smart Contract Architecture
-```rust
-// Solana Program Structure
-pub struct EscrowAccount {
-    pub escrow_id: u64,
-    pub payer: Pubkey,
-    pub payee: Pubkey,
-    pub amount: u64,
-    pub status: EscrowStatus,
-    pub evidence_hash: Option[String],
-    pub verification_result: Option[VerificationResult],
-}
-
-// Key Functions
-- initialize_escrow()
-- deposit_funds()
-- submit_evidence()
-- process_verification()
-- release_funds()
-```
-
-### AI Integration Flow
+### Supported Wallets & Chains
 ```typescript
-// Verification Pipeline
-interface VerificationRequest {
-  escrowId: string;
-  evidenceHashes: string[];
-  taskRequirements: string[];
+interface WalletConfig {
+  solana: ['Solflare', 'Slush'];
+  ton: ['Tonkeeper'];
+  sui: ['Sui Wallet'];
+  ethereum: ['MetaMask', 'WalletConnect'];
 }
 
-// AWS Bedrock Processing
-1. Fetch evidence from IPFS
-2. Analyze with Claude model
-3. Generate confidence score
-4. Return structured decision
-5. Update smart contract
-```
-
-### Cross-Chain Integration
-```solidity
-// ZetaChain Universal Contract
-contract AetherLockKYC {
-  mapping(address => KYCCredential) credentials;
+// Wallet Connection Flow
+async function connectWallet(chain: string, walletType: string) {
+  const wallet = await initializeWallet(chain, walletType);
+  const address = await wallet.connect();
   
-  function verifyKYC(bytes proof) external {
-    // Verify zkMe proof
-    // Store credential
-    // Emit cross-chain message
+  // Trigger zkMe verification
+  const kycResult = await launchZkMeVerification(address);
+  
+  if (kycResult.verified) {
+    enableEscrowService(address);
   }
 }
 ```
 
-## Security & Privacy
+## ZetaChain Omnichain Architecture
 
-### Data Protection
-- **Evidence Encryption**: Files encrypted before IPFS storage
-- **Zero-Knowledge Proofs**: Identity verification without data exposure
-- **Access Control**: Time-limited evidence access tokens
-- **Audit Trail**: All actions logged on-chain
+### Cross-Chain Message Flow
+```solidity
+// ZetaChain Universal Contract
+contract AetherLockOmnichain {
+    struct CrossChainEscrow {
+        uint256 sourceChain;
+        address payer;
+        address payee;
+        uint256 amount;
+        bool kycVerified;
+        bool aiVerified;
+    }
+    
+    function createOmnichainEscrow(
+        uint256 destinationChain,
+        address payee,
+        uint256 amount
+    ) external payable {
+        require(isKYCVerified(msg.sender), "KYC required");
+        
+        // Lock funds on source chain
+        lockFunds(msg.sender, amount + (amount * 2 / 100));
+        
+        // Send cross-chain message
+        sendMessage(destinationChain, abi.encode(
+            msg.sender, payee, amount, block.timestamp
+        ));
+    }
+}
+```
 
-### Smart Contract Security
-- **Reentrancy Protection**: Checks-effects-interactions pattern
-- **Access Control**: Multi-signature requirements
-- **Formal Verification**: Mathematical proof of correctness
-- **Emergency Pause**: Circuit breaker for critical issues
+## AI Verification System
 
-## Performance Metrics
+### On-Chain & Off-Chain Data Analysis
+```typescript
+interface VerificationData {
+  onChainData: {
+    transactionHashes: string[];
+    contractStates: any[];
+    blockchainEvents: Event[];
+  };
+  offChainData: {
+    evidenceFiles: File[];
+    communicationLogs: Message[];
+    externalAPIs: APIResponse[];
+  };
+}
 
-### Transaction Throughput
-- **Solana**: 65,000 TPS theoretical capacity
-- **AI Processing**: Sub-30 second verification
-- **IPFS Storage**: Distributed global network
-- **Cross-Chain**: ZetaChain omnichain messaging
+class AetherLockAI {
+  async verifyTransaction(data: VerificationData): Promise<VerificationResult> {
+    // Analyze on-chain data
+    const onChainAnalysis = await this.analyzeOnChainData(data.onChainData);
+    
+    // Analyze off-chain data
+    const offChainAnalysis = await this.analyzeOffChainData(data.offChainData);
+    
+    // Combined AI decision
+    const combinedScore = this.calculateCombinedScore(
+      onChainAnalysis, 
+      offChainAnalysis
+    );
+    
+    return {
+      approved: combinedScore > 0.9,
+      confidence: combinedScore,
+      reasoning: this.generateReasoning(onChainAnalysis, offChainAnalysis)
+    };
+  }
+}
+```
 
-### Scalability Features
-- **Parallel Processing**: Concurrent escrow handling
-- **Caching Layer**: Redis for frequent data
-- **Load Balancing**: Multi-region AWS deployment
-- **State Compression**: Optimized on-chain storage
+## Smart Contract Fund Management
 
-This architecture ensures high performance, security, and scalability while maintaining the decentralized and trustless nature of the AetherLock protocol.
+### Escrow & Fee Collection
+```rust
+// Solana Anchor Program
+#[program]
+pub mod aetherlock_escrow {
+    pub fn create_escrow_with_fee(
+        ctx: Context<CreateEscrow>,
+        amount: u64,
+        payee: Pubkey
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow_account;
+        let fee = amount * 2 / 100; // 2% station fee
+        let total_required = amount + fee;
+        
+        // Lock funds including fee
+        escrow.locked_amount = amount;
+        escrow.station_fee = fee;
+        escrow.payer = ctx.accounts.payer.key();
+        escrow.payee = payee;
+        escrow.status = EscrowStatus::FundsLocked;
+        
+        Ok(())
+    }
+    
+    pub fn release_funds_after_ai_verification(
+        ctx: Context<ReleaseFunds>
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow_account;
+        
+        require!(escrow.ai_verified, EscrowError::AIVerificationRequired);
+        
+        // Transfer funds to buyer
+        **ctx.accounts.buyer.lamports.borrow_mut() += escrow.locked_amount;
+        
+        // Collect station fee
+        **ctx.accounts.treasury.lamports.borrow_mut() += escrow.station_fee;
+        
+        escrow.status = EscrowStatus::Completed;
+        
+        emit!(FundsReleased {
+            escrow_id: escrow.id,
+            buyer: escrow.payee,
+            amount: escrow.locked_amount,
+            fee_collected: escrow.station_fee
+        });
+        
+        Ok(())
+    }
+}
+```
+
+## User Journey Flow
+
+### Complete Transaction Process
+
+1. **Multi-Chain Wallet Connection**
+   - User connects Solflare (Solana), Tonkeeper (TON), or Sui Wallet
+   - Wallet integration detects chain and initializes connection
+
+2. **zkMe Identity Verification**
+   - Verification screen pops up automatically
+   - User completes KYC using zkMe SDK
+   - Zero-knowledge proof generated and verified on ZetaChain
+
+3. **Escrow Service Access**
+   - UI enables escrow functionality after successful verification
+   - User can create, manage, and participate in escrows
+
+4. **Transaction Authorization**
+   - AetherLock sends authorization request to wallet
+   - User confirms transaction amount + 2% fee
+   - Smart contract locks funds securely
+
+5. **AI Verification Process**
+   - AI analyzes both on-chain transaction data and off-chain evidence
+   - Combined analysis generates confidence score
+   - Automatic approval/rejection based on AI decision
+
+6. **Fund Release & Fee Collection**
+   - Smart contract releases funds to buyer's account
+   - 2% station fee automatically collected
+   - Transaction marked as complete
+
+## Security & Compliance
+
+### Multi-Layer Verification
+- **Identity Layer**: zkMe zero-knowledge KYC
+- **Transaction Layer**: Smart contract validation
+- **Evidence Layer**: AI analysis of on/off-chain data
+- **Cross-Chain Layer**: ZetaChain message verification
+
+### Fee Structure
+- **Station Fee**: 2% collected on every completed transaction
+- **Gas Optimization**: Batched operations to minimize costs
+- **Treasury Management**: Automated fee collection and distribution
+
+This architecture ensures seamless multi-chain operation while maintaining security, privacy, and automated verification across all supported networks.
