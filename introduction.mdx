@@ -19,19 +19,27 @@ AetherLock Protocol introduces a new paradigm in decentralized escrow services b
 
 **Demo Status**: Solana devnet escrow with Bedrock AI mock verification ready for demonstration.
 
-This documentation represents AetherLock's submission to the AWS Global Vibe: AI Coding Hackathon 2025, showcasing the integration of AWS services (Bedrock, S3) with blockchain technology to create innovative financial infrastructure.
+This documentation represents AetherLock's submission to the AWS Global Vibe: AI Coding Hackathon 2025, showcasing the integration of AWS services with blockchain technology to create innovative financial infrastructure.
 
 **Live Demo**: [https://aetherlock.vercel.app](https://aetherlock.vercel.app)
+
 **Solana Explorer**: View transactions on Solana devnet
+
 **GitHub**: [https://github.com/De-real-iManuel/AetherLock-](https://github.com/De-real-iManuel/AetherLock-)
 
-### Official Partnership
+## Official Partnership
 
-**zkMe Integration Partner**: AetherLock is an official Integration Partner with [zkMe](https://zkme.org) for zero-knowledge identity verification, enabling privacy-preserving KYC compliance across our multi-chain escrow platform. This partnership provides enterprise-grade privacy solutions for regulatory compliance without compromising user data.
+**zkMe Integration Partner**: AetherLock is an official Integration Partner with [zkMe](https://zkme.org), providing enterprise-grade zero-knowledge identity verification for privacy-preserving KYC compliance.
 
-below img src="/assets/zkme-logo.jpg" alt="zkMe Logo" width="150" /above 
+![zkMe Logo](/assets/zkme-logo.jpg)
 
-### Architecture Highlights
+This partnership enables:
+- Privacy-preserving identity verification
+- Cross-chain KYC credential management
+- Regulatory compliance without data exposure
+- Enterprise-grade security standards
+
+## Architecture Highlights
 
 - **Smart Contracts**: Rust-based Anchor programs on Solana
 - **AI Integration**: AWS Bedrock for natural language task verification
@@ -39,5 +47,14 @@ below img src="/assets/zkme-logo.jpg" alt="zkMe Logo" width="150" /above
 - **Storage**: IPFS via Web3.Storage for evidence and metadata
 - **Frontend**: React with Three.js and Framer Motion for immersive UX
 - **Treasury**: 2 percent protocol fee for sustainable development
+
+## How It Works
+
+1. **Create Escrow**: Users create escrows with task requirements and deposit funds
+2. **KYC Verification**: Privacy-preserving identity verification via zkMe
+3. **Task Completion**: Workers submit evidence of completed work
+4. **AI Verification**: AWS Bedrock analyzes evidence and generates confidence scores
+5. **Automated Release**: Funds released based on AI verification results
+6. **Dispute Resolution**: Multi-tier resolution system for complex cases
 
 AetherLock represents the future of trustless commerce, where AI and blockchain converge to create truly autonomous financial infrastructure.

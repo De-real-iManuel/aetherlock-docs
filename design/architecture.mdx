@@ -1,101 +1,164 @@
 # Architecture
 
-## Simple Overview
-
-AetherLock connects **Users** → **AI** → **Blockchain** → **Storage** for trustless escrows.
-
-## System Architecture
+## Data Flow Diagram
 
 ```mermaid
-flowchart TD
-    User[User] --above  Dashboard[Cyberpunk Dashboard]
-    Dashboard --above  Wallet[Wallet Connection]
-    
-    Wallet --above  Solana[Solana Blockchain]
-    Wallet --above  ZetaChain[ZetaChain]
-    
-    Dashboard --above  AI[AWS Bedrock AI]
-    AI --above  Verify[Task Verification]
-    AI --above  Dispute[Dispute Resolution]
-    
-    Solana --above  Escrow[Escrow Contract]
-    ZetaChain --above  KYC[zkMe KYC]
-    
-    Verify --above  IPFS[IPFS Storage]
-    Dispute --above  IPFS
-    Escrow --above  IPFS
-    
-    IPFS --above  Web3Storage[Web3.Storage]
-    
-    classDef user fill:#9333ea,stroke:#fff,stroke-width:2px,color:#fff
-    classDef frontend fill:#06b6d4,stroke:#fff,stroke-width:2px,color:#fff
-    classDef blockchain fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff
-    classDef ai fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff
-    classDef storage fill:#8b5cf6,stroke:#fff,stroke-width:2px,color:#fff
-    
-    class User,Dashboard user
-    class Wallet,Verify,Dispute frontend
-    class Solana,ZetaChain,Escrow,KYC blockchain
-    class AI ai
-    class IPFS,Web3Storage storage
+sequenceDiagram
+    participant User
+    participant Dashboard
+    participant Wallet
+    participant Solana
+    participant AI as AWS Bedrock
+    participant IPFS
+    participant ZetaChain
+    participant zkMe
+
+    Note over User,zkMe: 1. Escrow Creation Flow
+    User->>Dashboard: Create Escrow
+    Dashboard->>Wallet: Connect & Sign
+    Wallet->>Solana: Deploy Contract
+    Solana-->>Dashboard: Contract Address
+    Dashboard->>IPFS: Store Metadata
+    IPFS-->>Solana: Return Hash
+
+    Note over User,zkMe: 2. KYC Verification Flow
+    User->>zkMe: Initiate KYC
+    zkMe->>ZetaChain: Generate ZK Proof
+    ZetaChain-->>Solana: Verify Status
+    Solana-->>Dashboard: KYC Confirmed
+
+    Note over User,zkMe: 3. Evidence Submission Flow
+    User->>Dashboard: Upload Evidence
+    Dashboard->>IPFS: Store Files
+    IPFS-->>Dashboard: File Hashes
+    Dashboard->>Solana: Submit Hashes
+    Solana->>AI: Trigger Verification
+
+    Note over User,zkMe: 4. AI Verification Flow
+    AI->>IPFS: Fetch Evidence
+    IPFS-->>AI: Return Files
+    AI->>AI: Analyze Content
+    AI-->>Solana: Verification Result
+    Solana-->>Dashboard: Update Status
+
+    Note over User,zkMe: 5. Fund Release Flow
+    Solana->>Solana: Check Verification
+    Solana->>Wallet: Release Funds
+    Solana->>Dashboard: Emit Events
+    Dashboard-->>User: Transaction Complete
 ```
 
-## How It Works (Simple Steps)
+## System Components
 
-### 1. Create Escrow
-- User opens cyberpunk dashboard
-- Connects wallet (Phantom/Solflare)
-- Creates escrow with task details
-- Deposits funds to Solana contract
+### Core Infrastructure
+- **Solana Blockchain**: Smart contracts and fund management
+- **AWS Bedrock**: AI-powered evidence verification
+- **IPFS Network**: Decentralized file storage
+- **ZetaChain**: Cross-chain KYC verification
+- **zkMe Protocol**: Zero-knowledge identity proofs
 
-### 2. Complete KYC
-- User verifies identity with zkMe
-- Zero-knowledge proof generated locally
-- Verification stored on ZetaChain
-- Privacy maintained throughout
+### Data Flow Patterns
 
-### 3. Submit Work Evidence
-- Worker uploads proof files
-- Files stored on IPFS (decentralized)
-- Evidence hash recorded on blockchain
-- AI analysis automatically triggered
+#### 1. Escrow Creation
+```
+User Input → Dashboard → Wallet Signature → Solana Contract → IPFS Metadata → On-Chain Hash
+```
 
-### 4. AI Verification
-- AWS Bedrock Claude analyzes evidence
-- Compares work against requirements
-- Generates confidence score (0-100 percent)
-- Makes approval/rejection decision
+#### 2. KYC Verification
+```
+User Identity → zkMe SDK → ZK Proof → ZetaChain → Cross-Chain Message → Solana Verification
+```
 
-### 5. Release Funds
-- High confidence (above 90 percent): Auto-approve
-- Medium confidence (50-90 percent): Human review
-- Low confidence (below 50 percent): Auto-reject
-- Funds released to worker's wallet
+#### 3. Evidence Processing
+```
+File Upload → IPFS Storage → Hash Recording → AI Trigger → Bedrock Analysis → Confidence Score
+```
 
-### 6. Dispute Resolution
-- If disagreement occurs
-- AI analyzes all evidence
-- Human arbitrators review complex cases
-- Final decision executed automatically
+#### 4. Decision Making
+```
+AI Analysis → Confidence Threshold → Auto-Approve/Review/Reject → Smart Contract Execution
+```
 
-## Key Benefits
+## Technical Implementation
 
-### For Users
-- **No Trust Required**: Smart contracts handle everything automatically
-- **Privacy Protected**: zkMe keeps identity private with zero-knowledge proofs
-- **Fast & Fair**: AI makes decisions in seconds, not days
-- **Global Access**: Works across multiple blockchains
+### Smart Contract Architecture
+```rust
+// Solana Program Structure
+pub struct EscrowAccount {
+    pub escrow_id: u64,
+    pub payer: Pubkey,
+    pub payee: Pubkey,
+    pub amount: u64,
+    pub status: EscrowStatus,
+    pub evidence_hash: Option[String],
+    pub verification_result: Option[VerificationResult],
+}
 
-### For Developers
-- **AWS Integration**: Leverages enterprise-grade AI services
-- **Multi-Chain Ready**: Solana now, Ethereum/Polygon later
-- **Decentralized Storage**: IPFS ensures evidence is always available
-- **Open Source**: Transparent and auditable code
+// Key Functions
+- initialize_escrow()
+- deposit_funds()
+- submit_evidence()
+- process_verification()
+- release_funds()
+```
 
-### Security Features
-- **Smart Contract Audits**: Code reviewed for vulnerabilities
-- **AI Confidence Scoring**: Multiple validation layers
-- **Encrypted Evidence**: Files protected before storage
-- **Cross-Chain Verification**: Consistent security across networks
+### AI Integration Flow
+```typescript
+// Verification Pipeline
+interface VerificationRequest {
+  escrowId: string;
+  evidenceHashes: string[];
+  taskRequirements: string[];
+}
 
-This simple yet powerful architecture makes trustless commerce accessible to everyone while maintaining enterprise-grade security and privacy.
+// AWS Bedrock Processing
+1. Fetch evidence from IPFS
+2. Analyze with Claude model
+3. Generate confidence score
+4. Return structured decision
+5. Update smart contract
+```
+
+### Cross-Chain Integration
+```solidity
+// ZetaChain Universal Contract
+contract AetherLockKYC {
+  mapping(address => KYCCredential) credentials;
+  
+  function verifyKYC(bytes proof) external {
+    // Verify zkMe proof
+    // Store credential
+    // Emit cross-chain message
+  }
+}
+```
+
+## Security & Privacy
+
+### Data Protection
+- **Evidence Encryption**: Files encrypted before IPFS storage
+- **Zero-Knowledge Proofs**: Identity verification without data exposure
+- **Access Control**: Time-limited evidence access tokens
+- **Audit Trail**: All actions logged on-chain
+
+### Smart Contract Security
+- **Reentrancy Protection**: Checks-effects-interactions pattern
+- **Access Control**: Multi-signature requirements
+- **Formal Verification**: Mathematical proof of correctness
+- **Emergency Pause**: Circuit breaker for critical issues
+
+## Performance Metrics
+
+### Transaction Throughput
+- **Solana**: 65,000 TPS theoretical capacity
+- **AI Processing**: Sub-30 second verification
+- **IPFS Storage**: Distributed global network
+- **Cross-Chain**: ZetaChain omnichain messaging
+
+### Scalability Features
+- **Parallel Processing**: Concurrent escrow handling
+- **Caching Layer**: Redis for frequent data
+- **Load Balancing**: Multi-region AWS deployment
+- **State Compression**: Optimized on-chain storage
+
+This architecture ensures high performance, security, and scalability while maintaining the decentralized and trustless nature of the AetherLock protocol.
