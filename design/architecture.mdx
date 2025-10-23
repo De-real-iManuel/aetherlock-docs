@@ -1,151 +1,101 @@
 # Architecture
 
-## System Architecture Diagram
+## Simple Overview
+
+AetherLock connects **Users** → **AI** → **Blockchain** → **Storage** for trustless escrows.
+
+## System Architecture
 
 ```mermaid
-graph TB
-    subgraph "Frontend Layer"
-        UI[Cyberpunk Dashboard]
-        WC[Wallet Connector]
-        WS[WebSocket Client]
-    end
+flowchart TD
+    User[👤 User] --> Dashboard[🎮 Cyberpunk Dashboard]
+    Dashboard --> Wallet[💼 Wallet Connection]
     
-    subgraph "ZetaChain Omnichain"
-        ZC[ZetaChain Contracts]
-        zkMe[zkMe KYC Protocol]
-        CCM[Cross-Chain Messaging]
-    end
+    Wallet --> Solana[⚡ Solana Blockchain]
+    Wallet --> ZetaChain[🔗 ZetaChain]
     
-    subgraph "Multi-Chain Layer"
-        SOL[Solana Escrow Program]
-        ETH[Ethereum Contracts]
-        POLY[Polygon Contracts]
-        ARB[Arbitrum Contracts]
-    end
+    Dashboard --> AI[🤖 AWS Bedrock AI]
+    AI --> Verify[✅ Task Verification]
+    AI --> Dispute[⚖️ Dispute Resolution]
     
-    subgraph "AI & Oracle Layer"
-        BR[AWS Bedrock Claude]
-        VE[Verification Engine]
-        DR[Dispute Resolution AI]
-        API[API Gateway]
-    end
+    Solana --> Escrow[💰 Escrow Contract]
+    ZetaChain --> KYC[🛡️ zkMe KYC]
     
-    subgraph "Storage Layer"
-        IPFS[IPFS Network]
-        W3S[Web3.Storage]
-        CACHE[Redis Cache]
-        DB[(PostgreSQL)]
-    end
+    Verify --> IPFS[📁 IPFS Storage]
+    Dispute --> IPFS
+    Escrow --> IPFS
     
-    subgraph "External Services"
-        AWS[AWS Services]
-        GATEWAYS[IPFS Gateways]
-        ORACLES[Price Oracles]
-    end
-
-    %% Frontend connections
-    UI --> WC
-    UI --> WS
-    WC --> SOL
-    WC --> SUI
-    WC --> TON
-    WC --> ARB
+    IPFS --> Web3Storage[☁️ Web3.Storage]
     
-    %% ZetaChain connections
-    ZC --> CCM
-    zkMe --> ZC
-    CCM --> SOL
-    CCM --> SUI
-    CCM --> TON
-    CCM --> ARB
+    classDef user fill:#9333ea,stroke:#fff,stroke-width:2px,color:#fff
+    classDef frontend fill:#06b6d4,stroke:#fff,stroke-width:2px,color:#fff
+    classDef blockchain fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff
+    classDef ai fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff
+    classDef storage fill:#8b5cf6,stroke:#fff,stroke-width:2px,color:#fff
     
-    %% AI Layer connections
-    API --> BR
-    VE --> BR
-    DR --> BR
-    VE --> IPFS
-    DR --> IPFS
-    
-    %% Storage connections
-    W3S --> IPFS
-    IPFS --> GATEWAYS
-    VE --> CACHE
-    DR --> CACHE
-    API --> DB
-    
-    %% External connections
-    BR --> AWS
-    W3S --> AWS
-    SOL --> ORACLES
-    SUI --> ORACLES
-    
-    %% WebSocket connections
-    WS -.-> API
-    API -.-> WS
-    
-    %% Cross-chain messaging
-    CCM -.-> VE
-    VE -.-> CCM
-
-    classDef frontend fill:#9333ea,stroke:#06b6d4,stroke-width:2px,color:#fff
-    classDef blockchain fill:#10b981,stroke:#06b6d4,stroke-width:2px,color:#fff
-    classDef ai fill:#06b6d4,stroke:#9333ea,stroke-width:2px,color:#fff
-    classDef storage fill:#f59e0b,stroke:#10b981,stroke-width:2px,color:#fff
-    classDef external fill:#6b7280,stroke:#374151,stroke-width:2px,color:#fff
-    classDef omnichain fill:#8b5cf6,stroke:#a78bfa,stroke-width:2px,color:#fff
-
-    class UI,WC,WS frontend
-    class SOL,ETH,POLY,ARB blockchain
-    class BR,VE,DR,API ai
-    class IPFS,W3S,CACHE,DB storage
-    class AWS,GATEWAYS,ORACLES external
-    class ZC,zkMe,CCM omnichain
+    class User,Dashboard user
+    class Wallet,Verify,Dispute frontend
+    class Solana,ZetaChain,Escrow,KYC blockchain
+    class AI ai
+    class IPFS,Web3Storage storage
 ```
 
-## Component Interactions
+## How It Works (Simple Steps)
 
-### Escrow Creation Flow
-1. **User Interface**: User initiates escrow creation through cyberpunk dashboard
-2. **Wallet Integration**: Wallet connector handles transaction signing
-3. **Smart Contract**: Escrow program creates PDA and locks funds
-4. **Cross-Chain Sync**: ZetaChain propagates escrow state across chains
-5. **Storage**: Escrow metadata stored on IPFS with hash recorded on-chain
+### 1. Create Escrow 💰
+- User opens cyberpunk dashboard
+- Connects wallet (Phantom/Solflare)
+- Creates escrow with task details
+- Deposits funds to Solana contract
 
-### AI Verification Process
-1. **Evidence Submission**: Files uploaded to IPFS via Web3.Storage
-2. **Verification Trigger**: Smart contract emits verification request event
-3. **AI Processing**: Bedrock Claude analyzes evidence and task requirements
-4. **Decision Logic**: Verification engine processes AI output and confidence scores
-5. **Result Storage**: Verification results cached and stored on-chain
+### 2. Complete KYC 🛡️
+- User verifies identity with zkMe
+- Zero-knowledge proof generated locally
+- Verification stored on ZetaChain
+- Privacy maintained throughout
 
-### zkMe KYC Integration
-1. **Identity Request**: User initiates KYC through zkMe SDK
-2. **Proof Generation**: Zero-knowledge proofs generated client-side
-3. **ZetaChain Verification**: Proofs verified on ZetaChain omnichain
-4. **Cross-Chain Sync**: KYC status synchronized across all supported chains
-5. **Compliance Check**: Escrow operations validate KYC requirements
+### 3. Submit Work Evidence 📋
+- Worker uploads proof files
+- Files stored on IPFS (decentralized)
+- Evidence hash recorded on blockchain
+- AI analysis automatically triggered
 
-### Dispute Resolution Workflow
-1. **Dispute Detection**: AI monitors for verification failures and conflicts
-2. **Evidence Analysis**: Bedrock processes all submitted evidence
-3. **Multi-Tier Resolution**: Automated, AI-assisted, or human arbitration
-4. **Decision Execution**: Resolution automatically executed on-chain
-5. **Cross-Chain Update**: Dispute outcomes synchronized across chains
+### 4. AI Verification 🤖
+- AWS Bedrock Claude analyzes evidence
+- Compares work against requirements
+- Generates confidence score (0-100%)
+- Makes approval/rejection decision
 
-## Security Architecture
+### 5. Release Funds ✅
+- High confidence (>90%): Auto-approve
+- Medium confidence (50-90%): Human review
+- Low confidence (<50%): Auto-reject
+- Funds released to worker's wallet
 
-### Multi-Layer Security
-- **Smart Contract Security**: Formal verification and audit processes
-- **AI Security**: Input validation and output verification for AI systems
-- **Privacy Protection**: Zero-knowledge proofs and encrypted storage
-- **Access Control**: Role-based permissions and time-locked operations
-- **Cross-Chain Security**: Verified messaging and state synchronization
+### 6. Dispute Resolution ⚖️
+- If disagreement occurs
+- AI analyzes all evidence
+- Human arbitrators review complex cases
+- Final decision executed automatically
 
-### Threat Mitigation
-- **Reentrancy Protection**: Checks-effects-interactions pattern
-- **Oracle Manipulation**: Multiple price feed sources and validation
-- **AI Manipulation**: Confidence thresholds and human oversight
-- **Cross-Chain Attacks**: Message verification and replay protection
-- **Privacy Breaches**: Client-side proof generation and encrypted storage
+## Key Benefits
 
-This architecture ensures scalability, security, and interoperability while maintaining the cyberpunk aesthetic and user experience that defines AetherLock Protocol.
+### For Users 👥
+- **No Trust Required**: Smart contracts handle everything automatically
+- **Privacy Protected**: zkMe keeps identity private with zero-knowledge proofs
+- **Fast & Fair**: AI makes decisions in seconds, not days
+- **Global Access**: Works across multiple blockchains
+
+### For Developers 👨‍💻
+- **AWS Integration**: Leverages enterprise-grade AI services
+- **Multi-Chain Ready**: Solana now, Ethereum/Polygon later
+- **Decentralized Storage**: IPFS ensures evidence is always available
+- **Open Source**: Transparent and auditable code
+
+### Security Features 🔒
+- **Smart Contract Audits**: Code reviewed for vulnerabilities
+- **AI Confidence Scoring**: Multiple validation layers
+- **Encrypted Evidence**: Files protected before storage
+- **Cross-Chain Verification**: Consistent security across networks
+
+This simple yet powerful architecture makes trustless commerce accessible to everyone while maintaining enterprise-grade security and privacy.
