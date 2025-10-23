@@ -20,7 +20,7 @@ pub struct EscrowAccount {
     /// Amount locked in escrow (in lamports for SOL)
     pub amount: u64,
     /// Token mint address (None for SOL)
-    pub token_mint: Option<Pubkey>,
+    pub token_mint: Optionbelow Pubkeyabove ,
     /// Current status of the escrow
     pub status: EscrowStatus,
     /// Deadline for task completion (Unix timestamp)
@@ -28,12 +28,12 @@ pub struct EscrowAccount {
     /// IPFS hash of task description and requirements
     pub task_metadata_hash: String,
     /// IPFS hash of submitted evidence
-    pub evidence_hash: Option<String>,
+    pub evidence_hash: Optionbelow Stringabove ,
     /// AI verification result
-    pub verification_result: Option<VerificationResult>,
+    pub verification_result: Optionbelow VerificationResultabove ,
     /// zkMe KYC verification status
     pub kyc_verified: bool,
-    /// Treasury fee amount (2% of escrow amount)
+    /// Treasury fee amount (2 percent of escrow amount)
     pub treasury_fee: u64,
     /// Timestamp when escrow was created
     pub created_at: i64,
@@ -94,7 +94,7 @@ pub enum VerificationDecision {
 ```rust
 #[derive(Accounts)]
 #[instruction(escrow_id: u64)]
-pub struct InitializeEscrow<'info> {
+pub struct InitializeEscrowbelow 'infoabove  {
     #[account(
         init,
         payer = payer,
@@ -102,25 +102,25 @@ pub struct InitializeEscrow<'info> {
         seeds = [b"escrow", escrow_id.to_le_bytes().as_ref()],
         bump
     )]
-    pub escrow_account: Account<'info, EscrowAccount>,
+    pub escrow_account: Accountbelow 'info, EscrowAccountabove ,
     
     #[account(mut)]
-    pub payer: Signer<'info>,
+    pub payer: Signerbelow 'infoabove ,
     
     /// CHECK: Payee address validation handled in instruction
-    pub payee: AccountInfo<'info>,
+    pub payee: AccountInfobelow 'infoabove ,
     
-    pub system_program: Program<'info, System>,
+    pub system_program: Programbelow 'info, Systemabove ,
 }
 
 pub fn initialize_escrow(
-    ctx: Context<InitializeEscrow>,
+    ctx: Contextbelow InitializeEscrowabove ,
     escrow_id: u64,
     amount: u64,
     deadline: i64,
     task_metadata_hash: String,
-    token_mint: Option<Pubkey>,
-) -> Result<()> {
+    token_mint: Optionbelow Pubkeyabove ,
+) -above  Resultbelow ()above  {
     let escrow = &mut ctx.accounts.escrow_account;
     
     escrow.escrow_id = escrow_id;
@@ -134,7 +134,7 @@ pub fn initialize_escrow(
     escrow.evidence_hash = None;
     escrow.verification_result = None;
     escrow.kyc_verified = false;
-    escrow.treasury_fee = amount * 2 / 100; // 2% fee
+    escrow.treasury_fee = amount * 2 / 100; // 2 percent fee
     escrow.created_at = Clock::get()?.unix_timestamp;
     escrow.bump = *ctx.bumps.get("escrow_account").unwrap();
     
@@ -154,32 +154,32 @@ pub fn initialize_escrow(
 
 ```rust
 #[derive(Accounts)]
-pub struct DepositFunds<'info> {
+pub struct DepositFundsbelow 'infoabove  {
     #[account(
         mut,
         seeds = [b"escrow", escrow_account.escrow_id.to_le_bytes().as_ref()],
         bump = escrow_account.bump,
         constraint = escrow_account.status == EscrowStatus::Created
     )]
-    pub escrow_account: Account<'info, EscrowAccount>,
+    pub escrow_account: Accountbelow 'info, EscrowAccountabove ,
     
     #[account(
         mut,
         constraint = payer.key() == escrow_account.payer
     )]
-    pub payer: Signer<'info>,
+    pub payer: Signerbelow 'infoabove ,
     
     #[account(
         mut,
         seeds = [b"escrow_vault", escrow_account.escrow_id.to_le_bytes().as_ref()],
         bump
     )]
-    pub escrow_vault: SystemAccount<'info>,
+    pub escrow_vault: SystemAccountbelow 'infoabove ,
     
-    pub system_program: Program<'info, System>,
+    pub system_program: Programbelow 'info, Systemabove ,
 }
 
-pub fn deposit_funds(ctx: Context<DepositFunds>) -> Result<()> {
+pub fn deposit_funds(ctx: Contextbelow DepositFundsabove ) -above  Resultbelow ()above  {
     let escrow = &mut ctx.accounts.escrow_account;
     
     // Transfer funds to escrow vault
@@ -213,9 +213,9 @@ pub fn deposit_funds(ctx: Context<DepositFunds>) -> Result<()> {
 
 ```rust
 pub fn submit_evidence(
-    ctx: Context<SubmitEvidence>,
+    ctx: Contextbelow SubmitEvidenceabove ,
     evidence_hash: String,
-) -> Result<()> {
+) -above  Resultbelow ()above  {
     let escrow = &mut ctx.accounts.escrow_account;
     
     require!(
@@ -224,7 +224,7 @@ pub fn submit_evidence(
     );
     
     require!(
-        Clock::get()?.unix_timestamp < escrow.deadline,
+        Clock::get()?.unix_timestamp below  escrow.deadline,
         EscrowError::DeadlineExceeded
     );
     
@@ -245,11 +245,11 @@ pub fn submit_evidence(
 
 ```rust
 pub fn process_verification(
-    ctx: Context<ProcessVerification>,
+    ctx: Contextbelow ProcessVerificationabove ,
     confidence_score: u8,
     decision: VerificationDecision,
     analysis_hash: String,
-) -> Result<()> {
+) -above  Resultbelow ()above  {
     let escrow = &mut ctx.accounts.escrow_account;
     
     require!(
@@ -265,13 +265,13 @@ pub fn process_verification(
     });
     
     match decision {
-        VerificationDecision::Approved => {
+        VerificationDecision::Approved =above  {
             escrow.status = EscrowStatus::Verified;
         },
-        VerificationDecision::Rejected => {
+        VerificationDecision::Rejected =above  {
             escrow.status = EscrowStatus::Funded; // Allow resubmission
         },
-        VerificationDecision::NeedsReview => {
+        VerificationDecision::NeedsReview =above  {
             escrow.status = EscrowStatus::Disputed;
         },
     }
@@ -290,7 +290,7 @@ pub fn process_verification(
 ### Release Funds
 
 ```rust
-pub fn release_funds(ctx: Context<ReleaseFunds>) -> Result<()> {
+pub fn release_funds(ctx: Contextbelow ReleaseFundsabove ) -above  Resultbelow ()above  {
     let escrow = &mut ctx.accounts.escrow_account;
     
     require!(

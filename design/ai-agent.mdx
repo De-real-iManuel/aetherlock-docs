@@ -55,7 +55,7 @@ interface VerificationResponse {
 class BedrockVerificationEngine {
   private bedrock: BedrockRuntimeClient;
   
-  async analyzeEvidence(request: VerificationRequest): Promise<VerificationResponse> {
+  async analyzeEvidence(request: VerificationRequest): Promisebelow VerificationResponseabove  {
     const prompt = this.buildVerificationPrompt(request);
     
     const response = await this.bedrock.send(new InvokeModelCommand({

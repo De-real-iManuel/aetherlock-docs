@@ -4,39 +4,39 @@
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Created: Initialize Escrow
-    Created --> Funded: Deposit Funds
-    Created --> Cancelled: Cancel Before Funding
+    [*] --above  Created: Initialize Escrow
+    Created --above  Funded: Deposit Funds
+    Created --above  Cancelled: Cancel Before Funding
     
-    Funded --> PendingVerification: Submit Evidence
-    Funded --> Expired: Deadline Exceeded
-    Funded --> Cancelled: Mutual Cancellation
+    Funded --above  PendingVerification: Submit Evidence
+    Funded --above  Expired: Deadline Exceeded
+    Funded --above  Cancelled: Mutual Cancellation
     
-    PendingVerification --> Verified: AI Approval (>90% confidence)
-    PendingVerification --> Funded: AI Rejection (<50% confidence)
-    PendingVerification --> Disputed: AI Uncertain (50-90% confidence)
-    PendingVerification --> Expired: Verification Timeout
+    PendingVerification --above  Verified: AI Approval (above 90 percent confidence)
+    PendingVerification --above  Funded: AI Rejection (below 50 percent confidence)
+    PendingVerification --above  Disputed: AI Uncertain (50-90 percent confidence)
+    PendingVerification --above  Expired: Verification Timeout
     
-    Verified --> Completed: Release Funds
-    Verified --> Disputed: Manual Dispute
+    Verified --above  Completed: Release Funds
+    Verified --above  Disputed: Manual Dispute
     
-    Disputed --> Completed: Resolution: Release
-    Disputed --> Cancelled: Resolution: Refund
-    Disputed --> PartialRelease: Resolution: Partial
+    Disputed --above  Completed: Resolution: Release
+    Disputed --above  Cancelled: Resolution: Refund
+    Disputed --above  PartialRelease: Resolution: Partial
     
-    PartialRelease --> Completed: Final Settlement
+    PartialRelease --above  Completed: Final Settlement
     
-    Expired --> Refunded: Auto Refund
-    Cancelled --> Refunded: Process Refund
+    Expired --above  Refunded: Auto Refund
+    Cancelled --above  Refunded: Process Refund
     
-    Completed --> [*]
-    Refunded --> [*]
+    Completed --above  [*]
+    Refunded --above  [*]
     
     note right of PendingVerification
         AI Confidence Thresholds:
-        >90%: Auto Approve
-        50-90%: Human Review
-        <50%: Auto Reject
+        Above 90 percent: Auto Approve
+        50-90 percent: Human Review
+        Below 50 percent: Auto Reject
     end note
     
     note right of Disputed
@@ -258,7 +258,7 @@ interface Notification {
   type: NotificationType;
   title: string;
   message: string;
-  data: Record<string, any>;
+  data: Recordbelow string, anyabove ;
   read: boolean;
   createdAt: number;
   expiresAt?: number;
@@ -282,7 +282,7 @@ interface BlockchainEvent {
   blockNumber: number;
   transactionHash: string;
   logIndex: number;
-  data: Record<string, any>;
+  data: Recordbelow string, anyabove ;
   timestamp: number;
   chainId: string;
 }

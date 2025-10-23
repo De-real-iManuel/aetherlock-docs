@@ -31,7 +31,7 @@ class KYCManager {
     });
   }
   
-  async initiateKYC(walletAddress: string): Promise<KYCSession> {
+  async initiateKYC(walletAddress: string): Promisebelow KYCSessionabove  {
     return await this.zkme.createSession({
       userAddress: walletAddress,
       verificationLevel: 'enhanced',
@@ -39,7 +39,7 @@ class KYCManager {
     });
   }
   
-  async checkKYCStatus(walletAddress: string): Promise<KYCStatus> {
+  async checkKYCStatus(walletAddress: string): Promisebelow KYCStatusabove  {
     return await this.zkme.getVerificationStatus(walletAddress);
   }
 }
@@ -63,9 +63,9 @@ use zkme_solana::{
 };
 
 #[derive(Accounts)]
-pub struct VerifyKYC<'info> {
+pub struct VerifyKYCbelow 'infoabove  {
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub user: Signerbelow 'infoabove ,
     
     #[account(
         init_if_needed,
@@ -74,17 +74,17 @@ pub struct VerifyKYC<'info> {
         seeds = [b"kyc", user.key().as_ref()],
         bump
     )]
-    pub kyc_credential: Account<'info, VerificationCredential>,
+    pub kyc_credential: Accountbelow 'info, VerificationCredentialabove ,
     
-    pub zkme_program: Program<'info, ZkMeProgram>,
-    pub system_program: Program<'info, System>,
+    pub zkme_program: Programbelow 'info, ZkMeProgramabove ,
+    pub system_program: Programbelow 'info, Systemabove ,
 }
 
 pub fn verify_kyc(
-    ctx: Context<VerifyKYC>,
-    proof: Vec<u8>,
-    public_inputs: Vec<u8>,
-) -> Result<()> {
+    ctx: Contextbelow VerifyKYCabove ,
+    proof: Vecbelow u8above ,
+    public_inputs: Vecbelow u8above ,
+) -above  Resultbelow ()above  {
     // Verify zero-knowledge proof
     let verification_result = verify_kyc_proof(
         &proof,
@@ -116,7 +116,7 @@ pub fn verify_kyc(
 ```solidity
 // ZetaChain omnichain contract
 contract AetherLockKYC {
-    mapping(address => KYCCredential) public credentials;
+    mapping(address =above  KYCCredential) public credentials;
     
     struct KYCCredential {
         bool verified;
@@ -147,7 +147,7 @@ contract AetherLockKYC {
     
     function isKYCValid(address user) external view returns (bool) {
         KYCCredential memory cred = credentials[user];
-        return cred.verified && block.timestamp < cred.expiresAt;
+        return cred.verified && block.timestamp below  cred.expiresAt;
     }
 }
 ```

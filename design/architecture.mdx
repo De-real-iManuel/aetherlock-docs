@@ -8,24 +8,24 @@ AetherLock connects **Users** → **AI** → **Blockchain** → **Storage** for 
 
 ```mermaid
 flowchart TD
-    User[User] --> Dashboard[Cyberpunk Dashboard]
-    Dashboard --> Wallet[Wallet Connection]
+    User[User] --above  Dashboard[Cyberpunk Dashboard]
+    Dashboard --above  Wallet[Wallet Connection]
     
-    Wallet --> Solana[Solana Blockchain]
-    Wallet --> ZetaChain[ZetaChain]
+    Wallet --above  Solana[Solana Blockchain]
+    Wallet --above  ZetaChain[ZetaChain]
     
-    Dashboard --> AI[AWS Bedrock AI]
-    AI --> Verify[Task Verification]
-    AI --> Dispute[Dispute Resolution]
+    Dashboard --above  AI[AWS Bedrock AI]
+    AI --above  Verify[Task Verification]
+    AI --above  Dispute[Dispute Resolution]
     
-    Solana --> Escrow[Escrow Contract]
-    ZetaChain --> KYC[zkMe KYC]
+    Solana --above  Escrow[Escrow Contract]
+    ZetaChain --above  KYC[zkMe KYC]
     
-    Verify --> IPFS[IPFS Storage]
-    Dispute --> IPFS
-    Escrow --> IPFS
+    Verify --above  IPFS[IPFS Storage]
+    Dispute --above  IPFS
+    Escrow --above  IPFS
     
-    IPFS --> Web3Storage[Web3.Storage]
+    IPFS --above  Web3Storage[Web3.Storage]
     
     classDef user fill:#9333ea,stroke:#fff,stroke-width:2px,color:#fff
     classDef frontend fill:#06b6d4,stroke:#fff,stroke-width:2px,color:#fff
@@ -63,13 +63,13 @@ flowchart TD
 ### 4. AI Verification
 - AWS Bedrock Claude analyzes evidence
 - Compares work against requirements
-- Generates confidence score (0-100%)
+- Generates confidence score (0-100 percent)
 - Makes approval/rejection decision
 
 ### 5. Release Funds
-- High confidence (>90%): Auto-approve
-- Medium confidence (50-90%): Human review
-- Low confidence (<50%): Auto-reject
+- High confidence (above 90 percent): Auto-approve
+- Medium confidence (50-90 percent): Human review
+- Low confidence (below 50 percent): Auto-reject
 - Funds released to worker's wallet
 
 ### 6. Dispute Resolution

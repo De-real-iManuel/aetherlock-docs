@@ -80,7 +80,7 @@ class ErrorBoundary extends React.Component {
   
   render() {
     if (this.state.hasError) {
-      return <CyberpunkErrorDisplay error={this.state.error} />;
+      return below CyberpunkErrorDisplay error={this.state.error} /above ;
     }
     return this.props.children;
   }
@@ -105,12 +105,12 @@ enum CrossChainError {
 ### Automatic Retry Logic
 ```typescript
 class RetryHandler {
-  async executeWithRetry<T>(
-    operation: () => Promise<T>,
+  async executeWithRetrybelow Tabove (
+    operation: () =above  Promisebelow Tabove ,
     maxRetries: number = 3,
     backoffMs: number = 1000
-  ): Promise<T> {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+  ): Promisebelow Tabove  {
+    for (let attempt = 1; attempt below = maxRetries; attempt++) {
       try {
         return await operation();
       } catch (error) {
