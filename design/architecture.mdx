@@ -8,24 +8,24 @@ AetherLock connects **Users** → **AI** → **Blockchain** → **Storage** for 
 
 ```mermaid
 flowchart TD
-    User[👤 User] --> Dashboard[🎮 Cyberpunk Dashboard]
-    Dashboard --> Wallet[💼 Wallet Connection]
+    User[User] --> Dashboard[Cyberpunk Dashboard]
+    Dashboard --> Wallet[Wallet Connection]
     
-    Wallet --> Solana[⚡ Solana Blockchain]
-    Wallet --> ZetaChain[🔗 ZetaChain]
+    Wallet --> Solana[Solana Blockchain]
+    Wallet --> ZetaChain[ZetaChain]
     
-    Dashboard --> AI[🤖 AWS Bedrock AI]
-    AI --> Verify[✅ Task Verification]
-    AI --> Dispute[⚖️ Dispute Resolution]
+    Dashboard --> AI[AWS Bedrock AI]
+    AI --> Verify[Task Verification]
+    AI --> Dispute[Dispute Resolution]
     
-    Solana --> Escrow[💰 Escrow Contract]
-    ZetaChain --> KYC[🛡️ zkMe KYC]
+    Solana --> Escrow[Escrow Contract]
+    ZetaChain --> KYC[zkMe KYC]
     
-    Verify --> IPFS[📁 IPFS Storage]
+    Verify --> IPFS[IPFS Storage]
     Dispute --> IPFS
     Escrow --> IPFS
     
-    IPFS --> Web3Storage[☁️ Web3.Storage]
+    IPFS --> Web3Storage[Web3.Storage]
     
     classDef user fill:#9333ea,stroke:#fff,stroke-width:2px,color:#fff
     classDef frontend fill:#06b6d4,stroke:#fff,stroke-width:2px,color:#fff
@@ -42,37 +42,37 @@ flowchart TD
 
 ## How It Works (Simple Steps)
 
-### 1. Create Escrow 💰
+### 1. Create Escrow
 - User opens cyberpunk dashboard
 - Connects wallet (Phantom/Solflare)
 - Creates escrow with task details
 - Deposits funds to Solana contract
 
-### 2. Complete KYC 🛡️
+### 2. Complete KYC
 - User verifies identity with zkMe
 - Zero-knowledge proof generated locally
 - Verification stored on ZetaChain
 - Privacy maintained throughout
 
-### 3. Submit Work Evidence 📋
+### 3. Submit Work Evidence
 - Worker uploads proof files
 - Files stored on IPFS (decentralized)
 - Evidence hash recorded on blockchain
 - AI analysis automatically triggered
 
-### 4. AI Verification 🤖
+### 4. AI Verification
 - AWS Bedrock Claude analyzes evidence
 - Compares work against requirements
 - Generates confidence score (0-100%)
 - Makes approval/rejection decision
 
-### 5. Release Funds ✅
+### 5. Release Funds
 - High confidence (>90%): Auto-approve
 - Medium confidence (50-90%): Human review
 - Low confidence (<50%): Auto-reject
 - Funds released to worker's wallet
 
-### 6. Dispute Resolution ⚖️
+### 6. Dispute Resolution
 - If disagreement occurs
 - AI analyzes all evidence
 - Human arbitrators review complex cases
@@ -80,19 +80,19 @@ flowchart TD
 
 ## Key Benefits
 
-### For Users 👥
+### For Users
 - **No Trust Required**: Smart contracts handle everything automatically
 - **Privacy Protected**: zkMe keeps identity private with zero-knowledge proofs
 - **Fast & Fair**: AI makes decisions in seconds, not days
 - **Global Access**: Works across multiple blockchains
 
-### For Developers 👨‍💻
+### For Developers
 - **AWS Integration**: Leverages enterprise-grade AI services
 - **Multi-Chain Ready**: Solana now, Ethereum/Polygon later
 - **Decentralized Storage**: IPFS ensures evidence is always available
 - **Open Source**: Transparent and auditable code
 
-### Security Features 🔒
+### Security Features
 - **Smart Contract Audits**: Code reviewed for vulnerabilities
 - **AI Confidence Scoring**: Multiple validation layers
 - **Encrypted Evidence**: Files protected before storage
