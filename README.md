@@ -2,13 +2,15 @@
 
 AI-driven escrow protocol on Solana with zero-knowledge privacy for AWS Global Vibe Hackathon 2025.
 
-## 🚀 Quick Start
+## 🚀 Deployment
 
+### Mintlify Hosting (Recommended)
+1. Connect GitHub repo to [Mintlify](https://mintlify.com)
+2. Auto-deploy from main branch
+
+### Local Development
 ```bash
-# Install Mintlify CLI
 npm install -g mintlify
-
-# Run documentation locally
 mintlify dev
 ```
 
@@ -16,11 +18,10 @@ mintlify dev
 
 - **Live Demo**: [https://aetherlock.vercel.app](https://aetherlock.vercel.app)
 - **GitHub**: [https://github.com/De-real-iManuel/AetherLock-](https://github.com/De-real-iManuel/AetherLock-)
-- **Documentation**: [Mintlify Docs](https://mintlify.com)
 
 ## 🏗️ Architecture
 
-- **Blockchain**: Solana (Anchor Rust)
+- **Blockchain**: Solana, TON, Sui (via ZetaChain)
 - **AI**: AWS Bedrock Claude
 - **Privacy**: zkMe on ZetaChain
 - **Storage**: IPFS via Web3.Storage
@@ -30,9 +31,9 @@ mintlify dev
 
 - AI-powered task verification
 - Zero-knowledge KYC compliance
-- Multi-chain escrow protocol
+- Omnichain escrow protocol
 - Automated dispute resolution
-- Immersive cyberpunk interface
+- Multi-wallet support (Solflare, Slush, Tonkeeper)
 
 Built for AWS Global Vibe: AI Coding Hackathon 2025.
 
