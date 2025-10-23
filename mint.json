@@ -6,7 +6,7 @@
     "dark": "/assets/logo.png"
   },
   "favicon": "/assets/favicon.ico",
-  "theme": "aspen",
+  "theme": "quill",
   "colors": {
     "primary": "#9333ea",
     "light": "#06b6d4",
