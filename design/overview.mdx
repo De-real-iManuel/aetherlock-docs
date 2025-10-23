@@ -1,63 +1,119 @@
 # Design Overview
 
-## Multi-Chain Vision
+## Omnichain Escrow Vision
 
-AetherLock Protocol is architected as a multi-chain escrow platform with Solana as the initial MVP implementation. The design prioritizes interoperability, scalability, and AI-driven automation while maintaining security and user privacy through zero-knowledge proofs.
+AetherLock Protocol is an omnichain escrow platform that enables seamless transactions across Solana, TON, Sui, and other blockchains via ZetaChain. The design prioritizes AI-driven automation, zero-knowledge privacy, and multi-wallet compatibility while maintaining enterprise-grade security.
 
-## Core Architecture Principles
+## Core System Components
 
-### Modular Design
-- **Blockchain Layer**: Pluggable smart contract implementations per chain
-- **AI Layer**: Chain-agnostic verification engine using AWS Bedrock
-- **Privacy Layer**: Universal zkMe integration via ZetaChain omnichain
-- **Storage Layer**: Decentralized IPFS storage accessible across all chains
-- **Interface Layer**: Unified frontend supporting multiple wallet types
+### Multi-Chain Wallet Integration
+- **Solana**: Solflare, Slush wallet support
+- **TON**: Tonkeeper wallet integration
+- **Sui**: Native Sui wallet compatibility
+- **Universal Access**: Single interface for all supported chains
+- **Automatic Detection**: Chain-specific wallet initialization
 
-### Interoperability Framework
-- **ZetaChain Integration**: Enables cross-chain messaging and universal identity
-- **Omnichain Contracts**: Smart contracts deployable across multiple blockchains
-- **Universal Wallet Support**: MetaMask, Phantom, and other chain-specific wallets
-- **Cross-Chain Evidence**: IPFS ensures evidence accessibility regardless of origin chain
-- **Unified User Experience**: Single interface for multi-chain escrow management
+### AI Verification Engine
+- **Dual Analysis**: Both on-chain and off-chain data verification
+- **AWS Bedrock**: Claude model integration for intelligent analysis
+- **Real-Time Processing**: Sub-30 second verification times
+- **Confidence Scoring**: Automated decision making based on AI confidence
+- **Continuous Learning**: Feedback loops for improved accuracy
 
-## Technology Stack
-
-### Blockchain Infrastructure
-- **Primary Chain**: Solana (MVP implementation)
-- **Future Chains**: Ethereum, Polygon, Arbitrum, Base
-- **Cross-Chain**: ZetaChain for omnichain functionality
-- **Smart Contracts**: Rust (Anchor) for Solana, Solidity for EVM chains
-
-### AI and Verification
-- **AI Engine**: AWS Bedrock with Claude models
-- **Processing**: Natural language understanding and evidence analysis
-- **Decision Logic**: Confidence-based automated verification
-- **Learning**: Feedback loops for continuous improvement
-
-### Privacy and Identity
-- **KYC Protocol**: zkMe zero-knowledge identity verification
+### Zero-Knowledge Identity
+- **zkMe SDK Integration**: Automatic KYC verification popup
 - **Privacy Preservation**: Zero-knowledge proofs for compliance
-- **Cross-Chain Identity**: Universal credentials via ZetaChain
-- **Data Protection**: Client-side proof generation
+- **Cross-Chain Credentials**: Universal identity via ZetaChain
+- **Regulatory Compliance**: Enterprise-grade KYC without data exposure
+- **Seamless UX**: One-time verification for all chains
 
-### Storage and Infrastructure
-- **Decentralized Storage**: IPFS via Web3.Storage
-- **Evidence Management**: Encrypted file storage with access controls
-- **Metadata**: On-chain hashes for integrity verification
-- **CDN**: Global content delivery for performance optimization
+### Smart Contract Architecture
+- **Fund Locking**: Secure escrow with 2% station fee
+- **Automated Release**: AI-triggered fund distribution
+- **Cross-Chain Messaging**: ZetaChain omnichain communication
+- **Fee Collection**: Automatic treasury management
+- **Emergency Controls**: Multi-signature safety mechanisms
 
-## Scalability Considerations
+## User Journey Flow
 
-### Performance Optimization
-- **Parallel Processing**: Concurrent AI verification for multiple escrows
-- **Caching Strategies**: Evidence and verification result caching
-- **Load Balancing**: Distributed AI processing across AWS regions
-- **Database Optimization**: Efficient indexing for rapid escrow discovery
+### 1. Wallet Connection
+```
+User → Select Chain → Connect Wallet (Solflare/Slush/Tonkeeper) → Wallet Connected
+```
 
-### Cost Management
-- **Gas Optimization**: Minimal on-chain operations to reduce fees
-- **Batch Processing**: Grouped operations for efficiency
-- **Layer 2 Integration**: Future support for L2 solutions
-- **Treasury Sustainability**: 2 percent fee structure for protocol maintenance
+### 2. Identity Verification
+```
+Wallet Connected → zkMe Popup → KYC Verification → ZK Proof → ZetaChain → Verified
+```
 
-This multi-chain architecture positions AetherLock as a universal escrow solution, capable of serving users across the entire blockchain ecosystem while maintaining consistent security, privacy, and user experience standards.
+### 3. Escrow Creation
+```
+Verified User → Create Escrow → Set Amount → Wallet Authorization → Funds Locked
+```
+
+### 4. AI Verification
+```
+Evidence Submitted → On-Chain Data + Off-Chain Data → AI Analysis → Verification Result
+```
+
+### 5. Transaction Completion
+```
+AI Approved → Smart Contract → Release Funds → Collect 2% Fee → Transaction Complete
+```
+
+## Technical Architecture
+
+### Omnichain Infrastructure
+- **ZetaChain Hub**: Central coordination for cross-chain operations
+- **Universal Contracts**: Deployable across all supported chains
+- **Message Passing**: Secure cross-chain communication protocol
+- **State Synchronization**: Consistent escrow status across chains
+- **Gas Optimization**: Efficient cross-chain transaction costs
+
+### AI Integration Layer
+- **Evidence Processing**: Multi-format file analysis (images, documents, text)
+- **Blockchain Analysis**: On-chain transaction and event verification
+- **Combined Scoring**: Holistic confidence assessment
+- **Decision Engine**: Automated approval/rejection logic
+- **Audit Trail**: Complete verification history tracking
+
+### Security Framework
+- **Multi-Signature**: Critical operations require multiple approvals
+- **Time Locks**: Delayed execution for sensitive functions
+- **Access Control**: Role-based permission system
+- **Encryption**: End-to-end evidence protection
+- **Audit Logging**: Comprehensive security event tracking
+
+## Scalability & Performance
+
+### High Throughput Design
+- **Parallel Processing**: Concurrent escrow handling across chains
+- **Load Distribution**: Multi-region AWS deployment
+- **Caching Layer**: Redis for frequently accessed data
+- **Database Optimization**: Efficient indexing and querying
+- **CDN Integration**: Global content delivery network
+
+### Cost Efficiency
+- **Minimal On-Chain Operations**: Reduced gas consumption
+- **Batch Processing**: Grouped transactions for efficiency
+- **Layer 2 Ready**: Future integration with scaling solutions
+- **Dynamic Fee Adjustment**: Market-responsive pricing
+- **Treasury Sustainability**: 2% fee ensures long-term viability
+
+## Competitive Advantages
+
+### Technical Innovation
+- **First Omnichain AI Escrow**: Unique combination of AI + cross-chain
+- **Zero-Knowledge Privacy**: Enterprise KYC without data exposure
+- **Multi-Wallet Support**: Broadest wallet compatibility
+- **Real-Time Verification**: Fastest AI-powered decision making
+- **Universal Identity**: One KYC for all supported chains
+
+### User Experience
+- **Seamless Onboarding**: Automatic wallet detection and KYC
+- **Cyberpunk Interface**: Immersive and engaging UI/UX
+- **Cross-Chain Simplicity**: Complex operations made simple
+- **Instant Transactions**: AI-powered automation eliminates delays
+- **Global Accessibility**: Support for major blockchain ecosystems
+
+This comprehensive design positions AetherLock as the leading omnichain escrow solution, combining cutting-edge AI technology with zero-knowledge privacy and seamless multi-chain functionality.
