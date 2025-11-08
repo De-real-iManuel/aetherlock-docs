@@ -2,67 +2,59 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "AetherLock Protocol",
   "logo": {
-    "light": "/assets/aetherlock-logo.png",
-    "dark": "/assets/aetherlock-logo.png"
+    "dark": "/assets/aetherlock-logo.png",
+    "light": "/assets/aetherlock-logo.png"
   },
   "favicon": "/assets/favicon.ico",
   "theme": "quill",
   "colors": {
-    "primary": "#9333ea",
-    "light": "#06b6d4",
+    "primary": "#A855F7",
+    "light": "#00D9FF",
     "dark": "#10b981"
   },
   "topbarLinks": [
     {
+      "name": "Live Demo",
+      "url": "https://aetherlock.vercel.app"
+    },
+    {
       "name": "GitHub",
       "url": "https://github.com/De-real-iManuel/AetherLock-"
-    },
-    {
-      "name": "Demo",
-      "url": "https://aetherlock.vercel.app"
     }
   ],
+  "topbarCtaButton": {
+    "name": "Try Demo →",
+    "url": "https://aetherlock.vercel.app"
+  },
   "navigation": [
     {
-      "group": "Overview",
-      "pages": ["introduction", "glossary"]
+      "group": "AWS Global Vibe 2025",
+      "pages": ["index", "hackathon", "business-model"]
     },
     {
-      "group": "Requirements",
-      "pages": [
-        "requirements/escrow-creation-and-fund-management",
-        "requirements/ai-powered-verification",
-        "requirements/zero-knowledge-kyc",
-        "requirements/dispute-resolution",
-        "requirements/frontend-dashboard",
-        "requirements/evidence-storage"
-      ]
+      "group": "How It Works",
+      "pages": ["how-it-works", "design/architecture"]
     },
     {
-      "group": "Design",
+      "group": "Amazon Q Integration",
+      "pages": ["amazon-q-usage", "design/ai-agent"]
+    },
+    {
+      "group": "Technical Docs",
       "pages": [
         "design/overview",
-        "design/architecture",
         "design/solana-escrow-contract",
-        "design/ai-agent",
         "design/zkme-integration",
-        "design/frontend-design",
-        "design/data-models",
-        "design/error-handling",
-        "design/testing-strategy",
-        "design/security-considerations",
-        "design/zetachain-integration",
-        "design/deployment-architecture"
+        "requirements/ai-powered-verification"
       ]
-    },
-    {
-      "group": "Implementation",
-      "pages": ["implementation/plan"]
     }
   ],
   "footerSocials": {
-    "twitter": "https://x.com/De_real_iManuel",
+    "twitter": "https://x.com/iManuel_dev",
     "github": "https://github.com/De-real-iManuel/AetherLock-"
+  },
+  "footer": {
+    "text": "Built with Amazon Q Developer | AWS Global Vibe 2025 | zkMe Integration Partner"
   },
   "mermaid": true
 }
