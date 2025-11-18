@@ -1,0 +1,1087 @@
+---
+title: "Troubleshooting Guide"
+description: "Common issues and solutions for AetherLock Protocol deployment and development"
+---
+
+# Troubleshooting Guide
+
+This guide covers common issues encountered when developing, deploying, and operating the AetherLock Protocol, along with step-by-step solutions and debugging strategies.
+
+## Quick Diagnosis
+
+### System Health Checks
+
+Before diving into specific issues, run these quick health checks:
+
+```bash
+# Check all services are running
+curl -f http://localhost:3000/api/health  # Frontend
+curl -f http://localhost:3001/health      # Backend
+
+# Check blockchain connectivity
+solana cluster-version                    # Solana
+cast block-number --rpc-url $ZETACHAIN_RPC_URL  # ZetaChain
+
+# Check database connectivity
+psql $DATABASE_URL -c "SELECT 1;"        # PostgreSQL
+redis-cli -u $REDIS_URL ping             # Redis
+```
+
+### Log Analysis
+
+Check logs for error patterns:
+
+```bash
+# Application logs
+tail -f logs/combined.log | grep ERROR
+tail -f logs/error.log
+
+# System logs
+journalctl -u aetherlock-backend -f
+docker logs aetherlock-backend --tail 100
+
+# Blockchain logs
+solana logs <PROGRAM_ID>
+```
+
+## Frontend Issues
+
+### Build and Compilation Errors
+
+#### Issue: Next.js Build Fails with Module Resolution Error
+
+**Symptoms**:
+```
+Error: Module not found: Can't resolve '@solana/wallet-adapter-react'
+```
+
+**Root Cause**: Missing or incompatible wallet adapter dependencies
+
+**Solution**:
+```bash
+# Clear cache and reinstall
+rm -rf .next node_modules package-lock.json
+npm install
+
+# Install specific wallet adapter versions
+npm install @solana/wallet-adapter-react@^0.15.35
+npm install @solana/wallet-adapter-react-ui@^0.9.34
+npm install @solana/wallet-adapter-wallets@^0.19.32
+
+# Rebuild
+npm run build
+```
+
+#### Issue: TypeScript Compilation Errors
+
+**Symptoms**:
+```
+Type error: Property 'publicKey' does not exist on type 'WalletContextState'
+```
+
+**Root Cause**: Type mismatches or outdated type definitions
+
+**Solution**:
+```bash
+# Update TypeScript and types
+npm update typescript @types/node @types/react
+
+# Check tsconfig.json configuration
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "strict": false  // Temporarily for debugging
+  }
+}
+
+# Clear TypeScript cache
+rm -rf .next/cache
+```
+
+#### Issue: Webpack Bundle Size Too Large
+
+**Symptoms**:
+- Slow page loads
+- Build warnings about large bundles
+- Vercel deployment failures
+
+**Root Cause**: Large dependencies not properly code-split
+
+**Solution**:
+```javascript
+// next.config.js - Add bundle analysis
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+// Add dynamic imports for heavy components
+const WalletModal = dynamic(() => import('./WalletModal'), {
+  ssr: false,
+  loading: () => <div>Loading...</div>
+});
+
+// Optimize webpack configuration
+module.exports = {
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
+};
+```
+
+### Runtime Errors
+
+#### Issue: Wallet Connection Failures
+
+**Symptoms**:
+- "Wallet not found" errors
+- Connection timeouts
+- Phantom/Solflare not detected
+
+**Root Cause**: Wallet adapter configuration or browser issues
+
+**Solution**:
+```typescript
+// Check wallet availability
+useEffect(() => {
+  const checkWallets = async () => {
+    if (typeof window !== 'undefined') {
+      console.log('Phantom:', window.phantom?.solana);
+      console.log('Solflare:', window.solflare);
+    }
+  };
+  checkWallets();
+}, []);
+
+// Add error handling
+const { connect } = useWallet();
+
+const handleConnect = async () => {
+  try {
+    await connect();
+  } catch (error) {
+    console.error('Wallet connection failed:', error);
+    // Show user-friendly error message
+  }
+};
+```
+
+**Additional Steps**:
+1. Check browser extensions are installed and enabled
+2. Verify wallet adapter versions compatibility
+3. Test in incognito mode to rule out extension conflicts
+4. Check console for detailed error messages
+
+#### Issue: RPC Connection Errors
+
+**Symptoms**:
+```
+Error: 429 Too Many Requests
+Error: Connection timeout
+```
+
+**Root Cause**: RPC rate limiting or endpoint issues
+
+**Solution**:
+```typescript
+// Implement RPC failover
+const RPC_ENDPOINTS = [
+  process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT,
+  'https://api.mainnet-beta.solana.com',
+  'https://solana-api.projectserum.com',
+];
+
+const connection = useMemo(() => {
+  for (const endpoint of RPC_ENDPOINTS) {
+    try {
+      return new Connection(endpoint, 'confirmed');
+    } catch (error) {
+      console.warn(`Failed to connect to ${endpoint}`);
+    }
+  }
+  throw new Error('All RPC endpoints failed');
+}, []);
+```
+
+#### Issue: IPFS Upload Failures
+
+**Symptoms**:
+- File upload timeouts
+- "Network error" messages
+- Files not appearing in IPFS
+
+**Root Cause**: Pinata API issues or network connectivity
+
+**Solution**:
+```typescript
+// Add retry logic for IPFS uploads
+const uploadToIPFS = async (file: File, retries = 3): Promise<string> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/ipfs/upload', {
+        method: 'POST',
+        body: formData,
+        timeout: 30000, // 30 second timeout
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+      
+      const { hash } = await response.json();
+      return hash;
+    } catch (error) {
+      console.warn(`Upload attempt ${i + 1} failed:`, error);
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+};
+```
+
+### Performance Issues
+
+#### Issue: Slow Page Load Times
+
+**Symptoms**:
+- First Contentful Paint > 3s
+- Large bundle sizes
+- Slow wallet connections
+
+**Root Cause**: Unoptimized assets and blocking operations
+
+**Solution**:
+```typescript
+// Implement lazy loading
+const EscrowCreator = lazy(() => import('./EscrowCreator'));
+const WalletModal = lazy(() => import('./WalletModal'));
+
+// Optimize images
+import Image from 'next/image';
+
+<Image
+  src="/logo.png"
+  alt="AetherLock"
+  width={200}
+  height={50}
+  priority // For above-the-fold images
+/>
+
+// Preload critical resources
+useEffect(() => {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.href = '/api/escrows';
+  link.as = 'fetch';
+  document.head.appendChild(link);
+}, []);
+```
+
+## Backend Issues
+
+### Database Connection Problems
+
+#### Issue: PostgreSQL Connection Refused
+
+**Symptoms**:
+```
+Error: connect ECONNREFUSED 127.0.0.1:5432
+Error: password authentication failed for user "postgres"
+```
+
+**Root Cause**: Database not running or incorrect credentials
+
+**Solution**:
+```bash
+# Check if PostgreSQL is running
+sudo systemctl status postgresql
+# or
+docker ps | grep postgres
+
+# Start PostgreSQL
+sudo systemctl start postgresql
+# or
+docker-compose up postgres -d
+
+# Test connection
+psql -h localhost -U postgres -d aetherlock -c "SELECT 1;"
+
+# Check connection string format
+DATABASE_URL=postgresql://username:password@host:port/database?sslmode=require
+```
+
+#### Issue: Database Migration Failures
+
+**Symptoms**:
+```
+Error: relation "escrows" does not exist
+Error: column "created_at" does not exist
+```
+
+**Root Cause**: Migrations not run or failed
+
+**Solution**:
+```bash
+# Check migration status
+npm run migrate:status
+
+# Run pending migrations
+npm run migrate:up
+
+# If migrations fail, check for conflicts
+npm run migrate:down  # Rollback if needed
+npm run migrate:create fix-schema  # Create fix migration
+
+# Reset database (development only)
+npm run migrate:reset
+npm run migrate:up
+```
+
+### Redis Connection Issues
+
+#### Issue: Redis Connection Timeout
+
+**Symptoms**:
+```
+Error: Redis connection timeout
+Error: ENOTFOUND redis-server
+```
+
+**Root Cause**: Redis server not accessible or misconfigured
+
+**Solution**:
+```bash
+# Check Redis status
+redis-cli ping
+# or
+docker ps | grep redis
+
+# Start Redis
+sudo systemctl start redis
+# or
+docker-compose up redis -d
+
+# Test connection with auth
+redis-cli -u redis://username:password@host:port ping
+
+# Check Redis configuration
+redis-cli CONFIG GET "*"
+```
+
+### AWS Bedrock Integration Issues
+
+#### Issue: Bedrock API Access Denied
+
+**Symptoms**:
+```
+Error: AccessDeniedException: User is not authorized to perform: bedrock:InvokeModel
+```
+
+**Root Cause**: Insufficient IAM permissions
+
+**Solution**:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:*::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0"
+      ]
+    }
+  ]
+}
+```
+
+```bash
+# Verify AWS credentials
+aws sts get-caller-identity
+
+# Test Bedrock access
+aws bedrock list-foundation-models --region us-east-1
+
+# Check IAM permissions
+aws iam get-user-policy --user-name your-user --policy-name BedrockAccess
+```
+
+#### Issue: Bedrock Model Not Available
+
+**Symptoms**:
+```
+Error: ValidationException: The model 'anthropic.claude-3-sonnet' is not available
+```
+
+**Root Cause**: Model not available in region or incorrect model ID
+
+**Solution**:
+```bash
+# List available models in region
+aws bedrock list-foundation-models --region us-east-1
+
+# Check model availability
+aws bedrock get-foundation-model \
+  --model-identifier anthropic.claude-3-sonnet-20240229-v1:0 \
+  --region us-east-1
+
+# Update model ID in environment variables
+BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
+```
+
+### API Rate Limiting Issues
+
+#### Issue: Too Many Requests Error
+
+**Symptoms**:
+```
+Error: 429 Too Many Requests
+Rate limit exceeded
+```
+
+**Root Cause**: Exceeding API rate limits
+
+**Solution**:
+```typescript
+// Implement exponential backoff
+const makeRequestWithBackoff = async (fn: () => Promise<any>, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (error.status === 429 && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000; // Exponential backoff
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
+// Add request queuing
+import PQueue from 'p-queue';
+
+const queue = new PQueue({ 
+  concurrency: 5,
+  interval: 1000,
+  intervalCap: 10 
+});
+
+const queuedRequest = (fn: () => Promise<any>) => queue.add(fn);
+```
+
+## Blockchain Issues
+
+### Solana Program Deployment
+
+#### Issue: Program Deployment Fails
+
+**Symptoms**:
+```
+Error: Insufficient funds for transaction
+Error: Program failed to complete
+```
+
+**Root Cause**: Insufficient SOL balance or program size limits
+
+**Solution**:
+```bash
+# Check wallet balance
+solana balance
+
+# Airdrop SOL (devnet only)
+solana airdrop 5
+
+# Check program size
+ls -la target/deploy/*.so
+
+# Optimize program size
+anchor build --release
+
+# Deploy with specific keypair
+anchor deploy --provider.wallet ~/.config/solana/deploy-key.json
+```
+
+#### Issue: Program ID Mismatch
+
+**Symptoms**:
+```
+Error: Program ID mismatch
+Error: Invalid program account
+```
+
+**Root Cause**: Program ID in code doesn't match deployed program
+
+**Solution**:
+```bash
+# Get deployed program ID
+solana program show <PROGRAM_ID>
+
+# Update Anchor.toml
+[programs.localnet]
+aetherlock = "YourActualProgramId111111111111111111111"
+
+# Update lib.rs
+declare_id!("YourActualProgramId111111111111111111111");
+
+# Rebuild and redeploy
+anchor build
+anchor deploy
+```
+
+### ZetaChain Contract Issues
+
+#### Issue: Contract Deployment Fails
+
+**Symptoms**:
+```
+Error: insufficient funds for gas * price + value
+Error: nonce too low
+```
+
+**Root Cause**: Insufficient ZETA balance or nonce issues
+
+**Solution**:
+```bash
+# Check ZETA balance
+cast balance $YOUR_ADDRESS --rpc-url $ZETACHAIN_RPC_URL
+
+# Get testnet ZETA from faucet
+curl -X POST https://faucet.zetachain.com/api/faucet \
+  -H "Content-Type: application/json" \
+  -d '{"address": "YOUR_ADDRESS"}'
+
+# Reset nonce if needed
+cast nonce $YOUR_ADDRESS --rpc-url $ZETACHAIN_RPC_URL
+
+# Deploy with specific gas settings
+npx hardhat run scripts/deploy.ts --network zetachain_testnet
+```
+
+#### Issue: Cross-Chain Message Failures
+
+**Symptoms**:
+```
+Error: Cross-chain call reverted
+Error: Invalid destination chain
+```
+
+**Root Cause**: Incorrect chain IDs or message format
+
+**Solution**:
+```solidity
+// Verify chain IDs
+uint256 constant SOLANA_CHAIN_ID = 18; // ZetaChain's Solana ID
+uint256 constant SOMNIA_CHAIN_ID = 2648;
+
+// Add proper error handling
+function onCall(
+    MessageContext calldata context,
+    address zrc20,
+    uint256 amount,
+    bytes calldata message
+) external override onlySystem {
+    require(context.chainID == SOLANA_CHAIN_ID, "Invalid source chain");
+    
+    try this.processMessage(message) {
+        // Success
+    } catch Error(string memory reason) {
+        // Handle error and potentially revert
+        revert(reason);
+    }
+}
+```
+
+### Transaction Failures
+
+#### Issue: Transaction Timeout
+
+**Symptoms**:
+- Transactions stuck in pending state
+- "Transaction expired" errors
+- Network congestion messages
+
+**Root Cause**: Network congestion or insufficient fees
+
+**Solution**:
+```typescript
+// Implement transaction retry with higher fees
+const sendTransactionWithRetry = async (
+  transaction: Transaction,
+  connection: Connection,
+  wallet: any
+) => {
+  const maxRetries = 3;
+  let baseFee = await connection.getRecentBlockhash();
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      // Increase fee for retries
+      const feeMultiplier = 1 + (i * 0.5);
+      transaction.recentBlockhash = baseFee.blockhash;
+      
+      const signature = await wallet.sendTransaction(transaction, connection, {
+        skipPreflight: false,
+        preflightCommitment: 'confirmed',
+        maxRetries: 0,
+      });
+      
+      // Wait for confirmation with timeout
+      const confirmation = await Promise.race([
+        connection.confirmTransaction(signature, 'confirmed'),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 30000)
+        )
+      ]);
+      
+      return signature;
+    } catch (error) {
+      console.warn(`Transaction attempt ${i + 1} failed:`, error);
+      if (i === maxRetries - 1) throw error;
+      
+      // Wait before retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+};
+```
+
+## Deployment Issues
+
+### Vercel Deployment Problems
+
+#### Issue: Build Timeout on Vercel
+
+**Symptoms**:
+```
+Error: Command "npm run build" timed out after 45s
+```
+
+**Root Cause**: Build process taking too long
+
+**Solution**:
+```json
+// vercel.json
+{
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=4096"
+    }
+  }
+}
+```
+
+```javascript
+// next.config.js - Optimize build
+module.exports = {
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, '../../'),
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('_http_common');
+    }
+    return config;
+  },
+};
+```
+
+#### Issue: Environment Variables Not Loading
+
+**Symptoms**:
+- `undefined` values for environment variables
+- API calls failing with missing configuration
+
+**Root Cause**: Variables not set in Vercel dashboard or incorrect naming
+
+**Solution**:
+```bash
+# Set variables via CLI
+vercel env add NEXT_PUBLIC_BACKEND_URL production
+vercel env add DATABASE_URL production
+
+# List all variables
+vercel env ls
+
+# Pull variables to local
+vercel env pull .env.local
+```
+
+### Docker Deployment Issues
+
+#### Issue: Container Fails to Start
+
+**Symptoms**:
+```
+Error: Cannot find module '/app/dist/server.js'
+Container exits with code 1
+```
+
+**Root Cause**: Build artifacts not copied correctly
+
+**Solution**:
+```dockerfile
+# Multi-stage build with proper copying
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine AS production
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Verify files exist
+RUN ls -la dist/
+
+CMD ["node", "dist/server.js"]
+```
+
+#### Issue: Database Connection in Container
+
+**Symptoms**:
+```
+Error: getaddrinfo ENOTFOUND localhost
+Connection refused to database
+```
+
+**Root Cause**: Localhost references don't work in containers
+
+**Solution**:
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  backend:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/aetherlock
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: aetherlock
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+```
+
+## Performance Issues
+
+### Database Performance
+
+#### Issue: Slow Query Performance
+
+**Symptoms**:
+- API responses > 5 seconds
+- Database CPU usage high
+- Query timeouts
+
+**Root Cause**: Missing indexes or inefficient queries
+
+**Solution**:
+```sql
+-- Add indexes for common queries
+CREATE INDEX idx_escrows_status ON escrows(status);
+CREATE INDEX idx_escrows_created_at ON escrows(created_at);
+CREATE INDEX idx_escrows_client_id ON escrows(client_id);
+
+-- Analyze query performance
+EXPLAIN ANALYZE SELECT * FROM escrows WHERE status = 'active';
+
+-- Add composite indexes
+CREATE INDEX idx_escrows_status_created ON escrows(status, created_at);
+```
+
+```typescript
+// Optimize queries with proper pagination
+const getEscrows = async (page = 1, limit = 20) => {
+  const offset = (page - 1) * limit;
+  
+  return await db.query(`
+    SELECT * FROM escrows 
+    WHERE status = $1 
+    ORDER BY created_at DESC 
+    LIMIT $2 OFFSET $3
+  `, ['active', limit, offset]);
+};
+```
+
+### Memory Issues
+
+#### Issue: Memory Leaks in Node.js
+
+**Symptoms**:
+- Increasing memory usage over time
+- Out of memory errors
+- Container restarts
+
+**Root Cause**: Event listeners not cleaned up or large objects retained
+
+**Solution**:
+```typescript
+// Proper cleanup of event listeners
+useEffect(() => {
+  const handleMessage = (event: MessageEvent) => {
+    // Handle WebSocket message
+  };
+  
+  websocket.addEventListener('message', handleMessage);
+  
+  return () => {
+    websocket.removeEventListener('message', handleMessage);
+    websocket.close();
+  };
+}, []);
+
+// Monitor memory usage
+const monitorMemory = () => {
+  const usage = process.memoryUsage();
+  console.log('Memory usage:', {
+    rss: Math.round(usage.rss / 1024 / 1024) + 'MB',
+    heapUsed: Math.round(usage.heapUsed / 1024 / 1024) + 'MB',
+    heapTotal: Math.round(usage.heapTotal / 1024 / 1024) + 'MB',
+  });
+};
+
+setInterval(monitorMemory, 60000); // Every minute
+```
+
+## Security Issues
+
+### API Security Problems
+
+#### Issue: CORS Errors
+
+**Symptoms**:
+```
+Access to fetch at 'https://api.aetherlock.io' from origin 'https://app.aetherlock.io' 
+has been blocked by CORS policy
+```
+
+**Root Cause**: Incorrect CORS configuration
+
+**Solution**:
+```typescript
+// Backend CORS configuration
+import cors from 'cors';
+
+const corsOptions = {
+  origin: [
+    'https://app.aetherlock.io',
+    'https://aetherlock.io',
+    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+```
+
+#### Issue: Rate Limiting False Positives
+
+**Symptoms**:
+- Legitimate users getting rate limited
+- API calls failing unexpectedly
+
+**Root Cause**: Overly aggressive rate limiting
+
+**Solution**:
+```typescript
+// Implement smart rate limiting
+import rateLimit from 'express-rate-limit';
+
+const createRateLimiter = (windowMs: number, max: number) => {
+  return rateLimit({
+    windowMs,
+    max,
+    message: 'Too many requests, please try again later',
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Skip rate limiting for certain conditions
+    skip: (req) => {
+      // Skip for authenticated admin users
+      return req.user?.role === 'admin';
+    },
+    // Custom key generator for better tracking
+    keyGenerator: (req) => {
+      return req.user?.id || req.ip;
+    }
+  });
+};
+```
+
+## Monitoring and Debugging
+
+### Logging Best Practices
+
+```typescript
+// Structured logging
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'aetherlock-backend' },
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
+});
+
+// Usage with context
+logger.info('Escrow created', {
+  escrowId: escrow.id,
+  clientId: escrow.clientId,
+  amount: escrow.amount,
+  userId: req.user.id
+});
+```
+
+### Health Monitoring
+
+```typescript
+// Comprehensive health check endpoint
+app.get('/health', async (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: process.env.npm_package_version,
+    checks: {}
+  };
+
+  try {
+    // Database check
+    await db.query('SELECT 1');
+    health.checks.database = 'ok';
+  } catch (error) {
+    health.checks.database = 'error';
+    health.status = 'error';
+  }
+
+  try {
+    // Redis check
+    await redis.ping();
+    health.checks.redis = 'ok';
+  } catch (error) {
+    health.checks.redis = 'error';
+    health.status = 'error';
+  }
+
+  try {
+    // Solana RPC check
+    const connection = new Connection(process.env.SOLANA_RPC_URL);
+    await connection.getVersion();
+    health.checks.solana = 'ok';
+  } catch (error) {
+    health.checks.solana = 'error';
+    health.status = 'error';
+  }
+
+  const statusCode = health.status === 'ok' ? 200 : 503;
+  res.status(statusCode).json(health);
+});
+```
+
+## Getting Help
+
+### Diagnostic Information to Collect
+
+When reporting issues, include:
+
+1. **Environment Information**:
+   ```bash
+   node --version
+   npm --version
+   solana --version
+   anchor --version
+   ```
+
+2. **Error Logs**:
+   - Full error messages and stack traces
+   - Browser console errors
+   - Server logs with timestamps
+
+3. **Configuration**:
+   - Environment variables (sanitized)
+   - Network settings
+   - Deployment platform details
+
+4. **Reproduction Steps**:
+   - Exact steps to reproduce the issue
+   - Expected vs actual behavior
+   - Screenshots or videos if applicable
+
+### Support Channels
+
+- **Documentation**: [Full Documentation](/)
+- **API Reference**: [REST API](/api/rest-api)
+- **Environment Variables**: [Environment Variables](/implementation/environment-variables)
+- **Deployment Guides**: [Implementation Guides](/implementation)
+- **Community**: [Discord Server](https://discord.gg/aetherlock)
+- **Issues**: [GitHub Issues](https://github.com/your-org/aetherlock-protocol/issues)
+
+### Emergency Procedures
+
+For production issues:
+
+1. **Immediate Response**:
+   - Check system health endpoints
+   - Review recent deployments
+   - Check monitoring alerts
+
+2. **Rollback Procedure**:
+   ```bash
+   # Vercel rollback
+   vercel rollback
+   
+   # Docker rollback
+   docker-compose down
+   docker-compose up -d --scale backend=0
+   docker-compose up -d previous-backend-image
+   
+   # Database rollback (if needed)
+   npm run migrate:down
+   ```
+
+3. **Communication**:
+   - Update status page
+   - Notify users via Discord/Twitter
+   - Document incident for post-mortem
+
+Remember: When in doubt, check the logs first, then verify environment variables, and finally test individual components in isolation.

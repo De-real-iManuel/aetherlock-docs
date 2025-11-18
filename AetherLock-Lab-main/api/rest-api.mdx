@@ -1,0 +1,696 @@
+# REST API Reference
+
+## Overview
+
+The AetherLock REST API provides programmatic access to escrow creation, evidence submission, verification status queries, and cross-chain transaction management. The API follows RESTful conventions and returns JSON responses.
+
+**Base URL**: `https://api.aetherlock.io/v1`
+
+## Authentication
+
+All API requests require authentication using JWT tokens obtained through wallet signature verification.
+
+### Authentication Flow
+
+```typescript
+// 1. Request challenge message
+const challengeResponse = await fetch('/auth/challenge', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ 
+    walletAddress: 'YOUR_WALLET_ADDRESS',
+    chainId: 'solana' // or 'zetachain', 'somnia'
+  })
+});
+
+const { message, nonce } = await challengeResponse.json();
+
+// 2. Sign message with wallet
+const signature = await wallet.signMessage(message);
+
+// 3. Verify signature and get JWT
+const authResponse = await fetch('/auth/verify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    walletAddress: 'YOUR_WALLET_ADDRESS',
+    signature: signature,
+    nonce: nonce
+  })
+});
+
+const { token } = await authResponse.json();
+
+// 4. Use token in subsequent requests
+const headers = {
+  'Authorization': `Bearer ${token}`,
+  'Content-Type': 'application/json'
+};
+```
+
+## Rate Limiting
+
+- **Rate Limit**: 100 requests per minute per API key
+- **Burst Limit**: 20 requests per second
+- **Headers**: Rate limit information is returned in response headers:
+  - `X-RateLimit-Limit`: Request limit per window
+  - `X-RateLimit-Remaining`: Requests remaining in current window
+  - `X-RateLimit-Reset`: Unix timestamp when window resets
+
+## Error Handling
+
+All errors follow a consistent format:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid escrow amount",
+    "details": {
+      "field": "amount",
+      "reason": "Amount must be greater than 0"
+    },
+    "requestId": "req_1234567890"
+  }
+}
+```
+
+### Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `VALIDATION_ERROR` | 400 | Request validation failed |
+| `UNAUTHORIZED` | 401 | Invalid or missing authentication |
+| `FORBIDDEN` | 403 | Insufficient permissions |
+| `NOT_FOUND` | 404 | Resource not found |
+| `RATE_LIMITED` | 429 | Rate limit exceeded |
+| `INTERNAL_ERROR` | 500 | Internal server error |
+| `BLOCKCHAIN_ERROR` | 502 | Blockchain interaction failed |
+| `AI_SERVICE_ERROR` | 503 | AI verification service unavailable |
+
+## Endpoints
+
+### Authentication
+
+#### POST /auth/challenge
+
+Generate a challenge message for wallet signature verification.
+
+**Request Body:**
+```json
+{
+  "walletAddress": "string",
+  "chainId": "solana" | "zetachain" | "somnia"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Sign this message to authenticate: [timestamp]",
+  "nonce": "random_nonce_string",
+  "expiresAt": "2024-01-01T12:00:00Z"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST https://api.aetherlock.io/v1/auth/challenge \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletAddress": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+    "chainId": "solana"
+  }'
+```
+
+#### POST /auth/verify
+
+Verify wallet signature and obtain JWT token.
+
+**Request Body:**
+```json
+{
+  "walletAddress": "string",
+  "signature": "string",
+  "nonce": "string"
+}
+```
+
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresAt": "2024-01-01T12:00:00Z",
+  "user": {
+    "id": "user_123",
+    "walletAddress": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+    "kycStatus": "verified" | "pending" | "rejected",
+    "createdAt": "2024-01-01T10:00:00Z"
+  }
+}
+```
+
+### Escrows
+
+#### POST /escrows
+
+Create a new escrow contract.
+
+**Request Body:**
+```json
+{
+  "title": "Website Design Project",
+  "description": "Design and develop a modern website",
+  "amount": "1000000000", // Amount in lamports (Solana) or wei (EVM)
+  "currency": "SOL" | "ETH" | "USDC",
+  "chainId": "solana" | "zetachain" | "somnia",
+  "freelancerAddress": "string",
+  "deadline": "2024-01-15T23:59:59Z",
+  "requirements": [
+    "Responsive design",
+    "Mobile optimization",
+    "SEO implementation"
+  ],
+  "deliverables": [
+    "Source code repository",
+    "Deployment documentation",
+    "User manual"
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "escrowId": "escrow_abc123",
+  "contractAddress": "CONTRACT_ADDRESS_ON_CHAIN",
+  "transactionHash": "TRANSACTION_HASH",
+  "status": "created",
+  "createdAt": "2024-01-01T12:00:00Z",
+  "estimatedGas": "0.001",
+  "networkFee": "0.0005"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST https://api.aetherlock.io/v1/escrows \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Website Design Project",
+    "description": "Design and develop a modern website",
+    "amount": "1000000000",
+    "currency": "SOL",
+    "chainId": "solana",
+    "freelancerAddress": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+    "deadline": "2024-01-15T23:59:59Z",
+    "requirements": ["Responsive design", "Mobile optimization"],
+    "deliverables": ["Source code", "Documentation"]
+  }'
+```
+
+#### GET /escrows
+
+List escrows with filtering and pagination.
+
+**Query Parameters:**
+- `status`: Filter by status (`created`, `funded`, `submitted`, `verified`, `released`, `disputed`)
+- `chainId`: Filter by blockchain
+- `role`: Filter by user role (`client`, `freelancer`)
+- `page`: Page number (default: 1)
+- `limit`: Items per page (default: 20, max: 100)
+- `sortBy`: Sort field (`createdAt`, `amount`, `deadline`)
+- `sortOrder`: Sort direction (`asc`, `desc`)
+
+**Response:**
+```json
+{
+  "escrows": [
+    {
+      "escrowId": "escrow_abc123",
+      "title": "Website Design Project",
+      "amount": "1000000000",
+      "currency": "SOL",
+      "status": "funded",
+      "clientAddress": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "freelancerAddress": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+      "deadline": "2024-01-15T23:59:59Z",
+      "createdAt": "2024-01-01T12:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 45,
+    "totalPages": 3
+  }
+}
+```
+
+#### GET /escrows/{escrowId}
+
+Get detailed information about a specific escrow.
+
+**Response:**
+```json
+{
+  "escrowId": "escrow_abc123",
+  "title": "Website Design Project",
+  "description": "Design and develop a modern website",
+  "amount": "1000000000",
+  "currency": "SOL",
+  "chainId": "solana",
+  "contractAddress": "CONTRACT_ADDRESS",
+  "status": "submitted",
+  "clientAddress": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+  "freelancerAddress": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+  "deadline": "2024-01-15T23:59:59Z",
+  "requirements": ["Responsive design", "Mobile optimization"],
+  "deliverables": ["Source code", "Documentation"],
+  "evidence": {
+    "submittedAt": "2024-01-10T15:30:00Z",
+    "ipfsHash": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+    "files": [
+      {
+        "name": "website-source.zip",
+        "size": 2048576,
+        "type": "application/zip"
+      }
+    ]
+  },
+  "verification": {
+    "status": "pending",
+    "submittedAt": "2024-01-10T15:30:00Z",
+    "aiConfidence": null,
+    "result": null
+  },
+  "transactions": [
+    {
+      "type": "create",
+      "hash": "CREATION_TX_HASH",
+      "timestamp": "2024-01-01T12:00:00Z"
+    },
+    {
+      "type": "fund",
+      "hash": "FUNDING_TX_HASH",
+      "timestamp": "2024-01-01T12:05:00Z"
+    }
+  ],
+  "createdAt": "2024-01-01T12:00:00Z",
+  "updatedAt": "2024-01-10T15:30:00Z"
+}
+```
+
+#### POST /escrows/{escrowId}/fund
+
+Fund an escrow contract.
+
+**Request Body:**
+```json
+{
+  "transactionHash": "FUNDING_TRANSACTION_HASH"
+}
+```
+
+**Response:**
+```json
+{
+  "status": "funded",
+  "transactionHash": "FUNDING_TRANSACTION_HASH",
+  "confirmedAt": "2024-01-01T12:10:00Z",
+  "blockNumber": 123456789
+}
+```
+
+### Evidence Submission
+
+#### POST /escrows/{escrowId}/evidence
+
+Submit evidence for task completion.
+
+**Request Body (multipart/form-data):**
+```
+files: File[] (multiple files supported)
+description: string
+metadata: JSON string with additional information
+```
+
+**Response:**
+```json
+{
+  "evidenceId": "evidence_xyz789",
+  "ipfsHash": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+  "files": [
+    {
+      "name": "website-source.zip",
+      "size": 2048576,
+      "type": "application/zip",
+      "ipfsHash": "QmSubHashForFile1"
+    },
+    {
+      "name": "documentation.pdf",
+      "size": 1024000,
+      "type": "application/pdf",
+      "ipfsHash": "QmSubHashForFile2"
+    }
+  ],
+  "submittedAt": "2024-01-10T15:30:00Z",
+  "verificationStatus": "pending"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST https://api.aetherlock.io/v1/escrows/escrow_abc123/evidence \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -F "files=@website-source.zip" \
+  -F "files=@documentation.pdf" \
+  -F "description=Completed website with all requirements" \
+  -F 'metadata={"deploymentUrl":"https://example.com","testCredentials":"admin/test123"}'
+```
+
+#### GET /escrows/{escrowId}/evidence
+
+Get evidence details for an escrow.
+
+**Response:**
+```json
+{
+  "evidenceId": "evidence_xyz789",
+  "description": "Completed website with all requirements",
+  "ipfsHash": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+  "files": [
+    {
+      "name": "website-source.zip",
+      "size": 2048576,
+      "type": "application/zip",
+      "downloadUrl": "https://gateway.pinata.cloud/ipfs/QmSubHashForFile1"
+    }
+  ],
+  "metadata": {
+    "deploymentUrl": "https://example.com",
+    "testCredentials": "admin/test123"
+  },
+  "submittedAt": "2024-01-10T15:30:00Z"
+}
+```
+
+### AI Verification
+
+#### GET /escrows/{escrowId}/verification
+
+Get AI verification status and results.
+
+**Response:**
+```json
+{
+  "verificationId": "verification_def456",
+  "status": "completed",
+  "aiConfidence": 0.94,
+  "result": "approved",
+  "reasoning": "All requirements met. Code quality is excellent, responsive design implemented correctly, SEO optimization present.",
+  "criteria": [
+    {
+      "requirement": "Responsive design",
+      "status": "passed",
+      "confidence": 0.96,
+      "evidence": "CSS media queries and flexible layouts detected"
+    },
+    {
+      "requirement": "Mobile optimization",
+      "status": "passed",
+      "confidence": 0.92,
+      "evidence": "Mobile-first approach with proper viewport configuration"
+    }
+  ],
+  "aiProvider": "aws-bedrock",
+  "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "signature": "AI_RESULT_ED25519_SIGNATURE",
+  "processedAt": "2024-01-10T15:35:00Z",
+  "processingTime": 2.3
+}
+```
+
+#### POST /escrows/{escrowId}/verification/dispute
+
+Initiate a dispute for AI verification results.
+
+**Request Body:**
+```json
+{
+  "reason": "AI verification incorrect",
+  "description": "The AI missed several requirements that were clearly implemented",
+  "evidence": "Additional evidence or explanation"
+}
+```
+
+**Response:**
+```json
+{
+  "disputeId": "dispute_ghi789",
+  "status": "pending",
+  "createdAt": "2024-01-10T16:00:00Z",
+  "estimatedResolution": "2024-01-12T16:00:00Z"
+}
+```
+
+### Cross-Chain Operations
+
+#### POST /cross-chain/bridge
+
+Initiate cross-chain asset transfer.
+
+**Request Body:**
+```json
+{
+  "fromChain": "solana",
+  "toChain": "zetachain",
+  "asset": "SOL",
+  "amount": "1000000000",
+  "destinationAddress": "DESTINATION_ADDRESS",
+  "escrowId": "escrow_abc123"
+}
+```
+
+**Response:**
+```json
+{
+  "bridgeId": "bridge_jkl012",
+  "status": "initiated",
+  "fromTxHash": "SOURCE_CHAIN_TX_HASH",
+  "estimatedArrival": "2024-01-01T12:15:00Z",
+  "fees": {
+    "bridgeFee": "0.001",
+    "gasFee": "0.0005"
+  }
+}
+```
+
+#### GET /cross-chain/bridge/{bridgeId}
+
+Get cross-chain transfer status.
+
+**Response:**
+```json
+{
+  "bridgeId": "bridge_jkl012",
+  "status": "completed",
+  "fromChain": "solana",
+  "toChain": "zetachain",
+  "fromTxHash": "SOURCE_CHAIN_TX_HASH",
+  "toTxHash": "DESTINATION_CHAIN_TX_HASH",
+  "amount": "1000000000",
+  "completedAt": "2024-01-01T12:12:00Z"
+}
+```
+
+### KYC Integration
+
+#### GET /kyc/status
+
+Get user's KYC verification status.
+
+**Response:**
+```json
+{
+  "status": "verified",
+  "provider": "zkme",
+  "verifiedAt": "2024-01-01T10:00:00Z",
+  "credentialHash": "ZERO_KNOWLEDGE_CREDENTIAL_HASH",
+  "expiresAt": "2025-01-01T10:00:00Z",
+  "verificationLevel": "basic" | "enhanced"
+}
+```
+
+#### POST /kyc/webhook
+
+Webhook endpoint for zkMe KYC status updates (internal use).
+
+**Request Body:**
+```json
+{
+  "userId": "user_123",
+  "status": "verified",
+  "credentialHash": "ZK_CREDENTIAL_HASH",
+  "timestamp": "2024-01-01T10:00:00Z",
+  "signature": "ZKME_SIGNATURE"
+}
+```
+
+### Analytics
+
+#### GET /analytics/dashboard
+
+Get user dashboard analytics.
+
+**Response:**
+```json
+{
+  "totalEscrows": 15,
+  "totalValue": "50000000000",
+  "completedEscrows": 12,
+  "successRate": 0.8,
+  "averageVerificationTime": 2.1,
+  "recentActivity": [
+    {
+      "type": "escrow_created",
+      "escrowId": "escrow_abc123",
+      "timestamp": "2024-01-10T15:00:00Z"
+    }
+  ],
+  "monthlyStats": {
+    "escrowsCreated": 5,
+    "totalEarned": "15000000000",
+    "averageRating": 4.8
+  }
+}
+```
+
+## Webhooks
+
+AetherLock supports webhooks for real-time notifications of escrow events.
+
+### Configuration
+
+Configure webhook endpoints in your dashboard or via API:
+
+```typescript
+// Configure webhook endpoint
+const webhook = await fetch('/webhooks', {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${token}` },
+  body: JSON.stringify({
+    url: 'https://your-app.com/webhooks/aetherlock',
+    events: ['escrow.funded', 'verification.completed', 'dispute.created'],
+    secret: 'your_webhook_secret'
+  })
+});
+```
+
+### Event Types
+
+- `escrow.created`: New escrow created
+- `escrow.funded`: Escrow funded by client
+- `evidence.submitted`: Evidence submitted by freelancer
+- `verification.completed`: AI verification completed
+- `escrow.released`: Funds released to freelancer
+- `dispute.created`: Dispute initiated
+- `dispute.resolved`: Dispute resolved
+
+### Webhook Payload
+
+```json
+{
+  "event": "verification.completed",
+  "timestamp": "2024-01-10T15:35:00Z",
+  "data": {
+    "escrowId": "escrow_abc123",
+    "verificationId": "verification_def456",
+    "result": "approved",
+    "confidence": 0.94
+  },
+  "signature": "HMAC_SHA256_SIGNATURE"
+}
+```
+
+## SDK Examples
+
+### JavaScript/TypeScript
+
+```typescript
+import { AetherLockAPI } from '@aetherlock/sdk';
+
+const api = new AetherLockAPI({
+  baseUrl: 'https://api.aetherlock.io/v1',
+  apiKey: 'your_api_key'
+});
+
+// Create escrow
+const escrow = await api.escrows.create({
+  title: 'Website Design',
+  amount: '1000000000',
+  currency: 'SOL',
+  freelancerAddress: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'
+});
+
+// Submit evidence
+const evidence = await api.evidence.submit(escrow.escrowId, {
+  files: [file1, file2],
+  description: 'Completed work'
+});
+
+// Check verification status
+const verification = await api.verification.get(escrow.escrowId);
+```
+
+### Python
+
+```python
+from aetherlock import AetherLockAPI
+
+api = AetherLockAPI(
+    base_url='https://api.aetherlock.io/v1',
+    api_key='your_api_key'
+)
+
+# Create escrow
+escrow = api.escrows.create({
+    'title': 'Website Design',
+    'amount': '1000000000',
+    'currency': 'SOL',
+    'freelancer_address': '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'
+})
+
+# Submit evidence
+evidence = api.evidence.submit(escrow['escrow_id'], {
+    'files': [('file1.zip', open('file1.zip', 'rb'))],
+    'description': 'Completed work'
+})
+```
+
+## Testing
+
+### Testnet Endpoints
+
+- **Solana Devnet**: `https://api-devnet.aetherlock.io/v1`
+- **ZetaChain Testnet**: `https://api-testnet.aetherlock.io/v1`
+- **Somnia Testnet**: `https://api-somnia-testnet.aetherlock.io/v1`
+
+### Mock Data
+
+Use the `/mock` endpoints for testing without blockchain interactions:
+
+```bash
+# Create mock escrow
+curl -X POST https://api.aetherlock.io/v1/mock/escrows \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Test Escrow", "amount": "1000000"}'
+```
+
+## Support
+
+- **Documentation**: [https://docs.aetherlock.io](https://docs.aetherlock.io)
+- **Discord**: [https://discord.gg/aetherlock](https://discord.gg/aetherlock)
+- **Email**: [support@aetherlock.io](mailto:support@aetherlock.io)
+- **Status Page**: [https://status.aetherlock.io](https://status.aetherlock.io)

@@ -1,0 +1,428 @@
+---
+title: "Quick Start Guide"
+description: "Get AetherLock Protocol running locally in under 10 minutes"
+---
+
+# Quick Start Guide
+
+This guide will help you set up the complete AetherLock Protocol development environment on your local machine. Follow these steps to get all components running for development and testing.
+
+## Prerequisites
+
+Before starting, ensure you have the following tools installed on your system:
+
+### Required Software
+
+#### Node.js and npm
+- **Version**: Node.js 18.0.0 or higher
+- **Installation**: Download from [nodejs.org](https://nodejs.org/)
+- **Verification**: 
+```bash
+node --version  # Should show v18.0.0+
+npm --version   # Should show 8.0.0+
+```
+
+#### Rust and Cargo
+- **Version**: Rust 1.70.0 or higher
+- **Installation**: 
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+```
+- **Verification**:
+```bash
+rustc --version  # Should show 1.70.0+
+cargo --version  # Should show 1.70.0+
+```
+
+#### Anchor Framework
+- **Version**: Anchor 0.29.0 or higher
+- **Installation**:
+```bash
+cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+avm install latest
+avm use latest
+```
+- **Verification**:
+```bash
+anchor --version  # Should show 0.29.0+
+```
+
+#### Solana CLI
+- **Version**: Solana 1.16.0 or higher
+- **Installation**:
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/v1.16.0/install)"
+```
+- **Verification**:
+```bash
+solana --version  # Should show 1.16.0+
+```
+
+#### Foundry (for Ethereum/ZetaChain development)
+- **Installation**:
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+- **Verification**:
+```bash
+forge --version  # Should show foundry version
+cast --version   # Should show cast version
+```
+
+### Optional Tools
+
+#### Docker (for containerized deployment)
+- **Installation**: Download from [docker.com](https://www.docker.com/get-started)
+- **Verification**:
+```bash
+docker --version     # Should show Docker version
+docker-compose --version  # Should show docker-compose version
+```
+
+#### Git (for version control)
+- **Installation**: Download from [git-scm.com](https://git-scm.com/)
+- **Verification**:
+```bash
+git --version  # Should show Git version
+```
+
+## Project Setup
+
+### 1. Clone the Repository
+
+```bash
+# Clone the main repository
+git clone https://github.com/your-org/aetherlock-protocol.git
+cd aetherlock-protocol
+
+# Initialize submodules (if any)
+git submodule update --init --recursive
+```
+
+### 2. Install Dependencies
+
+#### Install Node.js Dependencies
+```bash
+# Install root dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
+```
+
+#### Install Rust Dependencies
+```bash
+# Install Solana program dependencies
+cd solana-program
+cargo build
+cd ..
+```
+
+### 3. Environment Configuration
+
+#### Create Environment Files
+```bash
+# Copy environment templates
+cp .env.example .env
+cp frontend/.env.example frontend/.env.local
+cp backend/.env.example backend/.env
+```
+
+#### Configure Environment Variables
+Edit the `.env` files with your specific configuration:
+
+```bash
+# Root .env
+SOLANA_NETWORK=devnet
+ANCHOR_PROVIDER_URL=https://api.devnet.solana.com
+ANCHOR_WALLET=~/.config/solana/id.json
+
+# Frontend .env.local
+NEXT_PUBLIC_SOLANA_NETWORK=devnet
+NEXT_PUBLIC_RPC_ENDPOINT=https://api.devnet.solana.com
+NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+
+# Backend .env
+PORT=3001
+SOLANA_RPC_URL=https://api.devnet.solana.com
+AWS_BEDROCK_REGION=us-east-1
+ZKME_API_KEY=your_zkme_api_key_here
+REDIS_URL=redis://localhost:6379
+```
+
+## Build All Components
+
+### 1. Build Solana Program
+
+```bash
+cd solana-program
+anchor build
+```
+
+This will:
+- Compile the Rust program
+- Generate TypeScript client code
+- Create the program keypair
+- Output the program ID
+
+### 2. Build Backend Services
+
+```bash
+cd backend
+npm run build
+```
+
+This will:
+- Compile TypeScript to JavaScript
+- Bundle dependencies
+- Generate API documentation
+- Create production build
+
+### 3. Build Frontend Application
+
+```bash
+cd frontend
+npm run build
+```
+
+This will:
+- Compile Next.js application
+- Optimize assets
+- Generate static files
+- Create production bundle
+
+### 4. Build ZetaChain Contracts
+
+```bash
+cd zetachain-contracts
+npm install
+npx hardhat compile
+```
+
+This will:
+- Compile Solidity contracts
+- Generate TypeScript bindings
+- Create deployment artifacts
+
+## Local Development Setup
+
+### 1. Start Local Solana Validator
+
+```bash
+# Start local validator with required programs
+solana-test-validator \
+  --bpf-program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s ~/.local/share/solana/install/releases/1.16.0/solana-release/bin/spl_token_metadata.so \
+  --reset \
+  --quiet
+```
+
+Keep this running in a separate terminal.
+
+### 2. Configure Solana CLI
+
+```bash
+# Set CLI to use local validator
+solana config set --url localhost
+
+# Create a new keypair (if needed)
+solana-keygen new --outfile ~/.config/solana/id.json
+
+# Airdrop SOL for testing
+solana airdrop 10
+```
+
+### 3. Deploy Solana Program
+
+```bash
+cd solana-program
+
+# Deploy to local validator
+anchor deploy
+
+# Note the program ID and update Anchor.toml if needed
+```
+
+### 4. Start Backend Services
+
+```bash
+cd backend
+
+# Start Redis (if using local Redis)
+redis-server &
+
+# Start the backend API server
+npm run dev
+```
+
+The backend will be available at `http://localhost:3001`
+
+### 5. Start Frontend Development Server
+
+```bash
+cd frontend
+
+# Start Next.js development server
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000`
+
+### 6. Start ZetaChain Local Node (Optional)
+
+```bash
+cd zetachain-contracts
+
+# Start local Hardhat node
+npx hardhat node
+
+# In another terminal, deploy contracts
+npx hardhat run scripts/deploy.ts --network localhost
+```
+
+## Verification Steps
+
+### 1. Check Solana Program Deployment
+
+```bash
+# Verify program is deployed
+solana program show <PROGRAM_ID>
+
+# Test program functionality
+cd solana-program
+anchor test
+```
+
+### 2. Check Backend API
+
+```bash
+# Test health endpoint
+curl http://localhost:3001/health
+
+# Test escrow creation endpoint
+curl -X POST http://localhost:3001/api/escrows \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 1000000, "description": "Test escrow"}'
+```
+
+### 3. Check Frontend Application
+
+1. Open `http://localhost:3000` in your browser
+2. Connect your Solana wallet (Phantom recommended)
+3. Verify wallet connection works
+4. Test creating a test escrow
+
+### 4. Check Cross-Chain Integration
+
+```bash
+# Test ZetaChain contract deployment
+cd zetachain-contracts
+npx hardhat verify --network testnet <CONTRACT_ADDRESS>
+```
+
+## Common Development Commands
+
+### Solana Development
+
+```bash
+# Build program
+anchor build
+
+# Test program
+anchor test
+
+# Deploy to devnet
+anchor deploy --provider.cluster devnet
+
+# Generate new keypair
+solana-keygen new
+
+# Check program logs
+solana logs <PROGRAM_ID>
+```
+
+### Backend Development
+
+```bash
+# Start development server with hot reload
+npm run dev
+
+# Run tests
+npm test
+
+# Run linting
+npm run lint
+
+# Generate API documentation
+npm run docs
+```
+
+### Frontend Development
+
+```bash
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+
+# Run type checking
+npm run type-check
+
+# Build for production
+npm run build
+```
+
+### ZetaChain Development
+
+```bash
+# Compile contracts
+npx hardhat compile
+
+# Run tests
+npx hardhat test
+
+# Deploy to testnet
+npx hardhat run scripts/deploy.ts --network testnet
+
+# Verify contract
+npx hardhat verify --network testnet <ADDRESS>
+```
+
+## Next Steps
+
+Once you have the local development environment running:
+
+1. **Explore the API**: Visit `http://localhost:3001/docs` for interactive API documentation
+2. **Test Escrow Flow**: Create a test escrow through the frontend interface
+3. **Review Smart Contracts**: Examine the Solana program code in `solana-program/programs/`
+4. **Check Integration**: Test the AI verification system with sample evidence
+5. **Deploy to Testnet**: Follow the deployment guides for testnet deployment
+
+## Troubleshooting
+
+If you encounter issues during setup:
+
+1. **Check Prerequisites**: Ensure all required software is installed and up to date
+2. **Environment Variables**: Verify all environment variables are set correctly
+3. **Network Issues**: Ensure you're connected to the internet and can access RPC endpoints
+4. **Port Conflicts**: Make sure ports 3000, 3001, and 8899 are available
+5. **Permissions**: Ensure you have write permissions in the project directory
+
+For detailed troubleshooting, see the [Troubleshooting Guide](/implementation/troubleshooting).
+
+## Support
+
+- **Documentation**: [Full Documentation](/)
+- **API Reference**: [REST API](/api/rest-api)
+- **Smart Contracts**: [Contract Documentation](/api/smart-contracts)
+- **Community**: [Discord Server](https://discord.gg/aetherlock)
+- **Issues**: [GitHub Issues](https://github.com/your-org/aetherlock-protocol/issues)

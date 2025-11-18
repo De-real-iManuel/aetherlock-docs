@@ -1,0 +1,265 @@
+# Evidence Storage Requirements
+
+## Overview
+
+This document defines the requirements for AetherLock's decentralized evidence storage system. The system uses IPFS (InterPlanetary File System) for immutable, content-addressed storage of task completion evidence, ensuring data availability, integrity, and censorship resistance while maintaining efficient retrieval for AI verification.
+
+## User Stories and Acceptance Criteria
+
+### User Story 1: Freelancer Uploads Task Completion Evidence
+
+**As a** freelancer who has completed work  
+**I want to** upload my task completion evidence to decentralized storage  
+**So that** the evidence is permanently available for verification and cannot be tampered with or deleted
+
+#### Acceptance Criteria
+
+1. **WHEN** I select files to upload **THEN** the system SHALL validate file types, sizes, and formats before initiating upload
+2. **WHEN** I initiate the upload **THEN** the system SHALL display a progress bar showing upload percentage and estimated time remaining
+3. **WHEN** the upload completes **THEN** the system SHALL return a Content Identifier (CID) that uniquely identifies the uploaded content
+4. **WHEN** the CID is generated **THEN** the system SHALL store the CID on-chain in the escrow account for permanent reference
+5. **WHEN** the upload fails **THEN** the system SHALL display a clear error message and provide retry options
+
+### User Story 2: System Pins Evidence to IPFS Network
+
+**As the** AetherLock protocol  
+**I want to** ensure uploaded evidence remains available on the IPFS network  
+**So that** verification can occur at any time without data availability issues
+
+#### Acceptance Criteria
+
+1. **WHEN** evidence is uploaded **THEN** the system SHALL pin the content to at least 2 IPFS pinning services (Pinata and Web3.Storage)
+2. **WHEN** pinning completes **THEN** the system SHALL verify the content is retrievable from both pinning services
+3. **WHEN** pinning fails on one service **THEN** the system SHALL attempt to pin to a backup service (Filebase or NFT.Storage)
+4. **WHEN** all pinning services fail **THEN** the system SHALL mark the evidence as "Pending Upload" and notify administrators
+5. **WHEN** evidence is pinned **THEN** the system SHALL emit an EvidencePinned event with CID and pinning service details
+
+### User Story 3: AI System Retrieves Evidence for Verification
+
+**As the** AI verification system  
+**I want to** retrieve evidence from IPFS efficiently and reliably  
+**So that** I can analyze task completion without delays or failures
+
+#### Acceptance Criteria
+
+1. **WHEN** verification is triggered **THEN** the system SHALL retrieve evidence using the CID stored in the escrow account
+2. **WHEN** retrieving from IPFS **THEN** the system SHALL attempt retrieval from multiple gateways in parallel (Pinata, Web3.Storage, public gateways)
+3. **WHEN** content is retrieved **THEN** the system SHALL verify the content hash matches the stored CID to ensure integrity
+4. **WHEN** retrieval from all gateways fails **THEN** the system SHALL retry up to 3 times with exponential backoff
+5. **WHEN** all retries fail **THEN** the system SHALL mark the verification as "Evidence Unavailable" and notify the freelancer
+
+### User Story 4: Client Views Submitted Evidence
+
+**As a** client reviewing an escrow  
+**I want to** view the evidence submitted by the freelancer  
+**So that** I can understand what was delivered before the AI verification completes
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the escrow details **THEN** the system SHALL display links to all submitted evidence files
+2. **WHEN** I click an evidence link **THEN** the system SHALL retrieve the content from IPFS and display it in the browser
+3. **WHEN** the evidence is an image **THEN** the system SHALL display the image inline with proper formatting
+4. **WHEN** the evidence is a document **THEN** the system SHALL provide a download button and preview if supported
+5. **WHEN** evidence retrieval fails **THEN** the system SHALL display an error message and provide alternative gateway links
+
+### User Story 5: System Manages Evidence Metadata
+
+**As the** AetherLock protocol  
+**I want to** store metadata about uploaded evidence  
+**So that** I can track file types, sizes, upload timestamps, and retrieval statistics
+
+#### Acceptance Criteria
+
+1. **WHEN** evidence is uploaded **THEN** the system SHALL store metadata including filename, file type, file size, and upload timestamp
+2. **WHEN** metadata is stored **THEN** the system SHALL associate it with the escrow ID and CID for easy lookup
+3. **WHEN** evidence is retrieved **THEN** the system SHALL log retrieval events with timestamp, gateway used, and latency
+4. **WHEN** metadata is queried **THEN** the system SHALL return complete information about all evidence files for an escrow
+5. **WHEN** evidence is deleted from pinning services **THEN** the system SHALL update metadata to reflect the deletion status
+
+### User Story 6: System Enforces File Upload Limits
+
+**As the** AetherLock protocol  
+**I want to** enforce reasonable file size and count limits  
+**So that** I can prevent abuse and manage storage costs effectively
+
+#### Acceptance Criteria
+
+1. **WHEN** a user uploads a single file **THEN** the system SHALL reject files larger than 50MB with a clear error message
+2. **WHEN** a user uploads multiple files **THEN** the system SHALL limit the total number of files to 10 per escrow
+3. **WHEN** the total upload size is calculated **THEN** the system SHALL reject uploads exceeding 100MB total per escrow
+4. **WHEN** unsupported file types are uploaded **THEN** the system SHALL reject them and display a list of supported formats
+5. **WHEN** limits are exceeded **THEN** the system SHALL provide guidance on how to compress or reduce file sizes
+
+### User Story 7: Evidence Encryption for Sensitive Content
+
+**As a** freelancer submitting sensitive work  
+**I want** the option to encrypt my evidence before uploading  
+**So that** only authorized parties (client and AI verifier) can access the content
+
+#### Acceptance Criteria
+
+1. **WHEN** I enable encryption **THEN** the system SHALL generate a symmetric encryption key using AES-256
+2. **WHEN** the key is generated **THEN** the system SHALL encrypt the evidence client-side before uploading to IPFS
+3. **WHEN** encryption completes **THEN** the system SHALL store the encrypted CID on-chain and the decryption key in secure storage
+4. **WHEN** authorized parties retrieve evidence **THEN** the system SHALL automatically decrypt the content using the stored key
+5. **WHEN** unauthorized parties attempt access **THEN** the system SHALL deny access and log the attempt
+
+### User Story 8: Evidence Garbage Collection and Retention
+
+**As the** AetherLock protocol  
+**I want to** manage evidence retention and cleanup  
+**So that** I can optimize storage costs while maintaining evidence for active and recent escrows
+
+#### Acceptance Criteria
+
+1. **WHEN** an escrow is completed **THEN** the system SHALL maintain evidence pinning for at least 90 days
+2. **WHEN** 90 days have passed since completion **THEN** the system SHALL unpin evidence from paid pinning services
+3. **WHEN** evidence is unpinned **THEN** the system SHALL keep the CID on-chain for reference but mark it as "Archived"
+4. **WHEN** archived evidence is requested **THEN** the system SHALL attempt retrieval from public IPFS gateways
+5. **WHEN** an escrow is disputed **THEN** the system SHALL extend evidence retention indefinitely until dispute resolution
+
+### User Story 9: Multi-Format Evidence Support
+
+**As a** freelancer with diverse deliverables  
+**I want to** upload various file formats as evidence  
+**So that** I can submit appropriate proof regardless of the task type
+
+#### Acceptance Criteria
+
+1. **WHEN** I upload images **THEN** the system SHALL support JPEG, PNG, GIF, WebP, and SVG formats
+2. **WHEN** I upload documents **THEN** the system SHALL support PDF, DOCX, TXT, and Markdown formats
+3. **WHEN** I upload code **THEN** the system SHALL support ZIP archives containing source code files
+4. **WHEN** I upload videos **THEN** the system SHALL support MP4, WebM, and MOV formats up to 50MB
+5. **WHEN** I upload URLs **THEN** the system SHALL validate the URL format and store it as text evidence
+
+### User Story 10: Evidence Integrity Verification
+
+**As a** security auditor  
+**I want** to verify that evidence has not been tampered with  
+**So that** I can ensure the integrity of the verification process
+
+#### Acceptance Criteria
+
+1. **WHEN** evidence is uploaded **THEN** the system SHALL calculate a SHA-256 hash of the content
+2. **WHEN** the hash is calculated **THEN** the system SHALL store it on-chain alongside the CID
+3. **WHEN** evidence is retrieved **THEN** the system SHALL recalculate the hash and compare it to the stored value
+4. **WHEN** hashes match **THEN** the system SHALL proceed with verification
+5. **WHEN** hashes do not match **THEN** the system SHALL reject the evidence and alert administrators of potential tampering
+
+## Technical Requirements
+
+### IPFS Integration
+
+#### Pinning Services
+- **Primary**: Pinata (pinata.cloud)
+- **Secondary**: Web3.Storage (web3.storage)
+- **Tertiary**: Filebase (filebase.com)
+- **Fallback**: NFT.Storage (nft.storage)
+
+#### Gateway Configuration
+- **Primary Gateway**: Pinata Gateway (gateway.pinata.cloud)
+- **Secondary Gateway**: Web3.Storage Gateway (w3s.link)
+- **Public Gateways**: ipfs.io, dweb.link, cloudflare-ipfs.com
+
+#### Upload Configuration
+- **Chunk Size**: 256KB for large file uploads
+- **Timeout**: 60 seconds per upload attempt
+- **Retry Policy**: 3 attempts with exponential backoff (2s, 4s, 8s)
+- **Concurrency**: Upload to 2 pinning services in parallel
+
+### File Validation
+
+#### Size Limits
+- **Single File**: Maximum 50MB
+- **Total Upload**: Maximum 100MB per escrow
+- **File Count**: Maximum 10 files per escrow
+
+#### Supported Formats
+- **Images**: .jpg, .jpeg, .png, .gif, .webp, .svg
+- **Documents**: .pdf, .docx, .txt, .md
+- **Archives**: .zip (max 50MB uncompressed)
+- **Videos**: .mp4, .webm, .mov (max 50MB)
+- **Text**: URLs, plain text
+
+### Metadata Schema
+
+```typescript
+interface EvidenceMetadata {
+  escrowId: string;
+  cid: string;
+  filename: string;
+  fileType: string;
+  fileSize: number;
+  uploadTimestamp: number;
+  uploaderAddress: string;
+  pinningServices: string[];
+  sha256Hash: string;
+  encrypted: boolean;
+  retrievalCount: number;
+  lastRetrievalTimestamp: number;
+  status: 'active' | 'archived' | 'deleted';
+}
+```
+
+### Performance Requirements
+- **Upload Speed**: Complete uploads within 30 seconds for files up to 10MB
+- **Retrieval Speed**: Retrieve evidence within 5 seconds for 95% of requests
+- **Gateway Failover**: Switch to backup gateway within 2 seconds on failure
+- **Parallel Retrieval**: Query up to 3 gateways simultaneously for faster retrieval
+
+### Security Requirements
+- **Content Verification**: Always verify CID matches content hash
+- **Encryption**: Support AES-256 encryption for sensitive evidence
+- **Access Control**: Only escrow participants can upload evidence
+- **Audit Trail**: Log all upload and retrieval events with timestamps
+
+### Cost Optimization
+- **Pinning Strategy**: Pin to 2 services initially, expand to 3 for high-value escrows
+- **Retention Policy**: Unpin after 90 days for completed escrows
+- **Compression**: Automatically compress images and documents before upload
+- **Deduplication**: Check for duplicate CIDs before pinning to avoid redundant storage
+
+## Error Handling
+
+### Upload Errors
+- **File Too Large**: "File size exceeds 50MB limit. Please compress or split the file."
+- **Unsupported Format**: "File format not supported. Supported formats: JPEG, PNG, PDF, DOCX, ZIP, MP4"
+- **Network Failure**: "Upload failed due to network error. Retrying... (Attempt X of 3)"
+- **Pinning Failure**: "Evidence uploaded but pinning failed. Your evidence is queued for retry."
+
+### Retrieval Errors
+- **CID Not Found**: "Evidence not found on IPFS network. Please contact support."
+- **Gateway Timeout**: "Evidence retrieval timed out. Trying alternative gateway..."
+- **Hash Mismatch**: "Evidence integrity check failed. Content may have been tampered with."
+- **Decryption Failure**: "Unable to decrypt evidence. Decryption key may be invalid."
+
+### System Errors
+- **Storage Quota Exceeded**: "Storage quota exceeded. Please contact support to increase limits."
+- **Pinning Service Unavailable**: "Primary pinning service unavailable. Using backup service..."
+- **Metadata Corruption**: "Evidence metadata corrupted. Attempting recovery from blockchain..."
+
+## Integration Points
+
+### Frontend Integration
+- **Upload Widget**: Drag-and-drop interface with progress indicators
+- **File Preview**: In-browser preview for images and documents
+- **Error Display**: User-friendly error messages with actionable guidance
+- **Retry Mechanism**: Automatic retry with manual retry button
+
+### Smart Contract Integration
+- **CID Storage**: Store evidence CID in escrow account state
+- **Event Emission**: Emit EvidenceUploaded event with CID and metadata
+- **Access Control**: Verify uploader is the escrow freelancer
+- **State Updates**: Update escrow state to "AwaitingVerification" after upload
+
+### AI Verification Integration
+- **Evidence Retrieval**: Fetch evidence using CID for analysis
+- **Format Handling**: Support multiple evidence formats in AI pipeline
+- **Caching**: Cache retrieved evidence to avoid redundant IPFS fetches
+- **Error Handling**: Handle evidence unavailability gracefully
+
+### Analytics Integration
+- **Upload Metrics**: Track upload success rate, latency, and file sizes
+- **Retrieval Metrics**: Monitor gateway performance and failover rates
+- **Cost Tracking**: Calculate storage costs per escrow and overall
+- **Usage Patterns**: Analyze most common file types and sizes

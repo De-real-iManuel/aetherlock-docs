@@ -1,0 +1,973 @@
+---
+title: "Technical Architecture Deep Dive"
+description: "Comprehensive system design with detailed Mermaid diagrams"
+---
+
+# 🏗️ Technical Architecture Deep Dive
+
+## System Overview
+
+AetherLock is built on a multi-layered architecture combining blockchain settlement, AI verification, zero-knowledge identity, and decentralized storage.
+
+```mermaid
+graph TB
+    subgraph "User Interface Layer"
+        UI[React Frontend]
+        Wallet[Multi-Chain Wallet]
+        Dashboard[Cyberpunk Dashboard]
+    end
+    
+    subgraph "Application Layer"
+        API[Express Backend]
+        WS[WebSocket Server]
+        Auth[Auth Service]
+    end
+    
+    subgraph "Verification Layer"
+        AI[AWS Bedrock AI]
+        KYC[zkMe Verification]
+        Oracle[Chainlink Functions]
+    end
+    
+    subgraph "Blockchain Layer"
+        Solana[Solana Program]
+        Zeta[ZetaChain Gateway]
+        Somnia[Somnia Contract]
+    end
+    
+    subgraph "Storage Layer"
+        IPFS[IPFS Network]
+        Pinata[Pinata Pinning]
+        DB[(PostgreSQL)]
+    end
+    
+    UI --> API
+    UI --> Wallet
+    Wallet --> Solana
+    Wallet --> Zeta
+    
+    API --> AI
+    API --> KYC
+    API --> Oracle
+    API --> IPFS
+    API --> DB
+    
+    Solana --> Zeta
+    Zeta --> Somnia
+    
+    AI --> Oracle
+    KYC --> Zeta
+    IPFS --> Pinata
+    
+    style AI fill:#FF9900
+    style KYC fill:#A855F7
+    style Solana fill:#14F195
+    style Zeta fill:#00D9FF
+```
+
+## 🏢 Component Responsibility Matrix
+
+| Component | Primary Responsibility | Secondary Functions | Dependencies |
+|-----------|----------------------|-------------------|--------------|
+| **React Frontend** | User interface and wallet integration | State management, real-time updates | Wallet adapters, WebSocket |
+| **Express Backend** | API orchestration and business logic | Authentication, event processing | PostgreSQL, Redis, IPFS |
+| **AWS Bedrock AI** | Evidence analysis and verification | Confidence scoring, decision making | IPFS, Chainlink Oracle |
+| **zkMe SDK** | Zero-knowledge identity verification | KYC compliance, privacy preservation | ZetaChain, Frontend |
+| **Solana Program** | Escrow fund management | PDA validation, state transitions | ZetaChain Gateway |
+| **ZetaChain Gateway** | Omnichain message routing | Cross-chain state synchronization | All blockchain networks |
+| **Somnia Contract** | High-speed settlement execution | Transaction finality, gas optimization | ZetaChain, Treasury |
+| **IPFS Network** | Decentralized evidence storage | Content addressing, availability | Pinata, Web3.Storage |
+| **PostgreSQL** | Persistent data storage | Transaction history, user profiles | Backend API |
+| **Redis Cache** | Performance optimization | Session management, rate limiting | Backend API |
+| **Chainlink Oracle** | AI result authentication | Ed25519 signature verification | AWS Bedrock, Smart Contracts |
+
+## 🔗 Integration Point Documentation
+
+### Frontend ↔ Backend Integration
+```typescript
+// WebSocket connection for real-time updates
+const wsConnection = new WebSocket('wss://api.aetherlock.xyz/ws');
+
+// REST API client with authentication
+class AetherLockAPI {
+  private baseURL = 'https://api.aetherlock.xyz/v1';
+  private authToken: string;
+
+  async createEscrow(escrowData: CreateEscrowRequest): Promise<EscrowResponse> {
+    return this.post('/escrows', escrowData);
+  }
+
+  async uploadEvidence(files: File[]): Promise<IPFSUploadResponse> {
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+    return this.post('/evidence/upload', formData);
+  }
+}
+```
+
+### Backend ↔ Blockchain Integration
+```typescript
+// Solana program interaction
+class SolanaEscrowClient {
+  constructor(private connection: Connection, private wallet: Wallet) {}
+
+  async createEscrow(params: CreateEscrowParams): Promise<string> {
+    const program = new Program(IDL, PROGRAM_ID, this.provider);
+    const escrowPDA = await this.deriveEscrowPDA(params.escrowId);
+    
+    const tx = await program.methods
+      .createEscrow(params.amount, params.payee, params.deadline)
+      .accounts({
+        escrow: escrowPDA,
+        payer: this.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .rpc();
+    
+    return tx;
+  }
+}
+
+// ZetaChain cross-chain messaging
+class ZetaChainClient {
+  async sendCrossChainMessage(
+    destinationChain: string,
+    message: CrossChainMessage
+  ): Promise<string> {
+    const contract = new ethers.Contract(
+      ZETACHAIN_GATEWAY_ADDRESS,
+      GATEWAY_ABI,
+      this.signer
+    );
+    
+    const tx = await contract.sendMessage(
+      destinationChain,
+      ethers.utils.defaultAbiCoder.encode(
+        ['address', 'uint256', 'bytes32'],
+        [message.recipient, message.amount, message.dataHash]
+      )
+    );
+    
+    return tx.hash;
+  }
+}
+```
+
+### AI ↔ Oracle Integration
+```typescript
+// AWS Bedrock AI verification
+class AIVerificationService {
+  async verifyEvidence(evidenceHash: string): Promise<VerificationResult> {
+    const bedrock = new BedrockRuntimeClient({ region: 'us-east-1' });
+    
+    // Fetch evidence from IPFS
+    const evidence = await this.ipfs.get(evidenceHash);
+    
+    // Analyze with Claude
+    const response = await bedrock.send(new InvokeModelCommand({
+      modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      body: JSON.stringify({
+        anthropic_version: 'bedrock-2023-05-31',
+        messages: [{
+          role: 'user',
+          content: `Analyze this task evidence: ${evidence}`
+        }],
+        max_tokens: 1000
+      })
+    }));
+    
+    const result = JSON.parse(response.body);
+    
+    // Sign result with Ed25519
+    const signature = await this.signResult(result);
+    
+    // Submit to Chainlink Oracle
+    await this.chainlinkOracle.submitVerification(evidenceHash, result, signature);
+    
+    return result;
+  }
+}
+```
+
+## 📚 Technology Stack Breakdown
+
+### Frontend Stack
+```json
+{
+  "framework": "React 18 with TypeScript",
+  "styling": "Tailwind CSS + Framer Motion",
+  "state": "Zustand + React Query",
+  "wallet": "@solana/wallet-adapter, @mysten/wallet-adapter",
+  "ui": "Radix UI + Lucide Icons",
+  "build": "Vite + SWC",
+  "deployment": "Vercel Edge Functions"
+}
+```
+
+### Backend Stack
+```json
+{
+  "runtime": "Node.js 20 + Express.js",
+  "language": "TypeScript",
+  "database": "PostgreSQL 15 + Prisma ORM",
+  "cache": "Redis 7 + ioredis",
+  "storage": "IPFS + Pinata/Web3.Storage",
+  "auth": "JWT + Wallet Signatures",
+  "websockets": "Socket.io",
+  "deployment": "Docker + AWS ECS/Render"
+}
+```
+
+### Blockchain Stack
+```json
+{
+  "solana": {
+    "framework": "Anchor 0.29",
+    "language": "Rust",
+    "rpc": "Helius/QuickNode",
+    "deployment": "Devnet/Mainnet-beta"
+  },
+  "zetachain": {
+    "framework": "Hardhat + Ethers.js",
+    "language": "Solidity 0.8.20",
+    "network": "ZetaChain Testnet/Mainnet",
+    "gateway": "Universal App Pattern"
+  },
+  "somnia": {
+    "framework": "Hardhat + Ethers.js",
+    "language": "Solidity 0.8.20",
+    "network": "Somnia Testnet/Mainnet",
+    "features": "High-throughput settlement"
+  }
+}
+```
+
+### AI & Oracle Stack
+```json
+{
+  "ai_service": "AWS Bedrock (Claude 3 Sonnet)",
+  "fallback_ai": "OpenAI GPT-4, Anthropic Claude",
+  "oracle": "Chainlink Functions",
+  "signatures": "Ed25519 cryptographic proofs",
+  "ipfs": "Pinata, Web3.Storage, Lighthouse",
+  "monitoring": "AWS CloudWatch, Grafana"
+}
+```
+
+### DevOps & Infrastructure
+```json
+{
+  "ci_cd": "GitHub Actions",
+  "containers": "Docker + Docker Compose",
+  "orchestration": "AWS ECS/Kubernetes",
+  "monitoring": "Grafana + Prometheus",
+  "logging": "Winston + AWS CloudWatch",
+  "security": "AWS Secrets Manager, Vault",
+  "cdn": "Cloudflare",
+  "domains": "Cloudflare DNS"
+}
+```
+
+## 🔄 Complete Escrow Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> WalletConnection: User Connects
+    WalletConnection --> KYCVerification: Wallet Connected
+    KYCVerification --> EscrowCreation: KYC Approved
+    
+    EscrowCreation --> FundDeposit: Escrow Initialized
+    FundDeposit --> WorkInProgress: Funds Locked
+    
+    WorkInProgress --> EvidenceSubmission: Work Completed
+    EvidenceSubmission --> AIVerification: Evidence Uploaded
+    
+    AIVerification --> HighConfidence: >90% Confidence
+    AIVerification --> MediumConfidence: 50-90% Confidence
+    AIVerification --> LowConfidence: <50% Confidence
+    
+    HighConfidence --> AutoRelease: Approved
+    MediumConfidence --> HumanReview: Needs Review
+    LowConfidence --> Rejected: Auto-Reject
+    
+    HumanReview --> ManualApproval: Arbitrator Approves
+    HumanReview --> ManualRejection: Arbitrator Rejects
+    
+    ManualApproval --> AutoRelease
+    AutoRelease --> FundsReleased: 90% to Freelancer
+    AutoRelease --> FeeCollection: 10% to Treasury
+    
+    ManualRejection --> Refund: Return to Client
+    Rejected --> Resubmission: Allow Retry
+    Resubmission --> EvidenceSubmission
+    
+    FundsReleased --> [*]
+    FeeCollection --> [*]
+    Refund --> [*]
+```
+
+## 🧠 AI Verification Pipeline
+
+```mermaid
+flowchart LR
+    subgraph "Evidence Collection"
+        A[User Uploads Files]
+        B[Frontend Validation]
+        C[IPFS Upload]
+    end
+    
+    subgraph "AI Processing"
+        D[Fetch from IPFS]
+        E[AWS Bedrock Claude]
+        F[Semantic Analysis]
+        G[Quality Scoring]
+    end
+    
+    subgraph "Verification Logic"
+        H{Confidence Score}
+        I[>90%: Auto-Approve]
+        J[50-90%: Human Review]
+        K[<50%: Auto-Reject]
+    end
+    
+    subgraph "On-Chain Settlement"
+        L[Update Escrow State]
+        M[Release Funds]
+        N[Collect 10% Fee]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    
+    H -->|High| I
+    H -->|Medium| J
+    H -->|Low| K
+    
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M
+    M --> N
+    
+    style E fill:#FF9900
+    style H fill:#A855F7
+    style M fill:#14F195
+```
+
+## 🔐 Zero-Knowledge KYC Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant zkMe
+    participant ZetaChain
+    participant Solana
+    
+    User->>Frontend: Request KYC
+    Frontend->>zkMe: Initialize Session
+    zkMe-->>Frontend: Widget URL
+    
+    Frontend->>User: Display zkMe Widget
+    User->>zkMe: Submit Documents
+    zkMe->>zkMe: Generate ZK Proof
+    
+    zkMe-->>Frontend: Proof + Credential Hash
+    Frontend->>ZetaChain: Store Credential
+    ZetaChain-->>Frontend: Credential ID
+    
+    Frontend->>Solana: Link Credential to Wallet
+    Solana-->>Frontend: Verification Complete
+    
+    Note over User,Solana: No PII stored on-chain
+    Note over zkMe,ZetaChain: Only cryptographic proofs
+```
+
+## 🌐 Omnichain Settlement Architecture
+
+```mermaid
+graph TB
+    subgraph "Source Chain: Solana"
+        S1[User Creates Escrow]
+        S2[Lock Funds + 10% Fee]
+        S3[Emit xCall Event]
+    end
+    
+    subgraph "Orchestration: ZetaChain"
+        Z1[Receive xCall]
+        Z2[Route to Target Chain]
+        Z3[Handle Callbacks]
+        Z4[Finality Proof]
+    end
+    
+    subgraph "Target Chains"
+        T1[Somnia Settlement]
+        T2[Sui Settlement]
+        T3[TON Settlement]
+    end
+    
+    subgraph "Settlement Execution"
+        E1[Verify Conditions]
+        E2[Execute Transfer]
+        E3[Emit Confirmation]
+    end
+    
+    S1 --> S2
+    S2 --> S3
+    S3 --> Z1
+    
+    Z1 --> Z2
+    Z2 --> T1
+    Z2 --> T2
+    Z2 --> T3
+    
+    T1 --> E1
+    T2 --> E1
+    T3 --> E1
+    
+    E1 --> E2
+    E2 --> E3
+    E3 --> Z3
+    Z3 --> Z4
+    Z4 --> S1
+    
+    style Z2 fill:#00D9FF
+    style E2 fill:#14F195
+```
+
+## 🌊 Comprehensive Data Flow Diagrams
+
+### Primary Escrow Data Flow
+```mermaid
+flowchart TD
+    subgraph "User Layer"
+        U1[Client Browser]
+        U2[Freelancer Browser]
+        U3[Multi-Chain Wallets]
+    end
+    
+    subgraph "Application Layer"
+        A1[React Frontend]
+        A2[Express API Server]
+        A3[WebSocket Server]
+        A4[Event Processor]
+    end
+    
+    subgraph "Verification Layer"
+        V1[zkMe KYC Service]
+        V2[AWS Bedrock AI]
+        V3[Chainlink Oracle]
+        V4[IPFS Storage]
+    end
+    
+    subgraph "Blockchain Layer"
+        B1[Solana Program]
+        B2[ZetaChain Gateway]
+        B3[Somnia Settlement]
+        B4[Event Logs]
+    end
+    
+    subgraph "Data Layer"
+        D1[(PostgreSQL)]
+        D2[Redis Cache]
+        D3[IPFS Network]
+        D4[Monitoring DB]
+    end
+    
+    U1 --> A1
+    U2 --> A1
+    U3 --> B1
+    
+    A1 <--> A2
+    A1 <--> A3
+    A2 --> A4
+    
+    A2 <--> V1
+    A2 <--> V2
+    A2 <--> V4
+    V2 --> V3
+    
+    A2 --> B1
+    B1 <--> B2
+    B2 <--> B3
+    B1 --> B4
+    
+    A2 <--> D1
+    A2 <--> D2
+    V4 <--> D3
+    A4 --> D4
+    
+    B4 --> A4
+    A4 --> A3
+    A3 --> A1
+    
+    style V2 fill:#FF9900
+    style B2 fill:#00D9FF
+    style D1 fill:#336791
+```
+
+### Cross-Chain Message Flow
+```mermaid
+sequenceDiagram
+    participant Solana as Solana Program
+    participant ZetaGW as ZetaChain Gateway
+    participant Somnia as Somnia Contract
+    participant Oracle as Chainlink Oracle
+    participant AI as AWS Bedrock
+    
+    Note over Solana,AI: Cross-Chain Escrow Creation
+    Solana->>ZetaGW: xCall(createEscrow, destinationChain, data)
+    ZetaGW->>ZetaGW: Validate message format
+    ZetaGW->>Somnia: onCall(sourceChain, message)
+    Somnia->>Somnia: Initialize escrow state
+    Somnia-->>ZetaGW: Confirmation event
+    ZetaGW-->>Solana: onCallback(success)
+    
+    Note over Solana,AI: AI Verification Process
+    Solana->>Oracle: Request verification(evidenceHash)
+    Oracle->>AI: Analyze evidence
+    AI-->>Oracle: Verification result + signature
+    Oracle->>ZetaGW: xCall(updateVerification, result)
+    ZetaGW->>Somnia: onCall(verificationUpdate)
+    Somnia->>Somnia: Update escrow status
+    
+    Note over Solana,AI: Fund Settlement
+    Somnia->>ZetaGW: xCall(releaseFunds, amount, recipient)
+    ZetaGW->>Solana: onCall(fundRelease)
+    Solana->>Solana: Transfer funds + collect fee
+    Solana-->>ZetaGW: Settlement confirmation
+    ZetaGW-->>Somnia: onCallback(completed)
+```
+
+## 💾 Data Flow Architecture
+
+```mermaid
+flowchart TD
+    subgraph "Frontend State"
+        A[React Context]
+        B[Wallet State]
+        C[Escrow State]
+    end
+    
+    subgraph "Backend Services"
+        D[REST API]
+        E[WebSocket Server]
+        F[Event Listeners]
+    end
+    
+    subgraph "Data Storage"
+        G[(PostgreSQL)]
+        H[Redis Cache]
+        I[IPFS]
+    end
+    
+    subgraph "Blockchain State"
+        J[Solana Accounts]
+        K[ZetaChain State]
+        L[Event Logs]
+    end
+    
+    A <--> D
+    B <--> J
+    C <--> D
+    
+    D <--> G
+    D <--> H
+    D <--> I
+    
+    E <--> F
+    F <--> L
+    L <--> J
+    L <--> K
+    
+    style G fill:#336791
+    style I fill:#65C2CB
+    style J fill:#14F195
+```
+
+## 🔒 Security Architecture
+
+```mermaid
+graph TB
+    subgraph "Authentication Layer"
+        A1[Wallet Signature]
+        A2[JWT Tokens]
+        A3[Rate Limiting]
+    end
+    
+    subgraph "Verification Layer"
+        V1[zkMe KYC]
+        V2[Ed25519 Signatures]
+        V3[Chainlink Proofs]
+    end
+    
+    subgraph "Smart Contract Security"
+        SC1[PDA Validation]
+        SC2[Signer Checks]
+        SC3[Reentrancy Guards]
+        SC4[Access Control]
+    end
+    
+    subgraph "Data Security"
+        D1[Encrypted Storage]
+        D2[IPFS Content Addressing]
+        D3[Zero-Knowledge Proofs]
+    end
+    
+    A1 --> V1
+    A2 --> V2
+    A3 --> V3
+    
+    V1 --> SC1
+    V2 --> SC2
+    V3 --> SC3
+    
+    SC1 --> D1
+    SC2 --> D2
+    SC3 --> D3
+    SC4 --> D1
+    
+    style V1 fill:#A855F7
+    style SC2 fill:#14F195
+    style D3 fill:#A855F7
+```
+
+## 📊 Performance Optimization
+
+```mermaid
+graph LR
+    subgraph "Frontend Optimization"
+        F1[Code Splitting]
+        F2[Lazy Loading]
+        F3[CDN Caching]
+    end
+    
+    subgraph "Backend Optimization"
+        B1[Redis Caching]
+        B2[Connection Pooling]
+        B3[Query Optimization]
+    end
+    
+    subgraph "Blockchain Optimization"
+        BC1[Batch Transactions]
+        BC2[PDA Caching]
+        BC3[Event Indexing]
+    end
+    
+    subgraph "AI Optimization"
+        AI1[Prompt Caching]
+        AI2[Model Selection]
+        AI3[Parallel Processing]
+    end
+    
+    F1 --> B1
+    F2 --> B2
+    F3 --> B3
+    
+    B1 --> BC1
+    B2 --> BC2
+    B3 --> BC3
+    
+    BC1 --> AI1
+    BC2 --> AI2
+    BC3 --> AI3
+    
+    style B1 fill:#DC382D
+    style BC2 fill:#14F195
+    style AI2 fill:#FF9900
+```
+
+## 🎯 Proof of Task Verification (PoTv) Engine
+
+```mermaid
+flowchart TB
+    subgraph "Input Layer"
+        I1[Task Requirements]
+        I2[Submitted Evidence]
+        I3[Historical Data]
+    end
+    
+    subgraph "AI Analysis"
+        A1[Semantic Matching]
+        A2[Quality Assessment]
+        A3[Anomaly Detection]
+        A4[Confidence Scoring]
+    end
+    
+    subgraph "Consensus Engine"
+        C1{AI Score}
+        C2{zkMe Status}
+        C3{Reputation}
+        C4[Final Verdict]
+    end
+    
+    subgraph "Output Layer"
+        O1[Approved: Release Funds]
+        O2[Review: Human Arbitrator]
+        O3[Rejected: Refund Client]
+    end
+    
+    I1 --> A1
+    I2 --> A2
+    I3 --> A3
+    
+    A1 --> A4
+    A2 --> A4
+    A3 --> A4
+    
+    A4 --> C1
+    C1 --> C2
+    C2 --> C3
+    C3 --> C4
+    
+    C4 -->|>90%| O1
+    C4 -->|50-90%| O2
+    C4 -->|<50%| O3
+    
+    style A4 fill:#FF9900
+    style C4 fill:#A855F7
+    style O1 fill:#14F195
+```
+
+## 🔄 Event-Driven Architecture
+
+```mermaid
+sequenceDiagram
+    participant Solana
+    participant EventListener
+    participant Backend
+    participant AI
+    participant Frontend
+    
+    Solana->>EventListener: EscrowCreated Event
+    EventListener->>Backend: Process Event
+    Backend->>Frontend: WebSocket Update
+    
+    Solana->>EventListener: EvidenceSubmitted Event
+    EventListener->>Backend: Trigger Verification
+    Backend->>AI: Analyze Evidence
+    AI-->>Backend: Verification Result
+    Backend->>Solana: Update Escrow State
+    Solana->>EventListener: EscrowVerified Event
+    EventListener->>Frontend: WebSocket Update
+    
+    Solana->>EventListener: FundsReleased Event
+    EventListener->>Backend: Record Transaction
+    Backend->>Frontend: WebSocket Update
+    Frontend->>Frontend: Show Success UI
+```
+
+## 📈 Scalability Architecture
+
+```mermaid
+graph TB
+    subgraph "Load Balancing"
+        LB[Nginx Load Balancer]
+        API1[API Server 1]
+        API2[API Server 2]
+        API3[API Server 3]
+    end
+    
+    subgraph "Horizontal Scaling"
+        W1[Worker 1: AI Processing]
+        W2[Worker 2: Event Listening]
+        W3[Worker 3: Notifications]
+    end
+    
+    subgraph "Database Scaling"
+        Master[(Primary DB)]
+        Replica1[(Read Replica 1)]
+        Replica2[(Read Replica 2)]
+    end
+    
+    subgraph "Caching Layer"
+        Redis1[Redis Master]
+        Redis2[Redis Replica]
+    end
+    
+    LB --> API1
+    LB --> API2
+    LB --> API3
+    
+    API1 --> W1
+    API2 --> W2
+    API3 --> W3
+    
+    API1 --> Master
+    API2 --> Replica1
+    API3 --> Replica2
+    
+    Master --> Replica1
+    Master --> Replica2
+    
+    API1 --> Redis1
+    Redis1 --> Redis2
+    
+    style LB fill:#269539
+    style Master fill:#336791
+    style Redis1 fill:#DC382D
+```
+
+## 🛠️ Development & Deployment Pipeline
+
+```mermaid
+flowchart LR
+    subgraph "Development"
+        D1[Local Development]
+        D2[Unit Tests]
+        D3[Integration Tests]
+    end
+    
+    subgraph "CI/CD"
+        C1[GitHub Actions]
+        C2[Build & Test]
+        C3[Security Scan]
+    end
+    
+    subgraph "Staging"
+        S1[Devnet Deployment]
+        S2[E2E Testing]
+        S3[Performance Testing]
+    end
+    
+    subgraph "Production"
+        P1[Mainnet Deployment]
+        P2[Monitoring]
+        P3[Analytics]
+    end
+    
+    D1 --> D2
+    D2 --> D3
+    D3 --> C1
+    
+    C1 --> C2
+    C2 --> C3
+    C3 --> S1
+    
+    S1 --> S2
+    S2 --> S3
+    S3 --> P1
+    
+    P1 --> P2
+    P2 --> P3
+    
+    style C2 fill:#2088FF
+    style S2 fill:#FFA500
+    style P1 fill:#14F195
+```
+
+## 💰 Fee Distribution Architecture
+
+```mermaid
+graph TD
+    subgraph "Transaction Flow"
+        T1[Client Pays $1,100]
+        T2[Smart Contract Receives]
+    end
+    
+    subgraph "Fee Calculation"
+        F1[Base Amount: $1,000]
+        F2[Platform Fee: $100 - 10%]
+    end
+    
+    subgraph "Distribution"
+        D1[Freelancer: $1,000 - 90%]
+        D2[Treasury: $100 - 10%]
+    end
+    
+    subgraph "Treasury Allocation"
+        A1[Development: 40%]
+        A2[Operations: 30%]
+        A3[Marketing: 20%]
+        A4[Reserve: 10%]
+    end
+    
+    T1 --> T2
+    T2 --> F1
+    T2 --> F2
+    
+    F1 --> D1
+    F2 --> D2
+    
+    D2 --> A1
+    D2 --> A2
+    D2 --> A3
+    D2 --> A4
+    
+    style D1 fill:#14F195
+    style D2 fill:#A855F7
+```
+
+## 🔍 Monitoring & Observability
+
+```mermaid
+graph TB
+    subgraph "Application Metrics"
+        M1[Response Times]
+        M2[Error Rates]
+        M3[Throughput]
+    end
+    
+    subgraph "Blockchain Metrics"
+        B1[Transaction Success Rate]
+        B2[Gas Usage]
+        B3[Escrow Volume]
+    end
+    
+    subgraph "AI Metrics"
+        A1[Verification Speed]
+        A2[Confidence Distribution]
+        A3[Accuracy Rate]
+    end
+    
+    subgraph "Business Metrics"
+        BM1[Revenue]
+        BM2[User Growth]
+        BM3[Retention]
+    end
+    
+    M1 --> Dashboard[Grafana Dashboard]
+    M2 --> Dashboard
+    M3 --> Dashboard
+    
+    B1 --> Dashboard
+    B2 --> Dashboard
+    B3 --> Dashboard
+    
+    A1 --> Dashboard
+    A2 --> Dashboard
+    A3 --> Dashboard
+    
+    BM1 --> Dashboard
+    BM2 --> Dashboard
+    BM3 --> Dashboard
+    
+    Dashboard --> Alerts[Alert System]
+    Alerts --> Team[Development Team]
+    
+    style Dashboard fill:#F46800
+    style Alerts fill:#DC382D
+```
+
+---
+
+<div className="my-8 p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/30">
+  <h3 className="text-2xl font-bold text-white mb-4">Explore the Architecture</h3>
+  <p className="text-gray-300 mb-6">
+    Dive deeper into specific components and see how they work together to create a seamless AI-powered escrow experience.
+  </p>
+  <div className="flex gap-4">
+    <a href="/design/overview" className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold hover:opacity-90">
+      View Design Docs →
+    </a>
+    <a href="https://github.com/De-real-iManuel/AetherLock-" className="px-6 py-3 rounded-lg bg-white/10 border border-white/20 text-white font-bold hover:bg-white/20">
+      View Source Code
+    </a>
+  </div>
+</div>

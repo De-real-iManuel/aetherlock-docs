@@ -1,0 +1,16 @@
+{
+  "name": "aetherlock-docs",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Use mintlify dev for local development'",
+    "validate": "node validate-docs.js",
+    "validate:verbose": "node validate-docs.js --verbose",
+    "review": "node content-review.js",
+    "finalize": "node finalize-docs.js",
+    "check": "npm run validate && npm run review",
+    "prepare": "npm run finalize"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

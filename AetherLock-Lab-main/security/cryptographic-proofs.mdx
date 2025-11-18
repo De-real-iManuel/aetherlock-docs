@@ -1,0 +1,634 @@
+---
+title: "Cryptographic Proofs"
+description: "Ed25519 signatures, zero-knowledge proofs, and AI result authentication in AetherLock"
+---
+
+# Cryptographic Proofs
+
+AetherLock employs multiple cryptographic primitives to ensure security, authenticity, and privacy across the protocol. This document details the signature schemes, zero-knowledge proofs, and authentication mechanisms used throughout the system.
+
+## Ed25519 Signature Schemes
+
+### Overview
+
+AetherLock uses Ed25519 signatures for:
+- AI verification result authentication
+- Cross-chain message signing
+- User action authorization
+- Oracle data integrity
+
+Ed25519 provides:
+- **High Performance**: Fast signature generation and verification
+- **Small Signatures**: 64-byte signatures with 32-byte public keys
+- **Security**: 128-bit security level with resistance to side-channel attacks
+- **Deterministic**: Same message always produces the same signature
+
+### AI Result Authentication
+
+The AI verification system signs all results using Ed25519 to prevent tampering and ensure authenticity.
+
+#### Signature Generation (Backend)
+
+```typescript
+import { Keypair } from '@solana/web3.js';
+import { sign } from 'tweetnacl';
+import { encode } from 'bs58';
+
+interface AIVerificationResult {
+  escrowId: string;
+  confidence: number;
+  decision: 'approved' | 'rejected' | 'review';
+  timestamp: number;
+  evidenceHash: string;
+}
+
+class AIResultSigner {
+  private keypair: Keypair;
+
+  constructor(privateKey?: Uint8Array) {
+    this.keypair = privateKey 
+      ? Keypair.fromSecretKey(privateKey)
+      : Keypair.generate();
+  }
+
+  /**
+   * Sign AI verification result with Ed25519
+   */
+  signResult(result: AIVerificationResult): {
+    signature: string;
+    publicKey: string;
+    signedData: string;
+  } {
+    // Create canonical message format
+    const message = this.createCanonicalMessage(result);
+    const messageBytes = new TextEncoder().encode(message);
+    
+    // Generate Ed25519 signature
+    const signature = sign.detached(messageBytes, this.keypair.secretKey);
+    
+    return {
+      signature: encode(signature),
+      publicKey: this.keypair.publicKey.toBase58(),
+      signedData: message
+    };
+  }
+
+  /**
+   * Create deterministic message format for signing
+   */
+  private createCanonicalMessage(result: AIVerificationResult): string {
+    return [
+      `escrow:${result.escrowId}`,
+      `confidence:${result.confidence.toFixed(6)}`,
+      `decision:${result.decision}`,
+      `timestamp:${result.timestamp}`,
+      `evidence:${result.evidenceHash}`
+    ].join('|');
+  }
+
+  /**
+   * Get public key for verification
+   */
+  getPublicKey(): string {
+    return this.keypair.publicKey.toBase58();
+  }
+}
+
+// Usage example
+const signer = new AIResultSigner();
+
+const verificationResult: AIVerificationResult = {
+  escrowId: "ESC_123456789",
+  confidence: 0.94,
+  decision: "approved",
+  timestamp: Date.now(),
+  evidenceHash: "QmX7Y8Z9..."
+};
+
+const signedResult = signer.signResult(verificationResult);
+console.log("Signature:", signedResult.signature);
+console.log("Public Key:", signedResult.publicKey);
+```
+
+#### Signature Verification (Smart Contract)
+
+```rust
+use anchor_lang::prelude::*;
+use ed25519_dalek::{PublicKey, Signature, Verifier};
+
+#[derive(Accounts)]
+pub struct VerifyAIResult<'info> {
+    #[account(mut)]
+    pub escrow: Account<'info, EscrowAccount>,
+    pub ai_authority: Signer<'info>,
+}
+
+#[account]
+pub struct EscrowAccount {
+    pub id: String,
+    pub ai_public_key: [u8; 32],
+    pub verification_result: Option<AIResult>,
+    // ... other fields
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct AIResult {
+    pub confidence: u64, // Fixed-point representation (6 decimals)
+    pub decision: Decision,
+    pub timestamp: i64,
+    pub evidence_hash: String,
+    pub signature: [u8; 64],
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub enum Decision {
+    Approved,
+    Rejected,
+    Review,
+}
+
+impl<'info> VerifyAIResult<'info> {
+    pub fn verify_ai_signature(
+        ctx: Context<VerifyAIResult>,
+        result: AIResult,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        
+        // Reconstruct the signed message
+        let message = format!(
+            "escrow:{}|confidence:{:.6}|decision:{}|timestamp:{}|evidence:{}",
+            escrow.id,
+            result.confidence as f64 / 1_000_000.0,
+            match result.decision {
+                Decision::Approved => "approved",
+                Decision::Rejected => "rejected",
+                Decision::Review => "review",
+            },
+            result.timestamp,
+            result.evidence_hash
+        );
+        
+        // Verify Ed25519 signature
+        let public_key = PublicKey::from_bytes(&escrow.ai_public_key)
+            .map_err(|_| ErrorCode::InvalidPublicKey)?;
+        
+        let signature = Signature::from_bytes(&result.signature)
+            .map_err(|_| ErrorCode::InvalidSignature)?;
+        
+        public_key
+            .verify(message.as_bytes(), &signature)
+            .map_err(|_| ErrorCode::SignatureVerificationFailed)?;
+        
+        // Store verified result
+        escrow.verification_result = Some(result);
+        
+        msg!("AI result signature verified successfully");
+        Ok(())
+    }
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Invalid public key format")]
+    InvalidPublicKey,
+    #[msg("Invalid signature format")]
+    InvalidSignature,
+    #[msg("Signature verification failed")]
+    SignatureVerificationFailed,
+}
+```
+
+### Cross-Chain Message Signing
+
+For ZetaChain Universal App integration, messages are signed to ensure integrity across chains.
+
+```typescript
+import { ethers } from 'ethers';
+
+class CrossChainSigner {
+  private wallet: ethers.Wallet;
+
+  constructor(privateKey: string) {
+    this.wallet = new ethers.Wallet(privateKey);
+  }
+
+  /**
+   * Sign cross-chain message for ZetaChain
+   */
+  async signCrossChainMessage(
+    sourceChain: string,
+    destinationChain: string,
+    payload: any,
+    nonce: number
+  ): Promise<{
+    signature: string;
+    messageHash: string;
+    signer: string;
+  }> {
+    // Create message hash
+    const message = ethers.utils.solidityKeccak256(
+      ['string', 'string', 'bytes', 'uint256'],
+      [sourceChain, destinationChain, ethers.utils.toUtf8Bytes(JSON.stringify(payload)), nonce]
+    );
+
+    // Sign with ECDSA (for Ethereum compatibility)
+    const signature = await this.wallet.signMessage(ethers.utils.arrayify(message));
+
+    return {
+      signature,
+      messageHash: message,
+      signer: this.wallet.address
+    };
+  }
+}
+```
+
+## Zero-Knowledge Proofs
+
+### zkMe Integration
+
+AetherLock integrates with zkMe for privacy-preserving KYC verification using zero-knowledge proofs.
+
+#### Proof Generation (Frontend)
+
+```typescript
+import { ZkMeWidget } from '@zkme/widget';
+
+interface ZKProofResult {
+  proof: string;
+  publicSignals: string[];
+  verificationKey: string;
+}
+
+class ZKMeProofGenerator {
+  private widget: ZkMeWidget;
+
+  constructor(appId: string, apiKey: string) {
+    this.widget = new ZkMeWidget({
+      appId,
+      apiKey,
+      mode: 'production', // or 'sandbox'
+    });
+  }
+
+  /**
+   * Generate zero-knowledge proof for KYC verification
+   */
+  async generateKYCProof(userData: {
+    documentType: 'passport' | 'drivers_license' | 'national_id';
+    documentImage: File;
+    selfieImage: File;
+  }): Promise<ZKProofResult> {
+    try {
+      // Initialize zkMe verification
+      const session = await this.widget.startVerification({
+        verificationType: 'identity',
+        requiredFields: ['age_over_18', 'country', 'document_validity'],
+        privacyLevel: 'maximum' // Generate ZK proof without storing PII
+      });
+
+      // Upload documents (encrypted)
+      await session.uploadDocument(userData.documentType, userData.documentImage);
+      await session.uploadSelfie(userData.selfieImage);
+
+      // Generate zero-knowledge proof
+      const result = await session.generateProof({
+        proveAgeOver18: true,
+        proveCountryMembership: ['US', 'CA', 'EU'], // Allowed countries
+        proveDocumentValidity: true,
+        includeUniqueId: true // For preventing double-spending
+      });
+
+      return {
+        proof: result.zkProof,
+        publicSignals: result.publicSignals,
+        verificationKey: result.verificationKey
+      };
+    } catch (error) {
+      throw new Error(`ZK proof generation failed: ${error.message}`);
+    }
+  }
+}
+```
+
+#### Proof Verification (Smart Contract)
+
+```rust
+use anchor_lang::prelude::*;
+use groth16::{Proof, VerifyingKey, verify_proof};
+
+#[derive(Accounts)]
+pub struct VerifyZKProof<'info> {
+    #[account(mut)]
+    pub user_account: Account<'info, UserAccount>,
+    pub user: Signer<'info>,
+}
+
+#[account]
+pub struct UserAccount {
+    pub owner: Pubkey,
+    pub kyc_verified: bool,
+    pub kyc_proof_hash: [u8; 32],
+    pub verification_timestamp: i64,
+    pub unique_id_hash: [u8; 32], // Prevents double verification
+}
+
+impl<'info> VerifyZKProof<'info> {
+    pub fn verify_kyc_proof(
+        ctx: Context<VerifyZKProof>,
+        proof_data: Vec<u8>,
+        public_signals: Vec<u8>,
+        verifying_key: Vec<u8>,
+    ) -> Result<()> {
+        let user_account = &mut ctx.accounts.user_account;
+        
+        // Deserialize proof components
+        let proof = Proof::deserialize(&proof_data)
+            .map_err(|_| ErrorCode::InvalidProofFormat)?;
+        
+        let vk = VerifyingKey::deserialize(&verifying_key)
+            .map_err(|_| ErrorCode::InvalidVerifyingKey)?;
+        
+        // Verify zero-knowledge proof
+        let is_valid = verify_proof(&vk, &proof, &public_signals)
+            .map_err(|_| ErrorCode::ProofVerificationFailed)?;
+        
+        require!(is_valid, ErrorCode::InvalidProof);
+        
+        // Extract public signals (age_over_18, country_valid, document_valid, unique_id)
+        require!(public_signals.len() >= 4, ErrorCode::InsufficientPublicSignals);
+        
+        let age_over_18 = public_signals[0] == 1;
+        let country_valid = public_signals[1] == 1;
+        let document_valid = public_signals[2] == 1;
+        let unique_id = &public_signals[3..35]; // 32-byte unique ID
+        
+        // Verify all requirements met
+        require!(age_over_18 && country_valid && document_valid, ErrorCode::KYCRequirementsNotMet);
+        
+        // Check for duplicate verification
+        let unique_id_hash = solana_program::keccak::hash(unique_id).to_bytes();
+        require!(
+            user_account.unique_id_hash != unique_id_hash,
+            ErrorCode::DuplicateKYCVerification
+        );
+        
+        // Update user account
+        user_account.kyc_verified = true;
+        user_account.kyc_proof_hash = solana_program::keccak::hash(&proof_data).to_bytes();
+        user_account.verification_timestamp = Clock::get()?.unix_timestamp;
+        user_account.unique_id_hash = unique_id_hash;
+        
+        msg!("KYC verification successful for user: {}", user_account.owner);
+        Ok(())
+    }
+}
+```
+
+## Merkle Tree Proofs
+
+For efficient evidence storage and verification, AetherLock uses Merkle trees to prove inclusion without revealing all data.
+
+```typescript
+import { MerkleTree } from 'merkletreejs';
+import { keccak256 } from 'ethers/lib/utils';
+
+class EvidenceMerkleTree {
+  private tree: MerkleTree;
+  private leaves: string[];
+
+  constructor(evidenceHashes: string[]) {
+    this.leaves = evidenceHashes.map(hash => keccak256(hash));
+    this.tree = new MerkleTree(this.leaves, keccak256, { sortPairs: true });
+  }
+
+  /**
+   * Generate Merkle proof for specific evidence
+   */
+  generateProof(evidenceHash: string): {
+    proof: string[];
+    root: string;
+    leaf: string;
+  } {
+    const leaf = keccak256(evidenceHash);
+    const proof = this.tree.getHexProof(leaf);
+    const root = this.tree.getHexRoot();
+
+    return { proof, root, leaf };
+  }
+
+  /**
+   * Verify Merkle proof
+   */
+  static verifyProof(
+    proof: string[],
+    leaf: string,
+    root: string
+  ): boolean {
+    return MerkleTree.verify(proof, leaf, root, keccak256, { sortPairs: true });
+  }
+
+  getRoot(): string {
+    return this.tree.getHexRoot();
+  }
+}
+
+// Usage example
+const evidenceHashes = [
+  'QmX1Y2Z3...', // IPFS hash 1
+  'QmA4B5C6...', // IPFS hash 2
+  'QmD7E8F9...', // IPFS hash 3
+];
+
+const merkleTree = new EvidenceMerkleTree(evidenceHashes);
+const proof = merkleTree.generateProof('QmX1Y2Z3...');
+
+console.log('Merkle Root:', proof.root);
+console.log('Proof:', proof.proof);
+```
+
+## Digital Signature Best Practices
+
+### Key Generation
+
+```typescript
+import { Keypair } from '@solana/web3.js';
+import { randomBytes } from 'crypto';
+
+class SecureKeyGenerator {
+  /**
+   * Generate cryptographically secure Ed25519 keypair
+   */
+  static generateSecureKeypair(): {
+    keypair: Keypair;
+    mnemonic?: string;
+  } {
+    // Use secure random number generator
+    const seed = randomBytes(32);
+    const keypair = Keypair.fromSeed(seed);
+
+    return { keypair };
+  }
+
+  /**
+   * Derive keypair from mnemonic (for recovery)
+   */
+  static fromMnemonic(mnemonic: string, derivationPath?: string): Keypair {
+    // Implementation would use BIP39/BIP44 derivation
+    // This is a simplified example
+    const seed = this.mnemonicToSeed(mnemonic, derivationPath);
+    return Keypair.fromSeed(seed);
+  }
+
+  private static mnemonicToSeed(mnemonic: string, path?: string): Uint8Array {
+    // Implement BIP39 mnemonic to seed conversion
+    // Return 32-byte seed
+    throw new Error('Implement BIP39 derivation');
+  }
+}
+```
+
+### Signature Validation
+
+```rust
+use ed25519_dalek::{PublicKey, Signature, Verifier};
+use anchor_lang::prelude::*;
+
+pub fn validate_signature(
+    message: &[u8],
+    signature_bytes: &[u8; 64],
+    public_key_bytes: &[u8; 32],
+) -> Result<()> {
+    // Parse public key
+    let public_key = PublicKey::from_bytes(public_key_bytes)
+        .map_err(|_| ErrorCode::InvalidPublicKey)?;
+    
+    // Parse signature
+    let signature = Signature::from_bytes(signature_bytes)
+        .map_err(|_| ErrorCode::InvalidSignature)?;
+    
+    // Verify signature
+    public_key
+        .verify(message, &signature)
+        .map_err(|_| ErrorCode::SignatureVerificationFailed)?;
+    
+    Ok(())
+}
+```
+
+## Security Considerations
+
+### Signature Malleability
+
+Ed25519 signatures are not malleable, but additional checks ensure security:
+
+```rust
+pub fn check_signature_uniqueness(
+    signature: &[u8; 64],
+    used_signatures: &mut Vec<[u8; 64]>,
+) -> Result<()> {
+    // Check if signature was already used (replay protection)
+    require!(
+        !used_signatures.contains(signature),
+        ErrorCode::SignatureAlreadyUsed
+    );
+    
+    used_signatures.push(*signature);
+    Ok(())
+}
+```
+
+### Key Rotation
+
+```typescript
+class KeyRotationManager {
+  private currentKey: Keypair;
+  private previousKeys: Keypair[];
+  private rotationInterval: number;
+
+  constructor(rotationIntervalHours: number = 24) {
+    this.currentKey = Keypair.generate();
+    this.previousKeys = [];
+    this.rotationInterval = rotationIntervalHours * 60 * 60 * 1000;
+  }
+
+  /**
+   * Rotate signing key
+   */
+  rotateKey(): void {
+    this.previousKeys.push(this.currentKey);
+    this.currentKey = Keypair.generate();
+    
+    // Keep only last 3 keys for verification
+    if (this.previousKeys.length > 3) {
+      this.previousKeys.shift();
+    }
+  }
+
+  /**
+   * Verify signature with current or previous keys
+   */
+  verifyWithRotation(message: Uint8Array, signature: Uint8Array): boolean {
+    // Try current key first
+    if (this.verifySignature(message, signature, this.currentKey.publicKey)) {
+      return true;
+    }
+
+    // Try previous keys
+    for (const key of this.previousKeys) {
+      if (this.verifySignature(message, signature, key.publicKey)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private verifySignature(
+    message: Uint8Array,
+    signature: Uint8Array,
+    publicKey: any
+  ): boolean {
+    // Implementation depends on signature library
+    return false;
+  }
+}
+```
+
+## Audit Checklist
+
+### Cryptographic Implementation Review
+
+- [ ] **Ed25519 Implementation**
+  - [ ] Uses secure random number generation
+  - [ ] Proper key derivation from entropy
+  - [ ] Signature verification includes all edge cases
+  - [ ] No signature malleability vulnerabilities
+
+- [ ] **Zero-Knowledge Proofs**
+  - [ ] Trusted setup parameters verified
+  - [ ] Circuit constraints properly implemented
+  - [ ] Public signals validation complete
+  - [ ] No information leakage in proof generation
+
+- [ ] **Hash Functions**
+  - [ ] Uses SHA-256 or Keccak-256 consistently
+  - [ ] Proper salt usage for password hashing
+  - [ ] Merkle tree implementation secure
+  - [ ] No hash collision vulnerabilities
+
+- [ ] **Key Management**
+  - [ ] Private keys never logged or exposed
+  - [ ] Secure key storage mechanisms
+  - [ ] Key rotation procedures implemented
+  - [ ] Recovery mechanisms secure
+
+### Common Vulnerabilities
+
+- [ ] **Replay Attacks**: Nonces and timestamps used
+- [ ] **Side-Channel Attacks**: Constant-time implementations
+- [ ] **Weak Randomness**: Cryptographically secure RNG
+- [ ] **Key Reuse**: Unique keys for different purposes
+- [ ] **Signature Forgery**: Proper signature validation
+
+This cryptographic foundation ensures AetherLock maintains the highest security standards across all protocol operations.
