@@ -1,0 +1,169 @@
+# zkMe Integration
+
+## KYC Flow Overview
+
+### Zero-Knowledge Identity Verification Process
+
+1. **User Initiation**: User clicks "Verify Identity" in AetherLock dashboard
+2. **zkMe SDK Launch**: Client-side SDK opens verification interface
+3. **Document Capture**: User provides identity documents via secure interface
+4. **Proof Generation**: Zero-knowledge proofs generated locally on device
+5. **ZetaChain Submission**: Proofs submitted to ZetaChain testnet
+6. **Verification**: zkMe validators verify proofs without accessing raw data
+7. **Credential Issuance**: Verifiable credentials issued and linked to wallet
+8. **Cross-Chain Sync**: KYC status synchronized across supported chains
+
+## Integration Points
+
+### Frontend Integration
+
+```typescript
+import { ZkMeSDK } from '@zkme/sdk';
+
+class KYCManager {
+  private zkme: ZkMeSDK;
+  
+  constructor() {
+    this.zkme = new ZkMeSDK({
+      network: 'testnet',
+      chainId: 'zetachain-athens',
+      apiKey: process.env.ZKME_API_KEY
+    });
+  }
+  
+  async initiateKYC(walletAddress: string): Promisebelow KYCSessionabove  {
+    return await this.zkme.createSession({
+      userAddress: walletAddress,
+      verificationLevel: 'enhanced',
+      requiredFields: ['identity', 'address', 'phone']
+    });
+  }
+  
+  async checkKYCStatus(walletAddress: string): Promisebelow KYCStatusabove  {
+    return await this.zkme.getVerificationStatus(walletAddress);
+  }
+}
+
+interface KYCStatus {
+  verified: boolean;
+  level: 'basic' | 'enhanced' | 'premium';
+  issuedAt: number;
+  expiresAt: number;
+  credentialHash: string;
+}
+```
+
+### Smart Contract Integration
+
+```rust
+// Solana program integration
+use zkme_solana::{
+    state::VerificationCredential,
+    instruction::verify_kyc_proof,
+};
+
+#[derive(Accounts)]
+pub struct VerifyKYCbelow 'infoabove  {
+    #[account(mut)]
+    pub user: Signerbelow 'infoabove ,
+    
+    #[account(
+        init_if_needed,
+        payer = user,
+        space = VerificationCredential::LEN,
+        seeds = [b"kyc", user.key().as_ref()],
+        bump
+    )]
+    pub kyc_credential: Accountbelow 'info, VerificationCredentialabove ,
+    
+    pub zkme_program: Programbelow 'info, ZkMeProgramabove ,
+    pub system_program: Programbelow 'info, Systemabove ,
+}
+
+pub fn verify_kyc(
+    ctx: Contextbelow VerifyKYCabove ,
+    proof: Vecbelow u8above ,
+    public_inputs: Vecbelow u8above ,
+) -above  Resultbelow ()above  {
+    // Verify zero-knowledge proof
+    let verification_result = verify_kyc_proof(
+        &proof,
+        &public_inputs,
+        &ctx.accounts.zkme_program
+    )?;
+    
+    require!(verification_result.is_valid, KYCError::InvalidProof);
+    
+    let credential = &mut ctx.accounts.kyc_credential;
+    credential.user = ctx.accounts.user.key();
+    credential.verified = true;
+    credential.verification_level = verification_result.level;
+    credential.issued_at = Clock::get()?.unix_timestamp;
+    credential.expires_at = credential.issued_at + (365 * 24 * 60 * 60); // 1 year
+    
+    emit!(KYCVerified {
+        user: credential.user,
+        level: credential.verification_level,
+        issued_at: credential.issued_at,
+    });
+    
+    Ok(())
+}
+```
+
+### ZetaChain Universal App
+
+```solidity
+// ZetaChain omnichain contract
+contract AetherLockKYC {
+    mapping(address =above  KYCCredential) public credentials;
+    
+    struct KYCCredential {
+        bool verified;
+        uint8 level; // 1=basic, 2=enhanced, 3=premium
+        uint256 issuedAt;
+        uint256 expiresAt;
+        bytes32 credentialHash;
+    }
+    
+    function verifyKYC(
+        address user,
+        bytes calldata proof,
+        bytes calldata publicInputs
+    ) external {
+        // Verify zkMe proof
+        require(zkMeVerifier.verify(proof, publicInputs), "Invalid proof");
+        
+        credentials[user] = KYCCredential({
+            verified: true,
+            level: extractLevel(publicInputs),
+            issuedAt: block.timestamp,
+            expiresAt: block.timestamp + 365 days,
+            credentialHash: keccak256(proof)
+        });
+        
+        emit KYCVerified(user, credentials[user].level);
+    }
+    
+    function isKYCValid(address user) external view returns (bool) {
+        KYCCredential memory cred = credentials[user];
+        return cred.verified && block.timestamp below  cred.expiresAt;
+    }
+}
+```
+
+## Testnet Configuration
+
+### ZetaChain Athens Testnet
+- **Network**: Athens-3 Testnet
+- **Chain ID**: 7001
+- **RPC**: https://zetachain-athens-evm.blockpi.network/v1/rpc/public
+- **Explorer**: https://athens3.explorer.zetachain.com
+
+### Mock Identity Providers
+- **Test Documents**: Synthetic identity documents for demo
+- **Verification Speed**: Instant verification for hackathon demo
+- **Credential Types**: Basic, Enhanced, Premium levels
+- **Expiration**: 1 year validity period
+
+This integration ensures privacy-preserving KYC compliance while maintaining the seamless user experience essential for AetherLock's adoption.

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "AetherLock Protocol",
+  "logo": {
+    "dark": "/assets/aetherlock-logo.png",
+    "light": "/assets/aetherlock-logo.png"
+  },
+  "favicon": "/assets/favicon.ico",
+  "theme": "quill",
+  "colors": {
+    "primary": "#A855F7",
+    "light": "#00D9FF",
+    "dark": "#10b981"
+  },
+  "topbarLinks": [
+    {
+      "name": "Live Demo",
+      "url": "https://aetherlock.vercel.app"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/De-real-iManuel/AetherLock-"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Try Demo →",
+    "url": "https://aetherlock.vercel.app"
+  },
+  "navigation": [
+    {
+      "group": "AWS Global Vibe 2025",
+      "pages": ["index", "hackathon", "business-model"]
+    },
+    {
+      "group": "How It Works",
+      "pages": ["how-it-works", "design/architecture"]
+    },
+    {
+      "group": "Amazon Q Integration",
+      "pages": ["amazon-q-usage", "design/ai-agent"]
+    },
+    {
+      "group": "Technical Docs",
+      "pages": [
+        "design/overview",
+        "design/solana-escrow-contract",
+        "design/zkme-integration",
+        "requirements/ai-powered-verification"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://x.com/iManuel_dev",
+    "github": "https://github.com/De-real-iManuel/AetherLock-"
+  },
+  "footer": {
+    "text": "Built with Amazon Q Developer | AWS Global Vibe 2025 | zkMe Integration Partner"
+  },
+  "mermaid": true
+}

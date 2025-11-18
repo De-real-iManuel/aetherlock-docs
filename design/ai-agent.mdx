@@ -1,0 +1,85 @@
+# AI Agent
+
+## Verification Flow
+
+### Step-by-Step Process
+
+1. **Evidence Retrieval**: Fetch evidence files from IPFS using stored hashes
+2. **Content Analysis**: Process multiple file types (text, images, documents)
+3. **Task Matching**: Compare evidence against original task requirements
+4. **Confidence Scoring**: Generate numerical confidence score (0-100)
+5. **Decision Generation**: Categorize as Approved/Rejected/Needs Review
+6. **Report Creation**: Generate detailed analysis report
+7. **Result Storage**: Cache results and store analysis on IPFS
+
+## TypeScript Interfaces
+
+### Verification Request Payload
+
+```typescript
+interface VerificationRequest {
+  escrowId: string;
+  taskDescription: string;
+  taskRequirements: string[];
+  evidenceHashes: string[];
+  deadline: number;
+  submittedBy: string;
+}
+
+interface EvidenceFile {
+  hash: string;
+  type: 'text' | 'image' | 'document' | 'video' | 'url';
+  content: string | Buffer;
+  metadata: {
+    filename: string;
+    size: number;
+    mimeType: string;
+    uploadedAt: number;
+  };
+}
+
+interface VerificationResponse {
+  escrowId: string;
+  decision: 'approved' | 'rejected' | 'needs_review';
+  confidenceScore: number;
+  reasoning: string;
+  analysisHash: string;
+  processedAt: number;
+  suggestedImprovements?: string[];
+}
+```
+
+### AWS Bedrock Integration
+
+```typescript
+class BedrockVerificationEngine {
+  private bedrock: BedrockRuntimeClient;
+  
+  async analyzeEvidence(request: VerificationRequest): Promisebelow VerificationResponseabove  {
+    const prompt = this.buildVerificationPrompt(request);
+    
+    const response = await this.bedrock.send(new InvokeModelCommand({
+      modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      body: JSON.stringify({
+        anthropic_version: 'bedrock-2023-05-31',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    }));
+    
+    return this.parseBedrockResponse(response, request.escrowId);
+  }
+  
+  private buildVerificationPrompt(request: VerificationRequest): string {
+    return `
+      Analyze the following task completion evidence:
+      
+      Task: ${request.taskDescription}
+      Requirements: ${request.taskRequirements.join(', ')}
+      Evidence: [Evidence content processed]
+      
+      Provide verification decision with confidence score and detailed reasoning.
+    `;
+  }
+}
+```

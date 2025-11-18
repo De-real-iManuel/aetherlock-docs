@@ -1,0 +1,10 @@
+{
+  "name": "aetherlock-docs",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Use mintlify dev for local development'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
