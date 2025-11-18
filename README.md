@@ -111,4 +111,4 @@ See the main project repository for license information.
 
 ---
 
-**Built with ❤️ for AWS Global Vibe 2025**
+**Built with Amazon Kiro  for AWS Global Vibe 2025**
