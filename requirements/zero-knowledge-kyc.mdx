@@ -1,42 +1,171 @@
-# Zero-Knowledge KYC
+# Zero-Knowledge KYC Requirements
 
-## User Story
+## Overview
 
-As a user concerned about privacy, I need to complete identity verification without revealing personal information to the escrow platform, so that I can comply with regulations while maintaining my privacy and security.
+This document defines the functional requirements for AetherLock's privacy-preserving Know Your Customer (KYC) verification system powered by zkMe. The system enables regulatory compliance while maintaining user privacy through zero-knowledge cryptographic proofs.
 
-## Acceptance Criteria
+## User Stories and Acceptance Criteria
 
-### 1. zkMe Protocol Integration
-- System integrates with zkMe SDK for zero-knowledge identity verification
-- KYC process operates on ZetaChain testnet for cross-chain compatibility
-- Users generate zero-knowledge proofs of identity without revealing PII
-- Integration supports multiple identity verification levels (basic, enhanced, premium)
-- zkMe credentials are linked to user's Solana wallet address
+### User Story 1: Privacy-Preserving Identity Verification
 
-### 2. Testnet Implementation
-- KYC verification operates on ZetaChain Athens testnet
-- Testnet integration allows for hackathon demonstration without mainnet costs
-- Mock identity providers simulate real-world verification scenarios
-- Test credentials are clearly marked and separate from production data
-- Testnet limitations and future mainnet migration path are documented
+**As a** privacy-conscious user  
+**I want to** complete identity verification without revealing my personal information to AetherLock  
+**So that** I can comply with regulations while maintaining complete control over my private data
 
-### 3. Privacy-Preserving Verification
-- Zero-knowledge proofs verify identity attributes without data exposure
-- Verification status is stored as cryptographic commitments on-chain
-- Personal data never leaves user's device during verification process
-- Proof generation happens locally using zkMe's client-side SDK
-- Verification results are tamper-proof and cryptographically verifiable
+#### Acceptance Criteria
 
-### 4. Cross-Chain Credential Management
-- zkMe credentials are accessible across multiple blockchain networks
-- ZetaChain enables omnichain identity verification for future multi-chain expansion
-- Credential revocation and updates are handled through zkMe's infrastructure
-- Cross-chain messaging ensures verification status synchronization
-- Universal identity enables seamless user experience across chains
+1. **WHEN** I initiate KYC verification **THEN** the system SHALL launch zkMe's client-side verification widget without transmitting personal data to AetherLock servers
+2. **WHEN** I provide identity documents **THEN** the system SHALL generate zero-knowledge proofs locally on my device without uploading raw documents
+3. **WHEN** verification is complete **THEN** the system SHALL store only cryptographic commitments on-chain, never personal identifiable information
+4. **WHEN** I check my verification status **THEN** the system SHALL display my verification level without exposing the underlying personal data used for verification
+5. **WHEN** verification expires **THEN** the system SHALL require re-verification while maintaining the same privacy guarantees
 
-### 5. Compliance and Audit Trail
-- KYC verification meets regulatory requirements without compromising privacy
-- Audit trail records verification events without storing personal data
-- Compliance reports can be generated for regulatory authorities
-- Zero-knowledge proofs provide mathematical certainty of verification
-- System supports various jurisdiction-specific compliance requirements
+### User Story 2: Multi-Level Verification Options
+
+**As a** user with varying privacy and compliance needs  
+**I want to** choose from different verification levels (basic, enhanced, premium)  
+**So that** I can balance privacy, functionality, and regulatory requirements based on my use case
+
+#### Acceptance Criteria
+
+1. **WHEN** I select basic verification **THEN** the system SHALL verify only identity documents and issue a level-1 credential
+2. **WHEN** I select enhanced verification **THEN** the system SHALL verify identity and address documents and issue a level-2 credential  
+3. **WHEN** I select premium verification **THEN** the system SHALL verify identity, address, phone, and email and issue a level-3 credential
+4. **WHEN** I complete any verification level **THEN** the system SHALL clearly display what attributes were verified without revealing the actual values
+5. **WHEN** I want to upgrade my verification level **THEN** the system SHALL allow me to add additional verifications while preserving existing credentials
+
+### User Story 3: Cross-Chain Identity Portability
+
+**As a** multi-chain user  
+**I want** my KYC verification to work across different blockchain networks  
+**So that** I don't need to repeat verification for each network I use
+
+#### Acceptance Criteria
+
+1. **WHEN** I complete KYC on one network **THEN** the system SHALL automatically synchronize my verification status to all supported chains via ZetaChain
+2. **WHEN** I connect to a new supported blockchain **THEN** the system SHALL recognize my existing KYC status without requiring re-verification
+3. **WHEN** my verification status changes **THEN** the system SHALL propagate updates across all connected networks within 5 minutes
+4. **WHEN** I revoke my credentials **THEN** the system SHALL invalidate my verification status across all networks simultaneously
+5. **WHEN** network connectivity is restored after downtime **THEN** the system SHALL automatically sync any missed verification status updates
+
+### User Story 4: Seamless User Experience
+
+**As a** non-technical user  
+**I want** the KYC process to be simple and intuitive  
+**So that** I can complete verification without understanding the underlying cryptographic complexity
+
+#### Acceptance Criteria
+
+1. **WHEN** I click "Verify Identity" **THEN** the system SHALL display a clear explanation of the process and privacy guarantees before starting
+2. **WHEN** the verification widget loads **THEN** the system SHALL provide step-by-step guidance with progress indicators
+3. **WHEN** I encounter an error **THEN** the system SHALL display helpful error messages with clear next steps for resolution
+4. **WHEN** verification is processing **THEN** the system SHALL show real-time status updates and estimated completion time
+5. **WHEN** verification is complete **THEN** the system SHALL display a success confirmation with details about what was verified and credential validity period
+
+### User Story 5: Regulatory Compliance Officer
+
+**As a** compliance officer  
+**I want** to verify that users meet regulatory requirements  
+**So that** AetherLock operates within legal frameworks while respecting user privacy
+
+#### Acceptance Criteria
+
+1. **WHEN** I generate compliance reports **THEN** the system SHALL provide aggregate statistics on verification levels without exposing individual user data
+2. **WHEN** regulators request audit information **THEN** the system SHALL demonstrate cryptographic proof of verification without revealing personal information
+3. **WHEN** new regulations are implemented **THEN** the system SHALL support configurable verification requirements per jurisdiction
+4. **WHEN** suspicious activity is detected **THEN** the system SHALL flag accounts while maintaining privacy protections for legitimate users
+5. **WHEN** compliance violations occur **THEN** the system SHALL provide mechanisms for credential revocation and account restrictions
+
+### User Story 6: Developer Integration
+
+**As a** developer integrating with AetherLock  
+**I want** clear APIs for checking KYC status  
+**So that** I can build compliant applications without handling sensitive user data
+
+#### Acceptance Criteria
+
+1. **WHEN** I query a user's KYC status **THEN** the API SHALL return verification level and validity without exposing personal information
+2. **WHEN** I implement KYC checks **THEN** the system SHALL provide boolean verification results for different compliance requirements
+3. **WHEN** I need to verify specific attributes **THEN** the system SHALL support selective disclosure proofs for required fields only
+4. **WHEN** verification status changes **THEN** the system SHALL provide webhook notifications for real-time updates
+5. **WHEN** I integrate the verification widget **THEN** the system SHALL provide comprehensive SDK documentation with code examples
+
+### User Story 7: Security Auditor
+
+**As a** security auditor  
+**I want** to verify the cryptographic integrity of the KYC system  
+**So that** I can ensure the privacy and security claims are mathematically sound
+
+#### Acceptance Criteria
+
+1. **WHEN** I examine zero-knowledge proofs **THEN** the system SHALL use industry-standard cryptographic primitives (Groth16, BN254 curves)
+2. **WHEN** I verify proof generation **THEN** the system SHALL demonstrate that proofs cannot be reverse-engineered to reveal personal data
+3. **WHEN** I test replay attacks **THEN** the system SHALL prevent reuse of proofs through cryptographic nonces and timestamps
+4. **WHEN** I analyze on-chain data **THEN** the system SHALL store only non-reversible cryptographic commitments
+5. **WHEN** I review the verification process **THEN** the system SHALL provide complete audit trails without compromising user privacy
+
+## Privacy Preservation Requirements
+
+### Data Minimization
+- **Personal Data Isolation**: Personal information never leaves the user's device during verification
+- **Cryptographic Commitments**: Only mathematical proofs and hashes are stored on-chain
+- **Selective Disclosure**: Users can prove specific attributes without revealing others
+- **Automatic Expiration**: Credentials automatically expire to limit data exposure over time
+
+### Zero-Knowledge Properties
+- **Completeness**: Valid proofs always verify correctly
+- **Soundness**: Invalid proofs cannot be accepted as valid
+- **Zero-Knowledge**: Verification reveals no information beyond the proven statement
+- **Non-Interactive**: Proofs can be verified without interaction with the prover
+
+### Cross-Chain Privacy
+- **Consistent Privacy**: Same privacy guarantees across all supported blockchain networks
+- **Encrypted Messaging**: Cross-chain communications use end-to-end encryption
+- **Decentralized Verification**: No single point of failure for privacy protection
+- **Revocation Privacy**: Credential revocation doesn't reveal historical verification data
+
+## Technical Requirements
+
+### Performance Requirements
+- **Verification Speed**: Complete KYC verification within 2 minutes for 95% of users
+- **Proof Generation**: Generate zero-knowledge proofs within 30 seconds on standard devices
+- **Cross-Chain Sync**: Propagate verification status updates within 5 minutes across all networks
+- **Widget Load Time**: KYC verification widget loads within 3 seconds
+
+### Scalability Requirements
+- **Concurrent Users**: Support 1,000 simultaneous KYC verifications
+- **Proof Storage**: Efficiently store and retrieve cryptographic proofs for 1 million users
+- **Network Throughput**: Handle 10,000 verification status queries per minute
+- **Cross-Chain Capacity**: Support verification sync across 10+ blockchain networks
+
+### Security Requirements
+- **Cryptographic Standards**: Use audited implementations of Groth16 zero-knowledge proofs
+- **Key Management**: Secure generation and storage of cryptographic keys
+- **Replay Protection**: Prevent reuse of verification proofs through nonce mechanisms
+- **Access Control**: Role-based permissions for administrative functions
+
+### Compliance Requirements
+- **GDPR Compliance**: Support data subject rights while maintaining zero-knowledge properties
+- **AML/KYC Regulations**: Meet anti-money laundering requirements across jurisdictions
+- **Data Retention**: Automatic credential expiration and secure deletion of expired proofs
+- **Audit Support**: Generate compliance reports without compromising user privacy
+
+## Integration Requirements
+
+### Frontend Integration
+- **React Components**: Pre-built components for KYC verification workflow
+- **Wallet Integration**: Seamless integration with Solana, Ethereum, and other wallet providers
+- **Mobile Support**: Responsive design supporting mobile verification workflows
+- **Accessibility**: WCAG 2.1 AA compliance for inclusive user experience
+
+### Backend Integration
+- **Webhook Support**: Real-time notifications for verification status changes
+- **API Documentation**: Comprehensive REST API documentation with examples
+- **SDK Availability**: Client libraries for popular programming languages
+- **Error Handling**: Robust error handling with detailed error codes and messages
+
+### Blockchain Integration
+- **Multi-Chain Support**: Native integration with Solana, ZetaChain, and Ethereum
+- **Smart Contract APIs**: On-chain functions for verification status queries
+- **Event Emission**: Blockchain events for verification status changes
+- **Gas Optimization**: Efficient smart contract implementations to minimize transaction costs

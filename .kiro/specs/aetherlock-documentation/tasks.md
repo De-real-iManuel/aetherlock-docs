@@ -173,7 +173,7 @@
     - Include prompt engineering strategies
     - Explain evidence analysis pipeline
     - Add confidence scoring algorithm
-    - Document fallback provider chain (Arcanum → OpenAI → Claude)
+    - Document fallback provider chain (Arcanum.ai → OpenAI → Claude → Gemini)
     - Include Ed25519 signature generation for result authentication
     - _Requirements: 1.4, 2.4_
 
@@ -616,6 +616,10 @@
 
 
   - [ ] 16.3 Optimize and finalize
+
+
+
+
     - Optimize images and diagrams
     - Add final cross-references between sections
     - Generate table of contents

@@ -13,7 +13,7 @@ The AetherLock backend consists of several key components:
 
 - **REST API Server**: Express.js application handling escrow operations
 - **WebSocket Server**: Real-time event notifications
-- **AI Verification Service**: AWS Bedrock integration for task verification
+- **AI Verification Service**: Arcanum.ai integration for task verification (primary provider with OpenAI, Claude, and Gemini fallbacks)
 - **zkMe Integration**: Zero-knowledge KYC webhook handlers
 - **Database**: PostgreSQL for persistent data storage
 - **Cache Layer**: Redis for session management and caching
@@ -45,11 +45,14 @@ SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
 SOLANA_PRIVATE_KEY=your_base58_private_key_here
 ESCROW_PROGRAM_ID=AetherLockProgramId1111111111111111111111
 
-# AWS Bedrock Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
+# Arcanum.ai Configuration (Primary AI Provider)
+ARCANUM_API_KEY=your_arcanum_api_key
+ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
+
+# AI Fallback Providers (Optional)
+OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+GEMINI_API_KEY=your_gemini_api_key
 
 # zkMe Integration
 ZKME_API_KEY=your_zkme_api_key
@@ -169,6 +172,7 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/aetherlock
       - REDIS_URL=redis://redis:6379
+      - ARCANUM_API_KEY=${ARCANUM_API_KEY}
     depends_on:
       - postgres
       - redis
@@ -251,7 +255,8 @@ vercel --prod
 # Set environment variables
 vercel env add DATABASE_URL
 vercel env add REDIS_URL
-vercel env add AWS_ACCESS_KEY_ID
+vercel env add ARCANUM_API_KEY
+vercel env add ARCANUM_ENDPOINT
 # ... add all required environment variables
 ```
 
@@ -335,14 +340,8 @@ provider:
     NODE_ENV: production
     DATABASE_URL: ${env:DATABASE_URL}
     REDIS_URL: ${env:REDIS_URL}
-    AWS_REGION: ${env:AWS_REGION}
-    BEDROCK_MODEL_ID: ${env:BEDROCK_MODEL_ID}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - bedrock:InvokeModel
-        - bedrock:InvokeModelWithResponseStream
-      Resource: "*"
+    ARCANUM_API_KEY: ${env:ARCANUM_API_KEY}
+    ARCANUM_ENDPOINT: ${env:ARCANUM_ENDPOINT}
 
 functions:
   api:
@@ -730,7 +729,8 @@ export { pool };
 - [ ] Health endpoint responding
 - [ ] Database connectivity verified
 - [ ] Redis connectivity verified
-- [ ] AWS Bedrock integration working
+- [ ] Arcanum.ai integration working
+- [ ] AI fallback chain configured (Arcanum.ai → OpenAI → Claude → Gemini)
 - [ ] zkMe webhooks receiving events
 - [ ] IPFS uploads functioning
 - [ ] WebSocket connections stable
@@ -777,10 +777,11 @@ pg_restore -d aetherlock backup.sql
    - Check TLS settings
    - Verify authentication
 
-3. **AWS Bedrock Errors**:
-   - Check IAM permissions
-   - Verify region configuration
-   - Check model availability
+3. **Arcanum.ai API Errors**:
+   - Verify API key is valid
+   - Check endpoint connectivity
+   - Test fallback providers if primary fails
+   - Review API rate limits
 
 4. **Memory Issues**:
    - Increase container memory limits

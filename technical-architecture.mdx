@@ -24,7 +24,7 @@ graph TB
     end
     
     subgraph "Verification Layer"
-        AI[AWS Bedrock AI]
+        AI[Arcanum.ai]
         KYC[zkMe Verification]
         Oracle[Chainlink Functions]
     end
@@ -71,7 +71,7 @@ graph TB
 |-----------|----------------------|-------------------|--------------|
 | **React Frontend** | User interface and wallet integration | State management, real-time updates | Wallet adapters, WebSocket |
 | **Express Backend** | API orchestration and business logic | Authentication, event processing | PostgreSQL, Redis, IPFS |
-| **AWS Bedrock AI** | Evidence analysis and verification | Confidence scoring, decision making | IPFS, Chainlink Oracle |
+| **Arcanum.ai** | Evidence analysis and verification | Confidence scoring, decision making | IPFS, Chainlink Oracle |
 | **zkMe SDK** | Zero-knowledge identity verification | KYC compliance, privacy preservation | ZetaChain, Frontend |
 | **Solana Program** | Escrow fund management | PDA validation, state transitions | ZetaChain Gateway |
 | **ZetaChain Gateway** | Omnichain message routing | Cross-chain state synchronization | All blockchain networks |
@@ -79,7 +79,7 @@ graph TB
 | **IPFS Network** | Decentralized evidence storage | Content addressing, availability | Pinata, Web3.Storage |
 | **PostgreSQL** | Persistent data storage | Transaction history, user profiles | Backend API |
 | **Redis Cache** | Performance optimization | Session management, rate limiting | Backend API |
-| **Chainlink Oracle** | AI result authentication | Ed25519 signature verification | AWS Bedrock, Smart Contracts |
+| **Chainlink Oracle** | AI result authentication | Ed25519 signature verification | Arcanum.ai, Smart Contracts |
 
 ## 🔗 Integration Point Documentation
 
@@ -155,28 +155,30 @@ class ZetaChainClient {
 
 ### AI ↔ Oracle Integration
 ```typescript
-// AWS Bedrock AI verification
+// Arcanum.ai AI verification (production implementation)
+// Note: AWS Bedrock was initially explored but Arcanum.ai was chosen for
+// specialized task verification with better performance and simpler integration
 class AIVerificationService {
   async verifyEvidence(evidenceHash: string): Promise<VerificationResult> {
-    const bedrock = new BedrockRuntimeClient({ region: 'us-east-1' });
+    const arcanum = new ArcanumClient({
+      apiKey: process.env.ARCANUM_API_KEY,
+      endpoint: 'https://api.arcanum.ai/v1'
+    });
     
     // Fetch evidence from IPFS
     const evidence = await this.ipfs.get(evidenceHash);
     
-    // Analyze with Claude
-    const response = await bedrock.send(new InvokeModelCommand({
-      modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        messages: [{
-          role: 'user',
-          content: `Analyze this task evidence: ${evidence}`
-        }],
-        max_tokens: 1000
-      })
-    }));
+    // Analyze with Arcanum.ai specialized task verification
+    const response = await arcanum.verify({
+      evidenceHash,
+      evidence,
+      options: {
+        maxTokens: 2000,
+        temperature: 0.3
+      }
+    });
     
-    const result = JSON.parse(response.body);
+    const result = response.analysis;
     
     // Sign result with Ed25519
     const signature = await this.signResult(result);
@@ -245,8 +247,8 @@ class AIVerificationService {
 ### AI & Oracle Stack
 ```json
 {
-  "ai_service": "AWS Bedrock (Claude 3 Sonnet)",
-  "fallback_ai": "OpenAI GPT-4, Anthropic Claude",
+  "ai_service": "Arcanum.ai (Primary)",
+  "fallback_ai": "OpenAI GPT-4, Anthropic Claude, Google Gemini",
   "oracle": "Chainlink Functions",
   "signatures": "Ed25519 cryptographic proofs",
   "ipfs": "Pinata, Web3.Storage, Lighthouse",
@@ -318,7 +320,7 @@ flowchart LR
     
     subgraph "AI Processing"
         D[Fetch from IPFS]
-        E[AWS Bedrock Claude]
+        E[Arcanum.ai]
         F[Semantic Analysis]
         G[Quality Scoring]
     end
@@ -461,7 +463,7 @@ flowchart TD
     
     subgraph "Verification Layer"
         V1[zkMe KYC Service]
-        V2[AWS Bedrock AI]
+        V2[Arcanum.ai]
         V3[Chainlink Oracle]
         V4[IPFS Storage]
     end
@@ -519,7 +521,7 @@ sequenceDiagram
     participant ZetaGW as ZetaChain Gateway
     participant Somnia as Somnia Contract
     participant Oracle as Chainlink Oracle
-    participant AI as AWS Bedrock
+    participant AI as Arcanum.ai
     
     Note over Solana,AI: Cross-Chain Escrow Creation
     Solana->>ZetaGW: xCall(createEscrow, destinationChain, data)

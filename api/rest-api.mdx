@@ -87,6 +87,8 @@ All errors follow a consistent format:
 | `INTERNAL_ERROR` | 500 | Internal server error |
 | `BLOCKCHAIN_ERROR` | 502 | Blockchain interaction failed |
 | `AI_SERVICE_ERROR` | 503 | AI verification service unavailable |
+| `ARCANUM_TIMEOUT` | 504 | Arcanum.ai request timeout |
+| `ARCANUM_RATE_LIMIT` | 429 | Arcanum.ai rate limit exceeded |
 
 ## Endpoints
 
@@ -424,11 +426,17 @@ Get AI verification status and results.
       "evidence": "Mobile-first approach with proper viewport configuration"
     }
   ],
-  "aiProvider": "aws-bedrock",
-  "model": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "aiProvider": "arcanum-ai",
+  "model": "arcanum-pro",
   "signature": "AI_RESULT_ED25519_SIGNATURE",
   "processedAt": "2024-01-10T15:35:00Z",
-  "processingTime": 2.3
+  "processingTime": 2.3,
+  "fallbackChain": ["arcanum-ai"],
+  "providerMetadata": {
+    "endpoint": "https://api.arcanum.ai/v1/verify",
+    "version": "v1",
+    "requestId": "arcanum_req_123456"
+  }
 }
 ```
 
@@ -452,6 +460,27 @@ Initiate a dispute for AI verification results.
   "status": "pending",
   "createdAt": "2024-01-10T16:00:00Z",
   "estimatedResolution": "2024-01-12T16:00:00Z"
+}
+```
+
+### AI Provider Fallback Chain
+
+AetherLock uses a robust AI provider fallback chain to ensure high availability:
+
+**Primary Provider**: Arcanum.ai (specialized task verification)
+**Fallback Chain**: Arcanum.ai → OpenAI → Claude → Gemini
+
+If the primary provider (Arcanum.ai) is unavailable or returns an error, the system automatically falls back to the next provider in the chain. The verification response includes information about which provider was used:
+
+```json
+{
+  "verificationId": "verification_def456",
+  "status": "completed",
+  "aiProvider": "openai",
+  "fallbackChain": ["arcanum-ai", "openai"],
+  "fallbackReason": "ARCANUM_TIMEOUT",
+  "result": "approved",
+  "confidence": 0.91
 }
 ```
 

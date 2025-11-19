@@ -1000,6 +1000,49 @@ describe('AetherLock Universal App', () => {
 });
 ```
 
+## AI Verification Integration
+
+Smart contracts receive AI verification results from Arcanum.ai through Chainlink oracles. The verification result structure includes:
+
+```rust
+pub struct VerificationResult {
+    /// AI confidence score (0-100)
+    pub confidence: u8,
+    /// Verification decision
+    pub decision: VerificationDecision,
+    /// AI reasoning text
+    pub reasoning: String,
+    /// Ed25519 signature from Arcanum.ai
+    pub ai_signature: [u8; 64],
+    /// Timestamp of verification
+    pub verified_at: i64,
+    /// AI provider used (arcanum-ai, openai, claude, gemini)
+    pub provider: String,
+}
+```
+
+### Arcanum.ai Signature Verification
+
+The smart contract verifies that AI results are authentically signed by Arcanum.ai:
+
+```rust
+pub fn verify_ai_signature(
+    result: &VerificationResult,
+    ai_public_key: &Pubkey,
+) -> Result<bool> {
+    let message = format!(
+        "{}:{}:{}:{}",
+        result.confidence,
+        result.decision,
+        result.reasoning,
+        result.verified_at
+    );
+    
+    let signature = Signature::from(result.ai_signature);
+    signature.verify(ai_public_key.as_ref(), message.as_bytes())
+}
+```
+
 ## Support
 
 For smart contract integration support:
@@ -1007,3 +1050,4 @@ For smart contract integration support:
 - **Technical Documentation**: [https://docs.aetherlock.io/contracts](https://docs.aetherlock.io/contracts)
 - **Contract Verification**: All contracts are verified on their respective block explorers
 - **Audit Reports**: Available at [https://docs.aetherlock.io/security/audits](https://docs.aetherlock.io/security/audits)
+- **Arcanum.ai Integration**: [https://docs.arcanum.ai/aetherlock](https://docs.arcanum.ai/aetherlock)

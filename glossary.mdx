@@ -2,10 +2,22 @@
 
 ## Core Protocol Terms
 
-- **AetherLock**: Omnichain escrow protocol enabling cross-chain asset exchange with AI-powered Proof of Task Verification (PoTv)
-- **PoTv (Proof of Task Verification)**: Proprietary consensus mechanism that validates task completion quality before fund release using AI analysis, zero-knowledge identity verification, and on-chain settlement
-- **Escrow**: Smart contract holding funds until predefined conditions are met and verified through the PoTv mechanism
+- **AetherLock**: Omnichain escrow protocol enabling cross-chain asset exchange with AI-powered Proof-of-Task Verification (PoTV)
+- **PoTV (Proof-of-Task Verification)**: Novel consensus mechanism developed by AetherLock Labs that proves humans actually completed work. Analogous to how Proof-of-Work (PoW) proves computational work (math) and Proof-of-Stake (PoS) proves capital commitment (money), PoTV proves human task completion quality through a four-stage verification chain: AI analysis → Zero-knowledge proof → Chainlink oracle → Smart contract validation
+- **Escrow**: Smart contract holding funds until predefined conditions are met and verified through the PoTV mechanism
 - **Omnichain**: Capability to operate across multiple blockchain networks seamlessly, enabling cross-chain asset transfers and unified user experiences
+
+## Consensus Mechanism Comparison
+
+Understanding PoTV in context of other consensus mechanisms:
+
+| Consensus Type | What It Proves | How It Works | Use Case |
+|----------------|----------------|--------------|----------|
+| **Proof-of-Work (PoW)** | Computational work (math) | Miners solve cryptographic puzzles to validate blocks | Bitcoin, securing blockchain networks |
+| **Proof-of-Stake (PoS)** | Capital commitment (money) | Validators lock tokens as collateral to validate blocks | Ethereum 2.0, energy-efficient consensus |
+| **Proof-of-Task Verification (PoTV)** | Human work completion (task quality) | AI analysis → ZK proof → Oracle → Smart contract validates task completion | AetherLock, freelance work verification |
+
+**PoTV Innovation**: While PoW proves you did math and PoS proves you staked money, PoTV proves you actually completed human work to a specified quality standard. This makes it the first consensus mechanism designed specifically for verifying real-world task completion in decentralized freelance economies.
 
 ## Blockchain Platforms
 
@@ -23,9 +35,12 @@
 
 ## AI and Verification
 
-- **AWS Bedrock**: Amazon's managed AI service providing access to foundation models like Claude for evidence analysis
-- **Claude**: Anthropic's large language model accessed via AWS Bedrock for task completion verification
-- **Arcanum**: Primary AI provider in the fallback chain for evidence analysis
+- **Arcanum.ai**: Primary AI verification provider for AetherLock's task completion analysis, offering specialized task verification capabilities with predictable pricing and lower latency compared to general-purpose AI platforms
+- **AI Fallback Chain**: Sequential backup AI providers used when primary provider fails, ordered as: Arcanum.ai → OpenAI → Claude → Gemini
+- **AWS Bedrock**: Amazon's managed AI service providing access to foundation models (explored as alternative but not selected as primary provider due to higher complexity and less specialized task verification capabilities)
+- **Claude**: Anthropic's large language model, used as third fallback provider in the AI verification chain
+- **OpenAI**: Second fallback AI provider in the verification chain, offering text and code analysis capabilities
+- **Gemini**: Fourth fallback AI provider in the verification chain, providing multimodal analysis capabilities
 - **Confidence Score**: Numerical value (0-100) representing AI certainty in task completion verification
 - **Evidence Analysis Pipeline**: Multi-stage process for evaluating submitted work proof using AI models
 - **Prompt Engineering**: Technique for crafting effective AI prompts to maximize verification accuracy

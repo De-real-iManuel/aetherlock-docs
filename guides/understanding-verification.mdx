@@ -11,11 +11,11 @@ Learn how to interpret AI verification results, understand confidence scores, an
 
 ### How AI Verification Works
 
-AetherLock's Proof of Task Verification (PoTv) uses advanced AI models to analyze your submitted evidence against the original project requirements. The process involves multiple layers of analysis:
+AetherLock's Proof-of-Task Verification (PoTV) uses Arcanum.ai, a specialized AI verification provider, to analyze your submitted evidence against the original project requirements. The process involves multiple layers of analysis:
 
 <Steps>
 <Step title="Evidence Analysis">
-1. **Content Extraction**: AI analyzes images, videos, documents, and code
+1. **Content Extraction**: Arcanum.ai analyzes images, videos, documents, and code
 2. **Requirement Mapping**: Matches evidence to specific project criteria
 3. **Quality Assessment**: Evaluates completeness and accuracy
 4. **Cross-Validation**: Checks consistency across multiple evidence pieces
@@ -750,11 +750,28 @@ const verificationResult = {
 </Step>
 </Steps>
 
+## AI Provider Information
+
+### Arcanum.ai Verification
+
+AetherLock uses Arcanum.ai as the primary AI verification provider. Arcanum.ai is purpose-built for task completion analysis, offering:
+
+- **Specialized Analysis**: Trained specifically for freelance work verification
+- **High Accuracy**: 94.2% overall accuracy rate across all decisions
+- **Fast Processing**: Average verification time of 4.2 minutes
+- **Fallback Support**: Automatic failover to OpenAI, Claude, or Gemini if needed
+
+**Why Arcanum.ai?**
+- Lower latency (40% faster than general-purpose AI platforms)
+- Better accuracy for edge cases (15% improvement)
+- Predictable pricing ($0.05 per verification)
+- Specialized training on task verification scenarios
+
 ## Frequently Asked Questions
 
 <AccordionGroup>
 <Accordion title="How accurate is the AI verification system?">
-AetherLock's AI verification system maintains a 94.2% accuracy rate across all decisions. High-confidence decisions (85%+ score) have a 97.8% accuracy rate, while medium-confidence decisions requiring human review have an 89.1% accuracy rate. The system is continuously improved based on feedback and outcomes.
+AetherLock's AI verification system, powered by Arcanum.ai, maintains a 94.2% accuracy rate across all decisions. High-confidence decisions (85%+ score) have a 97.8% accuracy rate, while medium-confidence decisions requiring human review have an 89.1% accuracy rate. The system is continuously improved based on feedback and outcomes.
 </Accordion>
 
 <Accordion title="Can I request human review even for approved decisions?">
@@ -774,11 +791,15 @@ Clients cannot directly influence AI verification decisions, which are based sol
 </Accordion>
 
 <Accordion title="What if my evidence contains proprietary or sensitive information?">
-All evidence is handled with strict confidentiality and security measures. Evidence is encrypted during transmission and storage, and access is limited to authorized verification personnel. Evidence is automatically deleted after 1 year unless there are ongoing disputes.
+All evidence is handled with strict confidentiality and security measures. Evidence is encrypted during transmission and storage, and access is limited to authorized verification personnel. Arcanum.ai processes evidence securely without storing sensitive data permanently. Evidence is automatically deleted after 1 year unless there are ongoing disputes.
+</Accordion>
+
+<Accordion title="What AI provider does AetherLock use for verification?">
+AetherLock uses Arcanum.ai as the primary AI verification provider. Arcanum.ai is specialized for task completion analysis and offers superior accuracy and speed compared to general-purpose AI platforms. If Arcanum.ai is unavailable, the system automatically falls back to OpenAI, Claude, or Gemini to ensure continuous service.
 </Accordion>
 
 <Accordion title="Can I see the detailed AI analysis of my evidence?">
-Yes, you receive a detailed breakdown showing how each piece of evidence was analyzed, which requirements it addresses, and the confidence score for each requirement. This helps you understand the decision and improve future submissions.
+Yes, you receive a detailed breakdown showing how Arcanum.ai analyzed each piece of evidence, which requirements it addresses, and the confidence score for each requirement. This helps you understand the decision and improve future submissions.
 </Accordion>
 
 <Accordion title="What happens if there are technical issues during verification?">

@@ -1,4 +1,776 @@
+---
+title: "Data Models"
+description: "Comprehensive data structures for Solana accounts, TypeScript interfaces, and Solidity contracts"
+---
+
 # Data Models
+
+## 🏗️ Solana Account Structures
+
+### Escrow Account Structure
+
+```rust
+use anchor_lang::prelude::*;
+
+#[account]
+pub struct EscrowAccount {
+    /// Unique identifier for the escrow
+    pub escrow_id: u64,
+    
+    /// Public key of the payer (client)
+    pub payer: Pubkey,
+    
+    /// Public key of the payee (freelancer)
+    pub payee: Pubkey,
+    
+    /// Amount locked in escrow (in lamports for SOL)
+    pub amount: u64,
+    
+    /// Treasury fee (10% of amount)
+    pub treasury_fee: u64,
+    
+    /// Token mint address (None for SOL)
+    pub token_mint: Option<Pubkey>,
+    
+    /// Deadline for task completion (Unix timestamp)
+    pub deadline: i64,
+    
+    /// Current status of the escrow
+    pub status: EscrowStatus,
+    
+    /// IPFS hash of task metadata
+    pub task_metadata_hash: [u8; 32],
+    
+    /// IPFS hash of submitted evidence
+    pub evidence_hash: Option<[u8; 32]>,
+    
+    /// KYC verification status
+    pub kyc_verified: bool,
+    
+    /// AI verification result
+    pub ai_verified: bool,
+    
+    /// AI confidence score (0-100)
+    pub ai_confidence: u8,
+    
+    /// Dispute status
+    pub disputed: bool,
+    
+    /// Creation timestamp
+    pub created_at: i64,
+    
+    /// Last update timestamp
+    pub updated_at: i64,
+    
+    /// Bump seed for PDA derivation
+    pub bump: u8,
+}
+
+impl EscrowAccount {
+    pub const LEN: usize = 8 + // discriminator
+        8 + // escrow_id
+        32 + // payer
+        32 + // payee
+        8 + // amount
+        8 + // treasury_fee
+        1 + 32 + // token_mint (Option<Pubkey>)
+        8 + // deadline
+        1 + // status
+        32 + // task_metadata_hash
+        1 + 32 + // evidence_hash (Option<[u8; 32]>)
+        1 + // kyc_verified
+        1 + // ai_verified
+        1 + // ai_confidence
+        1 + // disputed
+        8 + // created_at
+        8 + // updated_at
+        1; // bump
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
+pub enum EscrowStatus {
+    Created,
+    Funded,
+    PendingVerification,
+    Verified,
+    Disputed,
+    Completed,
+    Cancelled,
+    Expired,
+    Refunded,
+}
+```
+
+### Treasury Account Structure
+
+```rust
+#[account]
+pub struct TreasuryAccount {
+    /// Authority that can withdraw from treasury
+    pub authority: Pubkey,
+    
+    /// Total fees collected
+    pub total_fees_collected: u64,
+    
+    /// Total escrows processed
+    pub total_escrows: u64,
+    
+    /// Total volume processed
+    pub total_volume: u64,
+    
+    /// Withdrawal history
+    pub last_withdrawal: i64,
+    
+    /// Emergency pause status
+    pub paused: bool,
+    
+    /// Bump seed for PDA
+    pub bump: u8,
+}
+
+impl TreasuryAccount {
+    pub const LEN: usize = 8 + // discriminator
+        32 + // authority
+        8 + // total_fees_collected
+        8 + // total_escrows
+        8 + // total_volume
+        8 + // last_withdrawal
+        1 + // paused
+        1; // bump
+}
+```
+
+### User Profile Account Structure
+
+```rust
+#[account]
+pub struct UserProfile {
+    /// User's wallet address
+    pub wallet: Pubkey,
+    
+    /// KYC verification status
+    pub kyc_verified: bool,
+    
+    /// KYC credential hash from zkMe
+    pub kyc_credential_hash: Option<[u8; 32]>,
+    
+    /// Total escrows created as payer
+    pub escrows_as_payer: u32,
+    
+    /// Total escrows completed as payee
+    pub escrows_as_payee: u32,
+    
+    /// Total disputes initiated
+    pub disputes_initiated: u32,
+    
+    /// Total disputes resolved favorably
+    pub disputes_won: u32,
+    
+    /// Reputation score (0-100)
+    pub reputation_score: u8,
+    
+    /// Account creation timestamp
+    pub created_at: i64,
+    
+    /// Last activity timestamp
+    pub last_active: i64,
+    
+    /// Bump seed for PDA
+    pub bump: u8,
+}
+
+impl UserProfile {
+    pub const LEN: usize = 8 + // discriminator
+        32 + // wallet
+        1 + // kyc_verified
+        1 + 32 + // kyc_credential_hash (Option<[u8; 32]>)
+        4 + // escrows_as_payer
+        4 + // escrows_as_payee
+        4 + // disputes_initiated
+        4 + // disputes_won
+        1 + // reputation_score
+        8 + // created_at
+        8 + // last_active
+        1; // bump
+}
+```
+
+## 🔗 Solidity Struct Definitions
+
+### ZetaChain Universal Contract Structures
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract AetherLockUniversal {
+    struct CrossChainEscrow {
+        uint256 sourceChain;
+        uint256 destinationChain;
+        address payer;
+        address payee;
+        uint256 amount;
+        address tokenAddress;
+        uint256 deadline;
+        EscrowStatus status;
+        bytes32 taskMetadataHash;
+        bytes32 evidenceHash;
+        bool kycVerified;
+        bool aiVerified;
+        uint8 aiConfidence;
+        uint256 createdAt;
+        uint256 updatedAt;
+    }
+    
+    enum EscrowStatus {
+        Created,
+        Funded,
+        PendingVerification,
+        Verified,
+        Disputed,
+        Completed,
+        Cancelled,
+        Expired,
+        Refunded
+    }
+    
+    struct VerificationResult {
+        bytes32 escrowId;
+        bool approved;
+        uint8 confidence;
+        bytes32 analysisHash;
+        bytes signature; // Ed25519 signature from AI service
+        uint256 timestamp;
+    }
+    
+    struct DisputeData {
+        bytes32 escrowId;
+        address initiator;
+        DisputeReason reason;
+        bytes32 evidenceHash;
+        uint256 createdAt;
+        DisputeStatus status;
+    }
+    
+    enum DisputeReason {
+        TaskNotCompleted,
+        PoorQuality,
+        DeadlineMissed,
+        RequirementsNotMet,
+        FraudulentEvidence
+    }
+    
+    enum DisputeStatus {
+        Open,
+        UnderReview,
+        Resolved,
+        Appealed
+    }
+    
+    struct CrossChainMessage {
+        string action;
+        bytes32 escrowId;
+        bytes data;
+        uint256 timestamp;
+        bytes32 messageHash;
+    }
+}
+```
+
+### Somnia Settlement Contract Structures
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SomniaSettlement {
+    struct SettlementOrder {
+        bytes32 escrowId;
+        uint256 sourceChain;
+        address beneficiary;
+        uint256 amount;
+        address tokenAddress;
+        SettlementStatus status;
+        uint256 executedAt;
+        bytes32 txHash;
+    }
+    
+    enum SettlementStatus {
+        Pending,
+        Executed,
+        Failed,
+        Reverted
+    }
+    
+    struct BatchSettlement {
+        bytes32 batchId;
+        SettlementOrder[] orders;
+        uint256 totalAmount;
+        uint256 executedAt;
+        bool completed;
+    }
+    
+    struct FeeDistribution {
+        address treasury;
+        uint256 treasuryAmount;
+        address[] stakeholders;
+        uint256[] amounts;
+        uint256 distributedAt;
+    }
+}
+```
+
+## 📊 Entity-Relationship Diagrams
+
+### Core Entity Relationships
+
+```mermaid
+erDiagram
+    USER ||--o{ ESCROW : creates
+    USER ||--o{ ESCROW : receives
+    USER ||--|| USER_PROFILE : has
+    USER ||--o{ KYC_CREDENTIAL : owns
+    
+    ESCROW ||--|| TASK_METADATA : contains
+    ESCROW ||--o| EVIDENCE : has
+    ESCROW ||--o| AI_VERIFICATION : verified_by
+    ESCROW ||--o{ DISPUTE : may_have
+    ESCROW ||--o{ BLOCKCHAIN_EVENT : generates
+    
+    DISPUTE ||--o{ DISPUTE_EVIDENCE : contains
+    DISPUTE ||--o| ARBITRATION : resolved_by
+    
+    AI_VERIFICATION ||--|| IPFS_STORAGE : stores_analysis
+    EVIDENCE ||--|| IPFS_STORAGE : stored_in
+    TASK_METADATA ||--|| IPFS_STORAGE : stored_in
+    
+    BLOCKCHAIN_EVENT ||--|| TRANSACTION : recorded_in
+    
+    USER {
+        string wallet_address PK
+        string chain_id
+        timestamp created_at
+        timestamp last_active
+    }
+    
+    USER_PROFILE {
+        string wallet_address PK
+        boolean kyc_verified
+        string kyc_credential_hash
+        int escrows_as_payer
+        int escrows_as_payee
+        int reputation_score
+        timestamp created_at
+    }
+    
+    ESCROW {
+        string id PK
+        int escrow_id
+        string payer FK
+        string payee FK
+        bigint amount
+        string token_mint
+        int status
+        timestamp deadline
+        string task_metadata_hash
+        string evidence_hash
+        boolean kyc_verified
+        boolean ai_verified
+        int ai_confidence
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TASK_METADATA {
+        string hash PK
+        string title
+        string description
+        json requirements
+        json deliverables
+        string category
+        json tags
+        int estimated_duration
+    }
+    
+    EVIDENCE {
+        string hash PK
+        string escrow_id FK
+        json file_metadata
+        timestamp submitted_at
+        string submitted_by FK
+    }
+    
+    AI_VERIFICATION {
+        string id PK
+        string escrow_id FK
+        int confidence_score
+        string decision
+        string analysis_hash
+        timestamp verified_at
+        string ai_model
+        int processing_time
+    }
+    
+    DISPUTE {
+        string id PK
+        string escrow_id FK
+        string initiator FK
+        int reason
+        int status
+        string evidence_hash
+        timestamp created_at
+        timestamp resolved_at
+    }
+    
+    KYC_CREDENTIAL {
+        string hash PK
+        string wallet_address FK
+        boolean verified
+        string level
+        timestamp issued_at
+        timestamp expires_at
+        string provider
+    }
+    
+    IPFS_STORAGE {
+        string hash PK
+        int size
+        string mime_type
+        string filename
+        timestamp uploaded_at
+        string uploaded_by FK
+        boolean encrypted
+    }
+    
+    BLOCKCHAIN_EVENT {
+        string id PK
+        string escrow_id FK
+        string event_type
+        int block_number
+        string transaction_hash
+        json data
+        timestamp timestamp
+        string chain_id
+    }
+```
+
+### Cross-Chain Relationship Model
+
+```mermaid
+erDiagram
+    SOLANA_ESCROW ||--|| ZETACHAIN_MESSAGE : triggers
+    ZETACHAIN_MESSAGE ||--|| SOMNIA_SETTLEMENT : routes_to
+    SOMNIA_SETTLEMENT ||--|| ZETACHAIN_CALLBACK : confirms_via
+    ZETACHAIN_CALLBACK ||--|| SOLANA_ESCROW : updates
+    
+    SOLANA_ESCROW {
+        bytes32 escrow_id PK
+        address payer
+        address payee
+        uint64 amount
+        int status
+        timestamp deadline
+    }
+    
+    ZETACHAIN_MESSAGE {
+        bytes32 message_id PK
+        uint256 source_chain
+        uint256 destination_chain
+        string action
+        bytes32 escrow_id FK
+        bytes data
+        timestamp created_at
+    }
+    
+    SOMNIA_SETTLEMENT {
+        bytes32 settlement_id PK
+        bytes32 escrow_id FK
+        address beneficiary
+        uint256 amount
+        int status
+        timestamp executed_at
+    }
+    
+    ZETACHAIN_CALLBACK {
+        bytes32 callback_id PK
+        bytes32 message_id FK
+        boolean success
+        bytes result_data
+        timestamp processed_at
+    }
+```
+
+## 🔄 State Machine Transitions
+
+### Escrow State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> Created: createEscrow()
+    
+    Created --> Funded: depositFunds()
+    Created --> Cancelled: cancelEscrow()
+    
+    Funded --> PendingVerification: submitEvidence()
+    Funded --> Expired: deadlineExceeded()
+    Funded --> Cancelled: mutualCancel()
+    
+    PendingVerification --> Verified: aiApproval(confidence > 90%)
+    PendingVerification --> Disputed: aiUncertain(50% ≤ confidence ≤ 90%)
+    PendingVerification --> Funded: aiRejection(confidence < 50%)
+    PendingVerification --> Expired: verificationTimeout()
+    
+    Verified --> Completed: releaseFunds()
+    Verified --> Disputed: initiateDispute()
+    
+    Disputed --> Completed: resolveInFavorOfPayee()
+    Disputed --> Cancelled: resolveInFavorOfPayer()
+    Disputed --> PartialRelease: partialResolution()
+    
+    PartialRelease --> Completed: finalizeSettlement()
+    
+    Expired --> Refunded: processRefund()
+    Cancelled --> Refunded: processRefund()
+    
+    Completed --> [*]
+    Refunded --> [*]
+    
+    note right of PendingVerification
+        AI Confidence Thresholds:
+        > 90%: Auto Approve
+        50-90%: Human Review Required
+        < 50%: Auto Reject
+    end note
+    
+    note right of Disputed
+        Resolution Tiers:
+        Tier 1: AI Re-analysis
+        Tier 2: Human Arbitrator
+        Tier 3: Multi-Arbitrator Panel
+    end note
+```
+
+### User KYC State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> Unverified: userRegistration()
+    
+    Unverified --> PendingKYC: initiateKYC()
+    
+    PendingKYC --> BasicVerified: basicKYCComplete()
+    PendingKYC --> Failed: kycRejected()
+    PendingKYC --> Unverified: kycCancelled()
+    
+    BasicVerified --> PendingEnhanced: requestEnhancedKYC()
+    BasicVerified --> Expired: credentialExpiry()
+    
+    PendingEnhanced --> EnhancedVerified: enhancedKYCComplete()
+    PendingEnhanced --> BasicVerified: enhancedKYCFailed()
+    
+    EnhancedVerified --> PendingPremium: requestPremiumKYC()
+    EnhancedVerified --> Expired: credentialExpiry()
+    
+    PendingPremium --> PremiumVerified: premiumKYCComplete()
+    PremiumVerified --> Expired: credentialExpiry()
+    
+    Failed --> PendingKYC: retryKYC()
+    Expired --> PendingKYC: renewKYC()
+    
+    note right of BasicVerified
+        Basic KYC allows:
+        - Escrows up to $1,000
+        - Standard verification speed
+    end note
+    
+    note right of EnhancedVerified
+        Enhanced KYC allows:
+        - Escrows up to $10,000
+        - Priority AI processing
+    end note
+    
+    note right of PremiumVerified
+        Premium KYC allows:
+        - Unlimited escrow amounts
+        - Instant verification
+        - Dispute priority
+    end note
+```
+
+### Cross-Chain Message State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> Initiated: xCall()
+    
+    Initiated --> Routing: messageValidated()
+    Initiated --> Failed: validationFailed()
+    
+    Routing --> Delivered: onCall()
+    Routing --> Failed: routingFailed()
+    
+    Delivered --> Processing: messageReceived()
+    Delivered --> Reverted: onRevert()
+    
+    Processing --> Completed: onCallback(success)
+    Processing --> Reverted: onCallback(failure)
+    Processing --> Aborted: onAbort()
+    
+    Reverted --> Retry: retryMessage()
+    Reverted --> Failed: maxRetriesExceeded()
+    
+    Aborted --> Failed: abortConfirmed()
+    
+    Completed --> [*]
+    Failed --> [*]
+    
+    note right of Routing
+        ZetaChain validates:
+        - Message format
+        - Source chain authenticity
+        - Destination chain support
+    end note
+    
+    note right of Processing
+        Target chain processes:
+        - Message execution
+        - State updates
+        - Response generation
+    end note
+```
+
+## 💾 Database Schema (PostgreSQL)
+
+### Core Tables
+
+```sql
+-- Users table
+CREATE TABLE users (
+    wallet_address VARCHAR(44) PRIMARY KEY,
+    chain_id VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_active TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- User profiles table
+CREATE TABLE user_profiles (
+    wallet_address VARCHAR(44) PRIMARY KEY REFERENCES users(wallet_address),
+    kyc_verified BOOLEAN DEFAULT FALSE,
+    kyc_level VARCHAR(20) DEFAULT 'none',
+    kyc_credential_hash VARCHAR(64),
+    escrows_as_payer INTEGER DEFAULT 0,
+    escrows_as_payee INTEGER DEFAULT 0,
+    disputes_initiated INTEGER DEFAULT 0,
+    disputes_won INTEGER DEFAULT 0,
+    reputation_score INTEGER DEFAULT 50 CHECK (reputation_score >= 0 AND reputation_score <= 100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Escrows table
+CREATE TABLE escrows (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    escrow_id BIGINT NOT NULL,
+    payer VARCHAR(44) NOT NULL REFERENCES users(wallet_address),
+    payee VARCHAR(44) NOT NULL REFERENCES users(wallet_address),
+    amount BIGINT NOT NULL,
+    token_mint VARCHAR(44),
+    status VARCHAR(20) NOT NULL DEFAULT 'created',
+    deadline TIMESTAMP WITH TIME ZONE NOT NULL,
+    task_metadata_hash VARCHAR(64) NOT NULL,
+    evidence_hash VARCHAR(64),
+    kyc_verified BOOLEAN DEFAULT FALSE,
+    ai_verified BOOLEAN DEFAULT FALSE,
+    ai_confidence INTEGER CHECK (ai_confidence >= 0 AND ai_confidence <= 100),
+    disputed BOOLEAN DEFAULT FALSE,
+    chain_id VARCHAR(20) NOT NULL,
+    transaction_hash VARCHAR(128),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    
+    UNIQUE(escrow_id, chain_id)
+);
+
+-- AI verifications table
+CREATE TABLE ai_verifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    escrow_id UUID NOT NULL REFERENCES escrows(id),
+    confidence_score INTEGER NOT NULL CHECK (confidence_score >= 0 AND confidence_score <= 100),
+    decision VARCHAR(20) NOT NULL,
+    analysis_hash VARCHAR(64) NOT NULL,
+    verified_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    ai_model VARCHAR(50) NOT NULL,
+    processing_time INTEGER NOT NULL, -- milliseconds
+    review_required BOOLEAN DEFAULT FALSE
+);
+
+-- Disputes table
+CREATE TABLE disputes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    escrow_id UUID NOT NULL REFERENCES escrows(id),
+    initiator VARCHAR(44) NOT NULL REFERENCES users(wallet_address),
+    reason VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'open',
+    evidence_hash VARCHAR(64),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE,
+    resolution_data JSONB
+);
+
+-- IPFS storage tracking
+CREATE TABLE ipfs_storage (
+    hash VARCHAR(64) PRIMARY KEY,
+    size BIGINT NOT NULL,
+    mime_type VARCHAR(100),
+    filename VARCHAR(255),
+    uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    uploaded_by VARCHAR(44) REFERENCES users(wallet_address),
+    encrypted BOOLEAN DEFAULT FALSE,
+    access_control JSONB
+);
+
+-- Blockchain events
+CREATE TABLE blockchain_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    escrow_id UUID REFERENCES escrows(id),
+    event_type VARCHAR(50) NOT NULL,
+    block_number BIGINT NOT NULL,
+    transaction_hash VARCHAR(128) NOT NULL,
+    log_index INTEGER,
+    data JSONB NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    chain_id VARCHAR(20) NOT NULL,
+    processed BOOLEAN DEFAULT FALSE,
+    
+    UNIQUE(transaction_hash, log_index, chain_id)
+);
+
+-- Notifications
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id VARCHAR(44) NOT NULL REFERENCES users(wallet_address),
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    data JSONB,
+    read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    expires_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Indexes for performance
+CREATE INDEX idx_escrows_payer ON escrows(payer);
+CREATE INDEX idx_escrows_payee ON escrows(payee);
+CREATE INDEX idx_escrows_status ON escrows(status);
+CREATE INDEX idx_escrows_created_at ON escrows(created_at);
+CREATE INDEX idx_blockchain_events_escrow_id ON blockchain_events(escrow_id);
+CREATE INDEX idx_blockchain_events_type ON blockchain_events(event_type);
+CREATE INDEX idx_blockchain_events_timestamp ON blockchain_events(timestamp);
+CREATE INDEX idx_notifications_user_read ON notifications(user_id, read);
+```
+
+This comprehensive data model ensures type safety, consistency, and optimal performance across all components of the AetherLock system while supporting complex cross-chain operations and AI verification workflows.
 
 ## Escrow Lifecycle State Diagram
 

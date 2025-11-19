@@ -1,0 +1,1526 @@
+{
+  "timestamp": "2025-11-19T14:52:24.771Z",
+  "totalProperties": 13,
+  "passedProperties": 3,
+  "failedProperties": 10,
+  "totalIssues": 283,
+  "totalFiles": 72,
+  "properties": [
+    {
+      "propertyNumber": 1,
+      "name": "Primary AI provider consistency",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 5,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 225,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 489,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 666,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 808,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 809,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 5,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 14,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 50,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": 28,
+          "message": "AWS Bedrock identified as primary provider (should be Arcanum.ai)"
+        }
+      ],
+      "filesChecked": 55
+    },
+    {
+      "propertyNumber": 2,
+      "name": "Fallback chain ordering consistency",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 107,
+          "message": "Incorrect fallback order: Lock → Submit → Verify → Release (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 113,
+          "message": "Incorrect fallback order: Contract → Freelancer → IPFS → AI (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 119,
+          "message": "Incorrect fallback order: Frontend → Backend → Oracle → Blockchain (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 172,
+          "message": "Incorrect fallback order: Solana → ZetaChain → Somnia (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 64,
+          "message": "Incorrect fallback order: Frontend → Backend → Oracle → Blockchain (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 146,
+          "message": "Incorrect fallback order: Solana → ZetaChain → Somnia (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 570,
+          "message": "Incorrect fallback order: Client → Contract → Freelancer → AI (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 302,
+          "message": "Incorrect fallback order: Bedrock → OpenAI → Claude (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 303,
+          "message": "Incorrect fallback order: Bedrock → OpenAI → Claude (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 304,
+          "message": "Incorrect fallback order: Arcanum → OpenAI → Claude (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 305,
+          "message": "Incorrect fallback order: Arcanum.ai → Claude → OpenAI (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 477,
+          "message": "Incorrect fallback order: Bedrock → OpenAI → Claude (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 11,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "design\\potv-mechanism.mdx",
+          "line": 69,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "design\\potv-mechanism.mdx",
+          "line": 1965,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "diagrams\\architecture-diagrams.md",
+          "line": 283,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "diagrams\\sequence-diagrams.md",
+          "line": 5,
+          "message": "Incorrect fallback order: Client → Contract → Freelancer → AI (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "diagrams\\sequence-diagrams.md",
+          "line": 260,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "glossary.mdx",
+          "line": 18,
+          "message": "Incorrect fallback order: proof → Oracle → Smart (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "security\\cryptographic-proofs.mdx",
+          "line": 1115,
+          "message": "Incorrect fallback order: OpenAI → Claude → Gemini (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 65,
+          "message": "Incorrect fallback order: Arcanum → OpenAI → Claude (should be Arcanum.ai → OpenAI → Claude → Gemini)"
+        }
+      ],
+      "filesChecked": 33
+    },
+    {
+      "propertyNumber": 3,
+      "name": "Code example API consistency",
+      "passed": true,
+      "issues": [],
+      "filesChecked": 57
+    },
+    {
+      "propertyNumber": 4,
+      "name": "Environment variable consistency",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 103,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 174,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 175,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 177,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        },
+        {
+          "file": "implementation\\environment-variables.mdx",
+          "line": 397,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        },
+        {
+          "file": "implementation\\environment-variables.mdx",
+          "line": 404,
+          "message": "AWS environment variables without ARCANUM_* as primary"
+        }
+      ],
+      "filesChecked": 44
+    },
+    {
+      "propertyNumber": 5,
+      "name": "API endpoint consistency",
+      "passed": true,
+      "issues": [],
+      "filesChecked": 29
+    },
+    {
+      "propertyNumber": 6,
+      "name": "Fallback code priority consistency",
+      "passed": true,
+      "issues": [],
+      "filesChecked": 8
+    },
+    {
+      "propertyNumber": 7,
+      "name": "PoTV flow completeness",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: AI analysis, Chainlink oracle"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Zero-knowledge proof, Chainlink oracle, Smart contract"
+        },
+        {
+          "file": "diagrams\\sequence-diagrams.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Smart contract"
+        },
+        {
+          "file": "guides\\understanding-verification.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Zero-knowledge proof, Chainlink oracle, Smart contract"
+        },
+        {
+          "file": "implementation\\plan.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": "index.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": "market-analysis.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": "README.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: AI analysis, Chainlink oracle"
+        },
+        {
+          "file": "requirements\\ai-powered-verification.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Zero-knowledge proof, Chainlink oracle"
+        },
+        {
+          "file": "requirements\\escrow-creation-and-fund-management.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Zero-knowledge proof, Chainlink oracle"
+        },
+        {
+          "file": "security\\key-management.mdx",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: AI analysis, Chainlink oracle, Smart contract"
+        },
+        {
+          "file": "TABLE-OF-CONTENTS.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: Chainlink oracle"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": "N/A",
+          "message": "PoTV documentation missing components: AI analysis, Zero-knowledge proof, Chainlink oracle, Smart contract"
+        }
+      ],
+      "filesChecked": 28
+    },
+    {
+      "propertyNumber": 8,
+      "name": "Terminology capitalization consistency",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 221,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 221,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 221,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 289,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 304,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 333,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 468,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 473,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 517,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 517,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 517,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 701,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 713,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 715,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 715,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 715,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 882,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 883,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 884,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 885,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 221,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 517,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 715,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 221,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 291,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 304,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 517,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 701,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 715,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 262,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 188,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\chainlink-functions.mdx",
+          "line": 597,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\rest-api.mdx",
+          "line": 429,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\rest-api.mdx",
+          "line": 430,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\rest-api.mdx",
+          "line": 434,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\rest-api.mdx",
+          "line": 480,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 238,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 239,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 468,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 483,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 945,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "api\\websocket-api.mdx",
+          "line": 956,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": 90,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 34,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 56,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 63,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 69,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 174,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 795,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 804,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 850,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 925,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 934,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 1224,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 1654,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 1925,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 1928,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 34,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "design\\potv-mechanism.mdx",
+          "line": 702,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "how-it-works.mdx",
+          "line": 279,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "how-it-works.mdx",
+          "line": 301,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "how-it-works.mdx",
+          "line": 338,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "requirements\\ai-powered-verification.mdx",
+          "line": 170,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "technical-architecture.mdx",
+          "line": 163,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "technical-architecture.mdx",
+          "line": 172,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 15,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 15,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 15,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 59,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 65,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 78,
+          "message": "Incorrect capitalization: \"arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 15,
+          "message": "Incorrect capitalization: \"ARCANUM\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 15,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 59,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 65,
+          "message": "Incorrect capitalization: \"Arcanum\" (should be \"Arcanum.ai\")"
+        }
+      ],
+      "filesChecked": 38
+    },
+    {
+      "propertyNumber": 9,
+      "name": "PoTV terminology consistency",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 5,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 132,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 135,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 145,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 5,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": 131,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": 5,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": 10,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": 30,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": 5,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\requirements.md",
+          "line": 10,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 91,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 98,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 101,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 109,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 114,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 91,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 222,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 296,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 521,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 722,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 222,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 296,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 722,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 222,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 296,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 521,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 722,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 263,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 263,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 263,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 19,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 21,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "design\\ai-agent.mdx",
+          "line": 5,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "hackathon.md",
+          "line": 106,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "index.mdx",
+          "line": 336,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "README.md",
+          "line": 8,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "README.md",
+          "line": 64,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "README.md",
+          "line": 8,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "requirements\\ai-powered-verification.mdx",
+          "line": 5,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "requirements\\escrow-creation-and-fund-management.mdx",
+          "line": 5,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "requirements\\escrow-creation-and-fund-management.mdx",
+          "line": 5,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "technical-architecture.mdx",
+          "line": 688,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "technical-architecture.mdx",
+          "line": 688,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 19,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 35,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 41,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 42,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 47,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 53,
+          "message": "Incorrect terminology: \"PoTv\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 19,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 41,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 42,
+          "message": "Incorrect terminology: \"POTV\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 19,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        },
+        {
+          "file": "TERMINOLOGY-VALIDATION-REPORT.md",
+          "line": 35,
+          "message": "Incorrect terminology: \"Proof of Task\" (should be \"PoTV\" or \"Proof-of-Task Verification\")"
+        }
+      ],
+      "filesChecked": 37
+    },
+    {
+      "propertyNumber": 10,
+      "name": "AWS Bedrock context restriction",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 112,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 169,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 172,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\tasks.md",
+          "line": 519,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 5,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 18,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 47,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 60,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 96,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 100,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 101,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 192,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 303,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 447,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 452,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 489,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 497,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 529,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 666,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 680,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 694,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 736,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 808,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 809,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\design.md",
+          "line": 900,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 5,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 14,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 26,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 60,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 61,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 62,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 63,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\requirements.md",
+          "line": 96,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 9,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 23,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 65,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 164,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": 218,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 70,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 75,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 129,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 158,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 159,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 311,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 317,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 367,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 381,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 395,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 568,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 290,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 310,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 317,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 326,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 368,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "business-model.mdx",
+          "line": 377,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 35,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 50,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 53,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": 28,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": 50,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": 101,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 24,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 31,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 87,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 88,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "CONTENT-REVIEW-REPORT.md",
+          "line": 89,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\architecture.mdx",
+          "line": 120,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\architecture.mdx",
+          "line": 122,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\architecture.mdx",
+          "line": 624,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\deployment-architecture.mdx",
+          "line": 5,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\deployment-architecture.mdx",
+          "line": 12,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\overview.mdx",
+          "line": 18,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "design\\potv-mechanism.mdx",
+          "line": 143,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "implementation\\troubleshooting.mdx",
+          "line": 612,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "README.md",
+          "line": 27,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "README.md",
+          "line": 92,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "TASK-16-COMPLETION-SUMMARY.md",
+          "line": 54,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        },
+        {
+          "file": "TASK-16-COMPLETION-SUMMARY.md",
+          "line": 207,
+          "message": "AWS Bedrock mentioned outside comparison/alternative context"
+        }
+      ],
+      "filesChecked": 21
+    },
+    {
+      "propertyNumber": 11,
+      "name": "Cost documentation accuracy",
+      "passed": false,
+      "issues": [
+        {
+          "file": "amazon-q-usage.mdx",
+          "line": 162,
+          "message": "AWS Bedrock pricing mentioned without comparison context"
+        },
+        {
+          "file": "CHANGELOG.md",
+          "line": 85,
+          "message": "AWS Bedrock pricing mentioned without comparison context"
+        },
+        {
+          "file": "design\\somnia-integration.mdx",
+          "line": 5,
+          "message": "Cost section does not reference Arcanum.ai pricing"
+        },
+        {
+          "file": "design\\somnia-integration.mdx",
+          "line": 852,
+          "message": "Cost section does not reference Arcanum.ai pricing"
+        },
+        {
+          "file": "requirements\\evidence-storage.mdx",
+          "line": 111,
+          "message": "Cost section does not reference Arcanum.ai pricing"
+        }
+      ],
+      "filesChecked": 34
+    },
+    {
+      "propertyNumber": 12,
+      "name": "Security documentation completeness",
+      "passed": false,
+      "issues": [
+        {
+          "file": ".kiro\\specs\\aetherlock-documentation\\design.md",
+          "line": "N/A",
+          "message": "PoTV security documentation missing: Cryptographic signing, Oracle decentralization, Smart contract validation"
+        },
+        {
+          "file": ".kiro\\specs\\ai-architecture-correction\\tasks.md",
+          "line": "N/A",
+          "message": "PoTV security documentation missing: Oracle decentralization"
+        },
+        {
+          "file": "diagrams\\sequence-diagrams.md",
+          "line": "N/A",
+          "message": "PoTV security documentation missing: Oracle decentralization"
+        }
+      ],
+      "filesChecked": 6
+    },
+    {
+      "propertyNumber": 13,
+      "name": "Arcanum.ai rationale documentation",
+      "passed": false,
+      "issues": [
+        {
+          "file": "CHANGELOG.md",
+          "line": "N/A",
+          "message": "Provider comparison lacks rationale for choosing Arcanum.ai"
+        },
+        {
+          "file": "CODE-VALIDATION-SUMMARY.md",
+          "line": "N/A",
+          "message": "Provider comparison lacks rationale for choosing Arcanum.ai"
+        },
+        {
+          "file": "implementation\\troubleshooting.mdx",
+          "line": "N/A",
+          "message": "Provider comparison lacks rationale for choosing Arcanum.ai"
+        },
+        {
+          "file": "technical-architecture.mdx",
+          "line": "N/A",
+          "message": "Provider comparison lacks rationale for choosing Arcanum.ai"
+        }
+      ],
+      "filesChecked": 11
+    }
+  ]
+}

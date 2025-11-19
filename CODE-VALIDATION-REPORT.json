@@ -1,0 +1,23 @@
+{
+  "totalFiles": 66,
+  "totalCodeBlocks": 153,
+  "issues": [],
+  "summary": {
+    "typescript": {
+      "total": 57,
+      "issues": 0
+    },
+    "javascript": {
+      "total": 0,
+      "issues": 0
+    },
+    "rust": {
+      "total": 24,
+      "issues": 0
+    },
+    "other": {
+      "total": 72,
+      "issues": 0
+    }
+  }
+}

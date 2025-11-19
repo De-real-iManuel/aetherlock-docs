@@ -140,7 +140,7 @@ AetherLock-Lab-main/
 - Edge case handling
 
 **Code Examples**:
-- AWS Bedrock integration
+- Arcanum.ai integration with fallback chain (Arcanum.ai → OpenAI → Claude → Gemini)
 - zkMe verification
 - PoTv consensus logic
 - On-chain state updates
@@ -172,14 +172,14 @@ AetherLock-Lab-main/
 **Diagrams**: Solana → ZetaChain → Somnia message flow
 
 #### 7. AI Verification Layer (design/ai-agent.mdx)
-**Purpose**: Document AWS Bedrock integration and AI decision logic
+**Purpose**: Document Arcanum.ai integration and AI decision logic
 
 **Key Elements**:
-- Bedrock API integration code
+- Arcanum.ai API integration code
 - Prompt engineering strategies
 - Evidence analysis pipeline
 - Confidence scoring algorithm
-- Fallback provider chain (Arcanum → OpenAI → Claude)
+- Fallback provider chain (Arcanum.ai → OpenAI → Claude → Gemini)
 - Ed25519 signature generation
 
 **Code**: Complete TypeScript implementation with error handling

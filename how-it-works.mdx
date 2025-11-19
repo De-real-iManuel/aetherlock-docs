@@ -21,7 +21,7 @@ description: "4 simple steps from lock to release"
   <div className="p-6 rounded-xl bg-green-500/10 border border-green-500/30">
     <div className="text-4xl mb-3">3️⃣</div>
     <h3 className="text-lg font-bold text-white mb-2">AI Verifies</h3>
-    <p className="text-sm text-gray-400">Bedrock analyzes in 2.3 seconds</p>
+    <p className="text-sm text-gray-400">Arcanum.ai analyzes in 1.2 seconds</p>
   </div>
   <div className="p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
     <div className="text-4xl mb-3">4️⃣</div>
@@ -39,7 +39,7 @@ sequenceDiagram
     participant SC as Smart Contract<br/>(Solana Anchor)
     participant F as Freelancer<br/>(Wallet: Solflare)
     participant IPFS as IPFS Storage<br/>(Web3.Storage)
-    participant AI as AWS Bedrock<br/>(Claude 3 Sonnet)
+    participant AI as Arcanum.ai<br/>(Task Verification)
     participant ZK as zkMe<br/>(KYC Verification)
     participant T as Treasury<br/>(Protocol Fee)
     
@@ -67,11 +67,11 @@ sequenceDiagram
     SC->>SC: Update escrow state
     SC-->>F: Evidence submitted
     
-    Note over SC,AI: Phase 4: AI Verification (2.3s)
+    Note over SC,AI: Phase 4: AI Verification (1.2s)
     SC->>AI: verify_task(requirements, evidence_cid)
     AI->>IPFS: Fetch evidence from CID
     IPFS-->>AI: Return files (images, docs, etc.)
-    AI->>AI: Analyze with Claude 3<br/>(NLP + Vision)
+    AI->>AI: Analyze with Arcanum.ai<br/>(NLP + Vision)
     AI->>AI: Generate confidence score
     AI-->>SC: Verdict: APPROVED<br/>Confidence: 95%<br/>Reasoning: "All requirements met..."
     
@@ -270,13 +270,13 @@ async function handleEvidenceSubmit(escrowId: string, files: FileList) {
 
 **What Happens**:
 1. Smart contract triggers AI verification
-2. AWS Bedrock fetches evidence from IPFS
-3. Claude analyzes work vs. requirements
+2. Arcanum.ai fetches evidence from IPFS
+3. AI analyzes work vs. requirements
 4. Returns verdict with confidence score
 
-**AI Analysis (AWS Bedrock + TypeScript)**:
+**AI Analysis (Arcanum.ai + TypeScript)**:
 ```typescript
-import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+import { ArcanumClient } from '@arcanum/sdk';
 import axios from 'axios';
 
 interface VerificationResult {
@@ -290,23 +290,20 @@ interface VerificationResult {
   }[];
 }
 
-async function verifyWithBedrock(
+async function verifyWithArcanum(
   evidenceCid: string, 
   requirements: string
 ): Promise<VerificationResult> {
   // Fetch evidence from IPFS
   const evidence = await fetchFromIPFS(evidenceCid);
   
-  // Initialize Bedrock client
-  const bedrock = new BedrockRuntimeClient({
-    region: 'us-east-1',
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
+  // Initialize Arcanum.ai client
+  const arcanum = new ArcanumClient({
+    apiKey: process.env.ARCANUM_API_KEY!,
+    endpoint: process.env.ARCANUM_ENDPOINT || 'https://api.arcanum.ai/v1',
   });
   
-  // Construct prompt for Claude
+  // Construct prompt for verification
   const prompt = `You are an expert task verification AI for an escrow platform. 
 Analyze if the submitted work meets the specified requirements.
 
@@ -337,25 +334,19 @@ Return a JSON object with this exact structure:
 
 Be objective and thorough. Confidence > 0.9 = APPROVED, < 0.5 = REJECTED, else NEEDS_REVIEW.`;
 
-  // Invoke Claude 3 Sonnet
-  const response = await bedrock.send(new InvokeModelCommand({
-    modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
-    contentType: 'application/json',
-    accept: 'application/json',
-    body: JSON.stringify({
-      anthropic_version: 'bedrock-2023-05-31',
-      max_tokens: 2000,
+  // Invoke Arcanum.ai verification
+  const response = await arcanum.verify({
+    requirements,
+    evidence,
+    prompt,
+    options: {
+      maxTokens: 2000,
       temperature: 0.3, // Lower temperature for more consistent analysis
-      messages: [{
-        role: 'user',
-        content: prompt,
-      }],
-    }),
-  }));
+    },
+  });
   
   // Parse response
-  const responseBody = JSON.parse(new TextDecoder().decode(response.body));
-  const aiResponse = responseBody.content[0].text;
+  const aiResponse = response.analysis;
   
   // Extract JSON from response
   const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
@@ -411,7 +402,7 @@ async function fetchFromIPFS(cid: string): Promise<any> {
 - **Confidence < 50%**: Auto-reject
 
 **User Experience**:
-- Takes 2.3 seconds average
+- Takes 1.2 seconds average
 - Real-time progress updates
 - Detailed AI reasoning shown
 - Transparent confidence score
@@ -621,12 +612,12 @@ pub enum EscrowError {
       <div className="flex items-center gap-3 mb-3">
         <div className="text-3xl">🤖</div>
         <div>
-          <div className="text-sm text-gray-400">Day 3 - 2:00 PM (2.3 seconds later)</div>
+          <div className="text-sm text-gray-400">Day 3 - 2:00 PM (1.2 seconds later)</div>
           <h4 className="text-lg font-bold text-white">AI Verification Complete</h4>
         </div>
       </div>
       <p className="text-gray-300 mb-3">
-        AWS Bedrock Claude analyzes all files against requirements and returns verdict.
+        Arcanum.ai analyzes all files against requirements and returns verdict.
       </p>
       <div className="p-3 rounded bg-black/30 font-mono text-xs text-gray-400">
 ```json
@@ -712,7 +703,7 @@ pub enum EscrowError {
       </div>
       <div className="flex justify-between items-center p-3 rounded bg-black/30">
         <span className="text-gray-300">AI verification</span>
-        <span className="text-green-400 font-bold">2.3s ⚡</span>
+        <span className="text-green-400 font-bold">1.2s ⚡</span>
       </div>
       <div className="flex justify-between items-center p-3 rounded bg-black/30">
         <span className="text-gray-300">Fund release</span>
@@ -765,7 +756,7 @@ pub enum EscrowError {
     AetherLock is <span className="text-green-400">100x faster</span> than traditional platforms
   </p>
   <p className="text-gray-300">
-    2.3 seconds AI verification vs. 7-14 days manual review
+    1.2 seconds AI verification vs. 7-14 days manual review
   </p>
 </div>
 
@@ -802,5 +793,5 @@ pub enum EscrowError {
 ---
 
 <div className="text-center text-gray-400 text-sm mt-12">
-  From lock to release in 2.3 seconds | Powered by AWS Bedrock
+  From lock to release in 1.2 seconds | Powered by Arcanum.ai
 </div>

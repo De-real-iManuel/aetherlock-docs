@@ -377,7 +377,222 @@ redis-cli -u redis://username:password@host:port ping
 redis-cli CONFIG GET "*"
 ```
 
-### AWS Bedrock Integration Issues
+### Arcanum.ai Integration Issues
+
+#### Issue: Arcanum.ai API Authentication Failed
+
+**Symptoms**:
+```
+Error: 401 Unauthorized - Invalid API key
+Error: 403 Forbidden - API key does not have required permissions
+```
+
+**Root Cause**: Invalid or missing API key
+
+**Solution**:
+```bash
+# Verify API key is set
+echo $ARCANUM_API_KEY
+
+# Test API connectivity
+curl -X POST https://api.arcanum.ai/v1/analyze \
+  -H "Authorization: Bearer $ARCANUM_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"task": "test", "evidence": "test data"}'
+
+# Check API key permissions in Arcanum.ai dashboard
+# Navigate to: https://arcanum.ai/dashboard/api-keys
+
+# Regenerate API key if needed
+# 1. Go to Arcanum.ai dashboard
+# 2. Navigate to API Keys section
+# 3. Click "Regenerate" on your key
+# 4. Update ARCANUM_API_KEY environment variable
+```
+
+**API Key Acquisition**:
+1. Sign up at https://arcanum.ai
+2. Navigate to Dashboard → API Keys
+3. Click "Create New API Key"
+4. Copy the key and store securely
+5. Set as ARCANUM_API_KEY environment variable
+
+#### Issue: Arcanum.ai Rate Limit Exceeded
+
+**Symptoms**:
+```
+Error: 429 Too Many Requests
+Error: Rate limit exceeded, retry after 60 seconds
+```
+
+**Root Cause**: Exceeded API rate limits for your plan
+
+**Solution**:
+```typescript
+// Implement rate limit handling with exponential backoff
+const callArcanumWithRetry = async (data: any, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(process.env.ARCANUM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.ARCANUM_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After') || (Math.pow(2, i) * 1000);
+        console.warn(`Rate limited, retrying after ${retryAfter}ms`);
+        await new Promise(resolve => setTimeout(resolve, retryAfter));
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Arcanum.ai API error: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+    }
+  }
+};
+```
+
+**Check Rate Limits**:
+- Review your plan limits at https://arcanum.ai/dashboard/usage
+- Consider upgrading plan for higher limits
+- Implement request queuing to stay within limits
+
+#### Issue: Arcanum.ai Service Unavailable - Fallback Chain
+
+**Symptoms**:
+```
+Error: 503 Service Unavailable
+Error: Connection timeout to Arcanum.ai
+```
+
+**Root Cause**: Arcanum.ai service temporarily unavailable
+
+**Solution**:
+```typescript
+// Implement AI provider fallback chain
+const AI_PROVIDERS = [
+  {
+    name: 'Arcanum.ai',
+    endpoint: process.env.ARCANUM_ENDPOINT,
+    apiKey: process.env.ARCANUM_API_KEY,
+    priority: 1,
+  },
+  {
+    name: 'OpenAI',
+    endpoint: 'https://api.openai.com/v1/chat/completions',
+    apiKey: process.env.OPENAI_API_KEY,
+    priority: 2,
+  },
+  {
+    name: 'Claude',
+    endpoint: 'https://api.anthropic.com/v1/messages',
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    priority: 3,
+  },
+  {
+    name: 'Gemini',
+    endpoint: 'https://generativelanguage.googleapis.com/v1/models',
+    apiKey: process.env.GEMINI_API_KEY,
+    priority: 4,
+  },
+];
+
+const verifyWithFallback = async (taskData: any) => {
+  for (const provider of AI_PROVIDERS) {
+    if (!provider.apiKey) {
+      console.warn(`${provider.name} API key not configured, skipping`);
+      continue;
+    }
+
+    try {
+      console.log(`Attempting verification with ${provider.name}`);
+      const result = await callAIProvider(provider, taskData);
+      console.log(`Verification successful with ${provider.name}`);
+      return result;
+    } catch (error) {
+      console.error(`${provider.name} failed:`, error);
+      // Continue to next provider
+    }
+  }
+
+  throw new Error('All AI providers failed');
+};
+```
+
+**Fallback Configuration**:
+```bash
+# Ensure fallback providers are configured
+ARCANUM_API_KEY=your_arcanum_key        # Primary
+OPENAI_API_KEY=your_openai_key          # Fallback 1
+ANTHROPIC_API_KEY=your_anthropic_key    # Fallback 2
+GEMINI_API_KEY=your_gemini_key          # Fallback 3
+```
+
+#### Issue: Invalid Verification Response Format
+
+**Symptoms**:
+```
+Error: Unexpected response format from Arcanum.ai
+Error: Missing required field 'confidence' in response
+```
+
+**Root Cause**: API response format mismatch or API version change
+
+**Solution**:
+```typescript
+// Validate and normalize API responses
+interface ArcanumResponse {
+  verified: boolean;
+  confidence: number;
+  reasoning: string;
+  timestamp: string;
+}
+
+const validateArcanumResponse = (response: any): ArcanumResponse => {
+  if (typeof response.verified !== 'boolean') {
+    throw new Error('Invalid response: missing or invalid "verified" field');
+  }
+  
+  if (typeof response.confidence !== 'number' || response.confidence < 0 || response.confidence > 1) {
+    throw new Error('Invalid response: missing or invalid "confidence" field');
+  }
+
+  return {
+    verified: response.verified,
+    confidence: response.confidence,
+    reasoning: response.reasoning || 'No reasoning provided',
+    timestamp: response.timestamp || new Date().toISOString(),
+  };
+};
+
+// Usage
+try {
+  const rawResponse = await callArcanum(taskData);
+  const validatedResponse = validateArcanumResponse(rawResponse);
+  // Process validated response
+} catch (error) {
+  console.error('Response validation failed:', error);
+  // Handle error or try fallback provider
+}
+```
+
+**Check API Version**:
+- Verify you're using the correct API endpoint version
+- Review API documentation at https://docs.arcanum.ai
+- Check for breaking changes in changelog
+
+### Legacy AWS Bedrock Issues (Alternative Provider)
+
+If you're using AWS Bedrock as an alternative provider, refer to these troubleshooting steps:
 
 #### Issue: Bedrock API Access Denied
 
@@ -389,24 +604,6 @@ Error: AccessDeniedException: User is not authorized to perform: bedrock:InvokeM
 **Root Cause**: Insufficient IAM permissions
 
 **Solution**:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "bedrock:InvokeModel",
-        "bedrock:InvokeModelWithResponseStream"
-      ],
-      "Resource": [
-        "arn:aws:bedrock:*::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0"
-      ]
-    }
-  ]
-}
-```
-
 ```bash
 # Verify AWS credentials
 aws sts get-caller-identity
@@ -414,32 +611,10 @@ aws sts get-caller-identity
 # Test Bedrock access
 aws bedrock list-foundation-models --region us-east-1
 
-# Check IAM permissions
-aws iam get-user-policy --user-name your-user --policy-name BedrockAccess
+# Ensure IAM policy includes Bedrock permissions
 ```
 
-#### Issue: Bedrock Model Not Available
-
-**Symptoms**:
-```
-Error: ValidationException: The model 'anthropic.claude-3-sonnet' is not available
-```
-
-**Root Cause**: Model not available in region or incorrect model ID
-
-**Solution**:
-```bash
-# List available models in region
-aws bedrock list-foundation-models --region us-east-1
-
-# Check model availability
-aws bedrock get-foundation-model \
-  --model-identifier anthropic.claude-3-sonnet-20240229-v1:0 \
-  --region us-east-1
-
-# Update model ID in environment variables
-BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
-```
+**Note**: Arcanum.ai is the recommended primary provider. AWS Bedrock should only be used as an alternative if specifically required.
 
 ### API Rate Limiting Issues
 
@@ -1017,6 +1192,90 @@ app.get('/health', async (req, res) => {
   res.status(statusCode).json(health);
 });
 ```
+
+## AI Provider Setup Guide
+
+### Arcanum.ai API Key Acquisition
+
+To use Arcanum.ai for task verification, you need to obtain an API key:
+
+**Step-by-Step Instructions**:
+
+1. **Sign Up for Arcanum.ai**:
+   - Visit https://arcanum.ai
+   - Click "Sign Up" or "Get Started"
+   - Complete registration with your email and password
+   - Verify your email address
+
+2. **Access Dashboard**:
+   - Log in to your Arcanum.ai account
+   - Navigate to the Dashboard
+
+3. **Create API Key**:
+   - Go to "API Keys" section in the dashboard
+   - Click "Create New API Key"
+   - Give your key a descriptive name (e.g., "AetherLock Production")
+   - Select appropriate permissions (ensure "Task Verification" is enabled)
+   - Click "Generate Key"
+
+4. **Copy and Store Key**:
+   - Copy the generated API key immediately (it won't be shown again)
+   - Store it securely in your password manager
+   - Never commit the key to version control
+
+5. **Configure Environment**:
+   ```bash
+   # Add to your .env file
+   ARCANUM_API_KEY=arcanum_live_your_key_here
+   ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
+   ```
+
+6. **Test Configuration**:
+   ```bash
+   # Test API connectivity
+   curl -X POST https://api.arcanum.ai/v1/analyze \
+     -H "Authorization: Bearer $ARCANUM_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "task_description": "Test task",
+       "evidence": "Test evidence",
+       "requirements": ["Test requirement"]
+     }'
+   ```
+
+**Pricing Plans**:
+- **Free Tier**: 100 verifications/month
+- **Starter**: $49/month - 1,000 verifications
+- **Professional**: $199/month - 10,000 verifications
+- **Enterprise**: Custom pricing for unlimited verifications
+
+**API Rate Limits**:
+- Free: 10 requests/minute
+- Starter: 60 requests/minute
+- Professional: 300 requests/minute
+- Enterprise: Custom limits
+
+### Fallback Provider Setup
+
+For production resilience, configure fallback AI providers:
+
+**OpenAI Setup**:
+1. Visit https://platform.openai.com
+2. Create account and navigate to API Keys
+3. Generate new API key
+4. Set `OPENAI_API_KEY` environment variable
+
+**Anthropic (Claude) Setup**:
+1. Visit https://console.anthropic.com
+2. Create account and navigate to API Keys
+3. Generate new API key
+4. Set `ANTHROPIC_API_KEY` environment variable
+
+**Google Gemini Setup**:
+1. Visit https://makersuite.google.com/app/apikey
+2. Create or select a Google Cloud project
+3. Generate API key
+4. Set `GEMINI_API_KEY` environment variable
 
 ## Getting Help
 

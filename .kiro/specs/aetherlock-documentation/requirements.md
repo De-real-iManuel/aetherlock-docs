@@ -10,7 +10,7 @@ This specification defines the requirements for creating comprehensive, producti
 - **PoTv (Proof of Task Verification)**: Proprietary consensus mechanism validating task completion quality before fund release
 - **ZetaChain**: Universal blockchain platform enabling omnichain messaging and asset routing
 - **zkMe**: Zero-knowledge identity verification provider offering privacy-preserving KYC
-- **AWS Bedrock**: Amazon's managed AI service providing access to foundation models like Claude
+- **Arcanum.ai**: Primary AI verification provider for task completion analysis with specialized verification capabilities
 - **IPFS**: InterPlanetary File System for decentralized content storage
 - **Somnia**: High-throughput EVM-compatible blockchain for settlement operations
 - **Anchor**: Framework for Solana smart contract development
@@ -28,7 +28,7 @@ This specification defines the requirements for creating comprehensive, producti
 1. WHEN a judge reviews the documentation THEN the system SHALL provide complete architecture diagrams showing all components and their interactions
 2. WHEN a judge examines code examples THEN the system SHALL include production-ready code snippets with detailed comments and explanations
 3. WHEN a judge evaluates innovation THEN the system SHALL clearly articulate the PoTv mechanism and its advantages over traditional approaches
-4. WHEN a judge assesses completeness THEN the system SHALL document all integration points including AWS Bedrock, zkMe, ZetaChain, and IPFS
+4. WHEN a judge assesses completeness THEN the system SHALL document all integration points including Arcanum.ai, zkMe, ZetaChain, and IPFS
 5. WHEN a judge reviews deployment instructions THEN the system SHALL provide step-by-step guides with environment variable configurations and troubleshooting sections
 
 ### Requirement 2
@@ -40,7 +40,7 @@ This specification defines the requirements for creating comprehensive, producti
 1. WHEN a developer reviews API endpoints THEN the system SHALL document all REST API routes with request/response examples and error codes
 2. WHEN a developer examines smart contracts THEN the system SHALL provide complete Solana Anchor program code with function signatures and state structures
 3. WHEN a developer implements cross-chain features THEN the system SHALL document ZetaChain Universal App integration patterns with message serialization examples
-4. WHEN a developer integrates AI verification THEN the system SHALL provide AWS Bedrock integration code with prompt engineering guidelines
+4. WHEN a developer integrates AI verification THEN the system SHALL provide Arcanum.ai integration code with prompt engineering guidelines and fallback chain configuration (Arcanum.ai → OpenAI → Claude → Gemini)
 5. WHEN a developer tests locally THEN the system SHALL include mock services and testing frameworks for all external dependencies
 
 ### Requirement 3

@@ -1,42 +1,305 @@
-# Dispute Resolution
+# Dispute Resolution Requirements
 
-## User Story
+## Overview
 
-As a user involved in an escrow dispute, I need an efficient and fair resolution mechanism that combines AI analysis with human oversight, so that conflicts can be resolved quickly and impartially without expensive legal proceedings.
+This document defines the requirements for AetherLock's dispute resolution system. When AI verification results in low confidence or when parties disagree with the outcome, the system provides a structured process for human arbitrators to review evidence and make final binding decisions, ensuring fairness while maintaining the efficiency benefits of automated verification.
 
-## Acceptance Criteria
+## User Stories and Acceptance Criteria
 
-### 1. Automated Dispute Detection
-- System automatically detects potential disputes from verification failures
-- AI analyzes communication patterns and evidence quality for early warning signs
-- Dispute triggers include verification rejections, deadline violations, and user complaints
-- Automated escalation occurs when AI confidence falls below threshold levels
-- Early intervention mechanisms attempt resolution before formal dispute initiation
+### User Story 1: Client Disputes AI Verification Result
 
-### 2. AI-Assisted Evidence Analysis
-- AWS Bedrock Claude analyzes all submitted evidence from both parties
-- AI generates impartial assessment reports with detailed reasoning
-- Evidence comparison identifies inconsistencies and supporting documentation
-- Natural language processing extracts key facts from dispute narratives
-- AI recommendations include confidence scores and alternative interpretations
+**As a** client who disagrees with an AI approval decision  
+**I want to** initiate a dispute and request human review  
+**So that** I can challenge verification results I believe are incorrect
 
-### 3. Multi-Tier Resolution Process
-- Tier 1: Automated AI resolution for clear-cut cases (above 95 percent confidence)
-- Tier 2: AI recommendation with human reviewer approval (80-95 percent confidence)
-- Tier 3: Full human arbitration panel for complex disputes (below 80 percent confidence)
-- Each tier has defined timeframes and escalation criteria
-- Resolution process is transparent with regular status updates
+#### Acceptance Criteria
 
-### 4. Human Arbitrator Integration
-- Qualified arbitrators review AI recommendations and evidence
-- Arbitrator dashboard provides comprehensive case summaries and AI insights
-- Human oversight ensures fairness and handles edge cases
-- Arbitrator decisions can override AI recommendations with justification
-- Arbitrator performance is tracked for quality assurance
+1. **WHEN** I view an approved verification **THEN** the system SHALL display a "Dispute Result" button for 48 hours after approval
+2. **WHEN** I click "Dispute Result" **THEN** the system SHALL display a form requesting dispute reason and supporting evidence
+3. **WHEN** I submit the dispute **THEN** the system SHALL lock the escrow funds and prevent automatic release
+4. **WHEN** the dispute is submitted **THEN** the system SHALL emit a DisputeInitiated event with escrow ID, disputer address, and reason
+5. **WHEN** the dispute is recorded **THEN** the system SHALL update the escrow state to "InDispute" and notify all parties
 
-### 5. Resolution Enforcement
-- Dispute resolution decisions are automatically executed on-chain
-- Fund distribution follows resolution outcomes without manual intervention
-- Appeals process allows for review of disputed decisions
-- Resolution outcomes are recorded permanently for future reference
-- Enforcement mechanisms include partial payments and penalty distributions
+### User Story 2: Freelancer Disputes AI Rejection
+
+**As a** freelancer whose work was rejected by AI  
+**I want to** dispute the rejection and request human review  
+**So that** I can appeal decisions I believe are unfair or incorrect
+
+#### Acceptance Criteria
+
+1. **WHEN** my work is rejected **THEN** the system SHALL display a "Dispute Rejection" button immediately
+2. **WHEN** I initiate a dispute **THEN** the system SHALL allow me to provide additional evidence or clarification
+3. **WHEN** I submit the dispute **THEN** the system SHALL prevent the client from claiming a refund until resolution
+4. **WHEN** the dispute is submitted **THEN** the system SHALL assign the case to the arbitrator queue
+5. **WHEN** the dispute is recorded **THEN** the system SHALL send notifications to the client and arbitrator pool
+
+### User Story 3: System Assigns Arbitrator to Dispute
+
+**As the** AetherLock protocol  
+**I want to** automatically assign qualified arbitrators to disputes  
+**So that** cases are resolved fairly and efficiently by neutral third parties
+
+#### Acceptance Criteria
+
+1. **WHEN** a dispute is initiated **THEN** the system SHALL select 3 arbitrators from the active arbitrator pool
+2. **WHEN** arbitrators are selected **THEN** the system SHALL prioritize those with relevant expertise and high reputation scores
+3. **WHEN** an arbitrator is assigned **THEN** the system SHALL send a notification with case details and deadline (72 hours)
+4. **WHEN** an arbitrator declines **THEN** the system SHALL automatically assign a replacement from the pool
+5. **WHEN** all 3 arbitrators accept **THEN** the system SHALL update the dispute state to "UnderReview"
+
+### User Story 4: Arbitrator Reviews Dispute Case
+
+**As an** arbitrator assigned to a dispute  
+**I want to** review all evidence and make an informed decision  
+**So that** I can resolve the dispute fairly based on the facts
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the dispute case **THEN** the system SHALL display the original task description, all submitted evidence, AI verification result, and dispute reason
+2. **WHEN** I review evidence **THEN** the system SHALL provide tools to view images, documents, and URLs directly in the interface
+3. **WHEN** I need clarification **THEN** the system SHALL allow me to request additional information from either party
+4. **WHEN** I make a decision **THEN** the system SHALL require me to select "Approve" or "Reject" and provide detailed reasoning
+5. **WHEN** I submit my decision **THEN** the system SHALL record it with timestamp and signature for auditability
+
+### User Story 5: System Reaches Consensus Decision
+
+**As the** AetherLock protocol  
+**I want to** aggregate arbitrator decisions into a final binding outcome  
+**So that** disputes are resolved with majority consensus
+
+#### Acceptance Criteria
+
+1. **WHEN** all 3 arbitrators submit decisions **THEN** the system SHALL calculate the majority decision (2 out of 3)
+2. **WHEN** majority approves **THEN** the system SHALL release funds to the freelancer and update escrow state to "Completed"
+3. **WHEN** majority rejects **THEN** the system SHALL refund the client and update escrow state to "Refunded"
+4. **WHEN** there is a tie (should not occur with 3 arbitrators) **THEN** the system SHALL assign a 4th arbitrator as tiebreaker
+5. **WHEN** the final decision is made **THEN** the system SHALL emit a DisputeResolved event with outcome and reasoning
+
+### User Story 6: Parties Receive Dispute Resolution Notification
+
+**As a** party involved in a dispute  
+**I want to** be notified of the resolution outcome  
+**So that** I understand the final decision and next steps
+
+#### Acceptance Criteria
+
+1. **WHEN** the dispute is resolved **THEN** the system SHALL send email and in-app notifications to both client and freelancer
+2. **WHEN** the notification is sent **THEN** it SHALL include the final decision, vote breakdown, and arbitrator reasoning
+3. **WHEN** funds are released **THEN** the notification SHALL include transaction details and expected arrival time
+4. **WHEN** the decision favors the freelancer **THEN** the system SHALL include information about the client's dispute fee forfeiture
+5. **WHEN** the decision favors the client **THEN** the system SHALL include information about refund processing
+
+### User Story 7: System Manages Dispute Fees
+
+**As the** AetherLock protocol  
+**I want to** charge dispute fees to discourage frivolous disputes  
+**So that** the arbitration system is used responsibly and arbitrators are compensated
+
+#### Acceptance Criteria
+
+1. **WHEN** a party initiates a dispute **THEN** the system SHALL require a dispute fee of 5% of the escrow amount (minimum 10 USDC)
+2. **WHEN** the dispute fee is paid **THEN** the system SHALL hold it in escrow until resolution
+3. **WHEN** the disputer wins **THEN** the system SHALL refund the dispute fee to the disputer
+4. **WHEN** the disputer loses **THEN** the system SHALL distribute the dispute fee to the 3 arbitrators (split equally)
+5. **WHEN** the dispute is resolved **THEN** the system SHALL emit a DisputeFeeDistributed event with recipient addresses and amounts
+
+### User Story 8: Arbitrator Reputation and Incentives
+
+**As an** arbitrator in the AetherLock ecosystem  
+**I want** my performance to be tracked and rewarded  
+**So that** I am incentivized to provide fair and timely decisions
+
+#### Acceptance Criteria
+
+1. **WHEN** I complete a dispute case **THEN** the system SHALL update my reputation score based on decision quality and timeliness
+2. **WHEN** my decision aligns with the majority **THEN** the system SHALL increase my reputation score by 10 points
+3. **WHEN** my decision is consistently in the minority **THEN** the system SHALL decrease my reputation score by 5 points
+4. **WHEN** I miss the 72-hour deadline **THEN** the system SHALL decrease my reputation score by 20 points and remove me from the case
+5. **WHEN** my reputation score falls below 50 **THEN** the system SHALL suspend me from the arbitrator pool pending review
+
+### User Story 9: Dispute Timeline and Deadlines
+
+**As a** party in a dispute  
+**I want** clear timelines and deadlines for resolution  
+**So that** I know when to expect a decision and can plan accordingly
+
+#### Acceptance Criteria
+
+1. **WHEN** a dispute is initiated **THEN** the system SHALL display an estimated resolution timeline of 72 hours
+2. **WHEN** arbitrators are assigned **THEN** the system SHALL set a 72-hour deadline for each arbitrator to submit their decision
+3. **WHEN** 48 hours have passed **THEN** the system SHALL send reminder notifications to arbitrators who haven't decided
+4. **WHEN** an arbitrator misses the deadline **THEN** the system SHALL automatically assign a replacement and extend the timeline by 24 hours
+5. **WHEN** all decisions are submitted early **THEN** the system SHALL resolve the dispute immediately without waiting for the full 72 hours
+
+### User Story 10: Dispute Analytics and Reporting
+
+**As a** system administrator  
+**I want to** track dispute metrics and patterns  
+**So that** I can improve the AI verification system and arbitration process
+
+#### Acceptance Criteria
+
+1. **WHEN** disputes are resolved **THEN** the system SHALL log the outcome, AI decision, arbitrator decisions, and resolution time
+2. **WHEN** patterns emerge **THEN** the system SHALL identify common dispute reasons and flag them for AI model improvement
+3. **WHEN** arbitrator performance is analyzed **THEN** the system SHALL calculate accuracy, average resolution time, and consensus rate
+4. **WHEN** dispute rates are calculated **THEN** the system SHALL display the percentage of escrows that go to dispute
+5. **WHEN** AI accuracy is measured **THEN** the system SHALL compare AI decisions with arbitrator decisions to calculate agreement rate
+
+## Technical Requirements
+
+### Dispute State Management
+
+#### Dispute States
+- **Initiated**: Dispute submitted, awaiting arbitrator assignment
+- **UnderReview**: Arbitrators assigned and reviewing evidence
+- **AwaitingDecisions**: Some arbitrators have decided, waiting for others
+- **Resolved**: Majority decision reached, outcome executed
+- **Escalated**: Tie occurred, 4th arbitrator assigned
+
+#### State Transitions
+```
+Initiated → UnderReview → AwaitingDecisions → Resolved
+                                            ↓
+                                        Escalated → Resolved
+```
+
+### Arbitrator Selection Algorithm
+
+#### Selection Criteria
+1. **Availability**: Arbitrator must be active and not at capacity (max 5 concurrent cases)
+2. **Expertise**: Match arbitrator skills with task category (design, development, writing, etc.)
+3. **Reputation**: Prioritize arbitrators with reputation score ≥ 80
+4. **Randomization**: Use verifiable random function (VRF) to prevent gaming
+5. **Conflict of Interest**: Exclude arbitrators who have interacted with either party
+
+#### Selection Process
+```typescript
+function selectArbitrators(dispute: Dispute): Arbitrator[] {
+  const eligible = arbitrators.filter(a => 
+    a.isActive && 
+    a.currentCases < 5 && 
+    a.reputation >= 80 &&
+    !hasConflictOfInterest(a, dispute)
+  );
+  
+  const scored = eligible.map(a => ({
+    arbitrator: a,
+    score: calculateScore(a, dispute)
+  }));
+  
+  scored.sort((a, b) => b.score - a.score);
+  
+  const selected = [];
+  for (let i = 0; i < 3; i++) {
+    const index = vrfRandom(scored.length);
+    selected.push(scored[index].arbitrator);
+    scored.splice(index, 1);
+  }
+  
+  return selected;
+}
+```
+
+### Consensus Mechanism
+
+#### Voting Rules
+- **Majority**: 2 out of 3 arbitrators must agree
+- **Tiebreaker**: If tie occurs (should not with 3), assign 4th arbitrator
+- **Weighted**: All arbitrator votes have equal weight (no reputation weighting)
+
+#### Decision Aggregation
+```typescript
+function aggregateDecisions(decisions: Decision[]): Outcome {
+  const approvals = decisions.filter(d => d.decision === 'Approve').length;
+  const rejections = decisions.filter(d => d.decision === 'Reject').length;
+  
+  if (approvals > rejections) {
+    return { outcome: 'Approved', votes: { approve: approvals, reject: rejections } };
+  } else if (rejections > approvals) {
+    return { outcome: 'Rejected', votes: { approve: approvals, reject: rejections } };
+  } else {
+    return { outcome: 'Tie', votes: { approve: approvals, reject: rejections } };
+  }
+}
+```
+
+### Dispute Fee Structure
+
+#### Fee Calculation
+- **Base Fee**: 5% of escrow amount
+- **Minimum Fee**: 10 USDC
+- **Maximum Fee**: 500 USDC
+- **Currency**: USDC (stablecoin for predictable costs)
+
+#### Fee Distribution
+- **Disputer Wins**: 100% refunded to disputer
+- **Disputer Loses**: Split equally among 3 arbitrators (33.33% each)
+- **Platform Fee**: No additional platform fee on dispute resolution
+
+### Performance Requirements
+- **Arbitrator Assignment**: Complete within 5 minutes of dispute initiation
+- **Decision Deadline**: 72 hours per arbitrator
+- **Resolution Time**: Average 48 hours from initiation to resolution
+- **Notification Latency**: Send notifications within 1 minute of state changes
+
+### Security Requirements
+- **Decision Signing**: All arbitrator decisions signed with Ed25519 private key
+- **Conflict of Interest**: Automated checks to prevent biased arbitrator assignment
+- **Evidence Integrity**: Verify all evidence CIDs match content hashes
+- **Access Control**: Only assigned arbitrators can view case details
+
+### Data Integrity Requirements
+- **Immutable Decisions**: Arbitrator decisions cannot be modified after submission
+- **Audit Trail**: Complete history of all dispute events stored on-chain
+- **Transparency**: All decisions and reasoning publicly viewable (addresses anonymized)
+- **Verifiability**: Anyone can verify arbitrator signatures and vote counts
+
+## Error Handling
+
+### Dispute Initiation Errors
+- **Insufficient Balance**: "Insufficient balance to pay dispute fee. Required: X USDC, Available: Y USDC"
+- **Dispute Window Expired**: "Dispute window has expired. Disputes must be initiated within 48 hours of verification."
+- **Already Disputed**: "This escrow is already in dispute. You cannot initiate another dispute."
+- **Invalid Reason**: "Please provide a detailed reason for the dispute (minimum 50 characters)."
+
+### Arbitrator Assignment Errors
+- **No Available Arbitrators**: "No arbitrators available. Your dispute is queued and will be assigned when arbitrators become available."
+- **Assignment Timeout**: "Arbitrator assignment timed out. Retrying with expanded pool..."
+- **Arbitrator Declined**: "Assigned arbitrator declined the case. Assigning replacement..."
+
+### Decision Submission Errors
+- **Deadline Missed**: "Decision deadline has passed. You have been removed from this case and your reputation score has been decreased."
+- **Invalid Decision**: "Please select either 'Approve' or 'Reject' and provide reasoning (minimum 100 characters)."
+- **Already Decided**: "You have already submitted a decision for this case. Decisions cannot be modified."
+
+### Resolution Errors
+- **Fund Transfer Failed**: "Failed to transfer funds. Retrying... (Attempt X of 3)"
+- **Consensus Error**: "Error calculating consensus. Administrators have been notified."
+- **Notification Failed**: "Failed to send notification to parties. Notification queued for retry."
+
+## Integration Points
+
+### Smart Contract Integration
+- **Dispute State**: Store dispute state in escrow account
+- **Arbitrator Registry**: On-chain registry of active arbitrators with reputation scores
+- **Decision Storage**: Store arbitrator decisions with signatures on-chain
+- **Fee Management**: Handle dispute fee collection and distribution
+
+### Frontend Integration
+- **Dispute Form**: User-friendly form for initiating disputes with evidence upload
+- **Arbitrator Dashboard**: Interface for arbitrators to review cases and submit decisions
+- **Status Tracking**: Real-time updates on dispute progress and arbitrator activity
+- **Notification Center**: Display dispute-related notifications prominently
+
+### Notification Service Integration
+- **Email Notifications**: Send detailed emails for dispute initiation, assignment, and resolution
+- **In-App Notifications**: Real-time notifications for all dispute state changes
+- **SMS Alerts**: Optional SMS alerts for high-value disputes (>$1000)
+- **Webhook Support**: Allow third-party integrations to receive dispute events
+
+### Analytics Integration
+- **Dispute Metrics**: Track dispute rate, resolution time, and outcomes
+- **Arbitrator Performance**: Monitor arbitrator accuracy, speed, and consensus rate
+- **AI Accuracy**: Compare AI decisions with arbitrator decisions to measure accuracy
+- **Cost Analysis**: Calculate dispute resolution costs and arbitrator compensation

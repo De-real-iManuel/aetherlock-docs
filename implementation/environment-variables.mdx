@@ -339,31 +339,78 @@ Environment variables are used to configure the AetherLock Protocol for differen
 - **Example**: `abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890`
 - **Security**: Store securely, never commit to version control
 
-### AWS Configuration
+### AI Provider Configuration
+
+#### Primary AI Provider (Arcanum.ai)
+
+#### `ARCANUM_API_KEY`
+- **Description**: Arcanum.ai API key for task verification
+- **Required**: Yes
+- **Format**: API key string
+- **Example**: `arcanum_live_1234567890abcdef1234567890abcdef`
+- **Security**: Store securely, different keys for each environment
+- **Acquisition**: Sign up at https://arcanum.ai and generate API key from dashboard
+
+#### `ARCANUM_ENDPOINT`
+- **Description**: Arcanum.ai API endpoint URL
+- **Required**: Yes
+- **Format**: `https://api.arcanum.ai/v1/analyze`
+- **Default**: `https://api.arcanum.ai/v1/analyze`
+- **Example**: `https://api.arcanum.ai/v1/analyze`
+
+#### AI Fallback Providers (Optional)
+
+These providers are used as fallbacks if Arcanum.ai is unavailable. The fallback order is: Arcanum.ai → OpenAI → Claude → Gemini
+
+#### `OPENAI_API_KEY`
+- **Description**: OpenAI API key for fallback verification
+- **Required**: No (recommended for production)
+- **Format**: API key string starting with `sk-`
+- **Example**: `sk-1234567890abcdef1234567890abcdef1234567890abcdef`
+- **Security**: Store securely, rotate regularly
+
+#### `ANTHROPIC_API_KEY`
+- **Description**: Anthropic (Claude) API key for fallback verification
+- **Required**: No (recommended for production)
+- **Format**: API key string starting with `sk-ant-`
+- **Example**: `sk-ant-1234567890abcdef1234567890abcdef`
+- **Security**: Store securely, rotate regularly
+
+#### `GEMINI_API_KEY`
+- **Description**: Google Gemini API key for fallback verification
+- **Required**: No (recommended for production)
+- **Format**: API key string
+- **Example**: `AIzaSy1234567890abcdef1234567890abcdef`
+- **Security**: Store securely, rotate regularly
+
+#### Legacy AWS Configuration (Alternative - Not Recommended)
+
+These variables are maintained for backward compatibility but Arcanum.ai is the recommended primary provider.
 
 #### `AWS_REGION`
-- **Description**: AWS region for Bedrock and other services
-- **Required**: Yes
+- **Description**: AWS region for Bedrock (if using as alternative)
+- **Required**: No
 - **Values**: AWS region codes
 - **Example**: `us-east-1`
+- **Note**: Only needed if using AWS Bedrock as an alternative provider
 
 #### `AWS_ACCESS_KEY_ID`
-- **Description**: AWS access key ID
-- **Required**: Yes
+- **Description**: AWS access key ID (if using Bedrock as alternative)
+- **Required**: No
 - **Format**: 20-character alphanumeric string
 - **Example**: `AKIAIOSFODNN7EXAMPLE`
 - **Security**: Use IAM roles in production when possible
 
 #### `AWS_SECRET_ACCESS_KEY`
-- **Description**: AWS secret access key
-- **Required**: Yes
+- **Description**: AWS secret access key (if using Bedrock as alternative)
+- **Required**: No
 - **Format**: 40-character base64 string
 - **Example**: `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
 - **Security**: Store securely, rotate regularly
 
 #### `BEDROCK_MODEL_ID`
-- **Description**: AWS Bedrock model identifier for AI verification
-- **Required**: Yes
+- **Description**: AWS Bedrock model identifier (if using as alternative)
+- **Required**: No
 - **Format**: Model ID string
 - **Examples**:
   - Claude 3 Sonnet: `anthropic.claude-3-sonnet-20240229-v1:0`
@@ -519,6 +566,8 @@ NODE_ENV=development
 DATABASE_URL=postgresql://postgres:password@localhost:5432/aetherlock_dev
 REDIS_URL=redis://localhost:6379
 SOLANA_RPC_URL=https://api.devnet.solana.com
+ARCANUM_API_KEY=arcanum_test_your_key_here
+ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
 ZKME_ENVIRONMENT=sandbox
 ```
 
@@ -536,6 +585,8 @@ NEXT_PUBLIC_ENABLE_DEBUG=false
 NODE_ENV=staging
 DATABASE_URL=postgresql://user:pass@staging-db.example.com:5432/aetherlock_staging
 REDIS_URL=redis://user:pass@staging-cache.example.com:6379
+ARCANUM_API_KEY=arcanum_test_your_key_here
+ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
 ZKME_ENVIRONMENT=sandbox
 ```
 
@@ -554,6 +605,11 @@ NEXT_PUBLIC_ENABLE_ANALYTICS=true
 NODE_ENV=production
 DATABASE_SSL=true
 REDIS_TLS=true
+ARCANUM_API_KEY=arcanum_live_your_key_here
+ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
+OPENAI_API_KEY=sk-your_openai_key_here
+ANTHROPIC_API_KEY=sk-ant-your_anthropic_key_here
+GEMINI_API_KEY=your_gemini_key_here
 ZKME_ENVIRONMENT=production
 LOG_LEVEL=warn
 ```
@@ -575,6 +631,7 @@ const frontendEnvSchema = z.object({
   NEXT_PUBLIC_SOLANA_NETWORK: z.enum(['mainnet-beta', 'devnet', 'testnet']),
   NEXT_PUBLIC_SOLANA_RPC_ENDPOINT: z.string().url(),
   NEXT_PUBLIC_ESCROW_PROGRAM_ID: z.string().min(32).max(44),
+  NEXT_PUBLIC_ARCANUM_API_KEY: z.string().optional(), // Only if client-side verification needed
 });
 
 export const validateFrontendEnv = () => {
@@ -597,9 +654,11 @@ const backendEnvSchema = Joi.object({
   PORT: Joi.number().port().default(3001),
   DATABASE_URL: Joi.string().uri().required(),
   REDIS_URL: Joi.string().uri().required(),
-  AWS_REGION: Joi.string().required(),
-  AWS_ACCESS_KEY_ID: Joi.string().alphanum().length(20).required(),
-  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+  ARCANUM_API_KEY: Joi.string().required(),
+  ARCANUM_ENDPOINT: Joi.string().uri().required(),
+  OPENAI_API_KEY: Joi.string().optional(),
+  ANTHROPIC_API_KEY: Joi.string().optional(),
+  GEMINI_API_KEY: Joi.string().optional(),
 });
 
 const validateBackendEnv = () => {

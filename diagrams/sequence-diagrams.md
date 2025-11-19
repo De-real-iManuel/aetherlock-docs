@@ -13,7 +13,7 @@ sequenceDiagram
     participant ZetaChain
     participant Freelancer
     participant IPFS
-    participant AI as AWS Bedrock AI
+    participant AI as Arcanum.ai
     participant Oracle as Chainlink Oracle
     participant Treasury
     
@@ -168,7 +168,7 @@ sequenceDiagram
     participant Frontend
     participant Backend
     participant Solana as Solana Program
-    participant AI as AWS Bedrock AI
+    participant AI as Arcanum.ai
     participant Arbitrator
     participant Freelancer
     participant Treasury
@@ -218,3 +218,90 @@ sequenceDiagram
     
     Note over Client,Treasury: Resolution Time: 24-48 hours
 ```
+
+
+
+## Proof-of-Task Verification (PoTV) Detailed Flow
+
+```mermaid
+sequenceDiagram
+    participant Freelancer
+    participant IPFS
+    participant Oracle as Chainlink Oracle
+    participant AI as Arcanum.ai
+    participant Fallback as Fallback Providers<br/>(OpenAI/Claude/Gemini)
+    participant zkMe as zkMe SDK
+    participant ZetaChain
+    participant Solana as Solana Program
+    participant Client
+    
+    Note over Freelancer,Client: Phase 1: Evidence Submission & Storage
+    Freelancer->>IPFS: Upload Evidence Files
+    Note right of IPFS: Decentralized storage<br/>Content addressing
+    IPFS-->>Freelancer: Content Hash (CID)
+    Freelancer->>Solana: Submit Evidence Hash
+    Solana->>Solana: Update Escrow State<br/>Status: EVIDENCE_SUBMITTED
+    Solana-->>Freelancer: Evidence Recorded
+    
+    Note over Freelancer,Client: Phase 2: AI Analysis (PoTV Component 1)
+    Solana->>Oracle: Trigger Verification Request
+    Oracle->>IPFS: Fetch Evidence by CID
+    IPFS-->>Oracle: Evidence Files
+    
+    Oracle->>AI: Analyze Evidence<br/>POST /v1/analyze
+    Note right of AI: Primary provider:<br/>Arcanum.ai
+    
+    alt Arcanum.ai Success
+        AI->>AI: Semantic Analysis<br/>Quality Scoring<br/>Requirements Matching
+        AI-->>Oracle: Verification Result<br/>Confidence: 94%
+    else Arcanum.ai Failure
+        AI-->>Oracle: Error Response
+        Oracle->>Fallback: Retry with OpenAI
+        Note right of Fallback: Fallback chain:<br/>OpenAI → Claude → Gemini
+        Fallback-->>Oracle: Verification Result<br/>Confidence: 91%
+    end
+    
+    Oracle->>Oracle: Sign Result<br/>HMAC-SHA256 + Timestamp
+    Note right of Oracle: Cryptographic signature<br/>prevents tampering
+    
+    Note over Freelancer,Client: Phase 3: Zero-Knowledge Proof (PoTV Component 2)
+    Oracle->>zkMe: Generate ZK Proof
+    Note right of zkMe: Proof includes:<br/>- Verification occurred<br/>- Confidence ≥ threshold<br/>- Timestamp valid<br/><br/>Does NOT reveal:<br/>- Evidence content<br/>- AI model details<br/>- Analysis reasoning
+    zkMe->>zkMe: Create Cryptographic Proof
+    zkMe-->>Oracle: ZK Proof Generated
+    
+    Note over Freelancer,Client: Phase 4: Oracle Consensus (PoTV Component 3)
+    Oracle->>Oracle: Validate ZK Proof
+    Note right of Oracle: Multiple oracle nodes<br/>independently verify
+    Oracle->>Oracle: Reach Consensus<br/>Majority Agreement
+    Oracle->>ZetaChain: Submit Verification<br/>with ZK Proof
+    Note right of ZetaChain: Cross-chain message<br/>with proof payload
+    
+    Note over Freelancer,Client: Phase 5: On-Chain Validation (PoTV Component 4)
+    ZetaChain->>Solana: Update Verification Status
+    Solana->>Solana: Validate PoTV Chain<br/>1. AI signature valid?<br/>2. ZK proof correct?<br/>3. Oracle consensus?<br/>4. Timestamp fresh?
+    
+    alt All Validations Pass
+        Solana->>Solana: Mark as APPROVED
+        Solana->>Freelancer: Release Funds (90%)
+        Solana->>Solana: Collect Fee (10%)
+        Solana-->>Client: Task Completed
+        Solana-->>Freelancer: Payment Received
+    else Validation Fails
+        Solana->>Solana: Mark as DISPUTED
+        Solana-->>Client: Manual Review Required
+        Solana-->>Freelancer: Funds Held Pending Review
+    end
+    
+    Note over Freelancer,Client: PoTV Complete: Cryptographic proof of human work quality
+    Note over Freelancer,Client: Total Time: ~2.3 seconds (average)
+```
+
+**PoTV Security Properties:**
+
+1. **AI Result Integrity**: Cryptographic signatures prevent tampering with verification results
+2. **Privacy Preservation**: Zero-knowledge proofs verify without exposing evidence content
+3. **Decentralization**: Multiple oracle nodes prevent single point of failure
+4. **Immutability**: On-chain validation creates permanent audit trail
+5. **Fallback Resilience**: Provider chain ensures high availability (Arcanum.ai → OpenAI → Claude → Gemini)
+

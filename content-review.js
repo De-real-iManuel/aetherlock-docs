@@ -76,7 +76,7 @@ class ContentReview {
       'Requirement 1': {
         '1.1': 'Complete architecture diagrams',
         '1.2': 'Production-ready code snippets',
-        '1.3': 'PoTv mechanism explanation',
+        '1.3': 'PoTV mechanism explanation',
         '1.4': 'Integration points documentation',
         '1.5': 'Deployment instructions',
       },
@@ -134,7 +134,7 @@ class ContentReview {
     // Check for key content indicators
     const contentChecks = {
       'architecture diagrams': ['design/architecture.mdx', 'technical-architecture.mdx'],
-      'PoTv mechanism': ['design/potv-mechanism.mdx'],
+      'PoTV mechanism': ['design/potv-mechanism.mdx'],
       'REST API': ['api/rest-api.mdx'],
       'smart contracts': ['api/smart-contracts.mdx', 'design/solana-escrow-contract.mdx'],
       'AWS Bedrock': ['design/ai-agent.mdx'],
@@ -178,7 +178,7 @@ class ContentReview {
     // Key terms that should be consistent
     const keyTerms = [
       { correct: 'AetherLock', variations: ['aetherlock', 'Aetherlock', 'AETHERLOCK'] },
-      { correct: 'PoTv', variations: ['POTV', 'potv', 'Potv'] },
+      { correct: 'PoTV', variations: ['POTV', 'potv', 'PoTv', 'Potv'] },
       { correct: 'ZetaChain', variations: ['Zetachain', 'zetachain', 'ZETACHAIN'] },
       { correct: 'zkMe', variations: ['ZkMe', 'ZKME', 'zkme'] },
       { correct: 'AWS Bedrock', variations: ['aws bedrock', 'Bedrock', 'AWS bedrock'] },
