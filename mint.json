@@ -62,6 +62,7 @@
         "design/overview",
         "design/architecture",
         "design/data-models",
+        "design/potv-mechanism.mdx",
         "technical-architecture"
       ]
     },
