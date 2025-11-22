@@ -1,0 +1,761 @@
+---
+title: "Access Controls"
+description: "Solana PDA constraints, role-based access control, and permission management in AetherLock"
+---
+
+# Access Controls
+
+AetherLock implements a comprehensive access control system using Solana's Program Derived Addresses (PDAs), role-based permissions, and multi-signature requirements. This document details the security mechanisms that protect user funds and ensure proper authorization throughout the protocol.
+
+## Solana PDA Constraints
+
+### Overview
+
+Program Derived Addresses (PDAs) provide deterministic, secure account derivation without requiring private keys. AetherLock uses PDAs to:
+- Ensure only authorized programs can modify accounts
+- Create deterministic addresses for escrow accounts
+- Implement secure cross-program invocations
+- Prevent unauthorized access to user funds
+
+### Escrow Account PDAs
+
+```rust
+use anchor_lang::prelude::*;
+
+#[derive(Accounts)]
+#[instruction(escrow_id: String)]
+pub struct CreateEscrow<'info> {
+    #[account(
+        init,
+        payer = client,
+        space = EscrowAccount::LEN,
+        seeds = [
+            b"escrow",
+            escrow_id.as_bytes(),
+            client.key().as_ref()
+        ],
+        bump
+    )]
+    pub escrow: Account<'info, EscrowAccount>,
+    
+    #[account(mut)]
+    pub client: Signer<'info>,
+    
+    pub system_program: Program<'info, System>,
+}
+
+#[account]
+pub struct EscrowAccount {
+    pub id: String,                    // Unique escrow identifier
+    pub client: Pubkey,               // Client who created escrow
+    pub freelancer: Option<Pubkey>,   // Assigned freelancer
+    pub amount: u64,                  // Escrow amount in lamports
+    pub state: EscrowState,           // Current escrow state
+    pub created_at: i64,              // Creation timestamp
+    pub deadline: i64,                // Completion deadline
+    pub bump: u8,                     // PDA bump seed
+}
+
+impl EscrowAccount {
+    pub const LEN: usize = 8 + // discriminator
+        32 + // id (max 32 chars)
+        32 + // client pubkey
+        33 + // freelancer option pubkey
+        8 +  // amount
+        1 +  // state enum
+        8 +  // created_at
+        8 +  // deadline
+        1;   // bump
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
+pub enum EscrowState {
+    Created,
+    Funded,
+    InProgress,
+    SubmittedForReview,
+    Approved,
+    Disputed,
+    Completed,
+    Cancelled,
+}
+```
+
+### Treasury PDA
+
+```rust
+#[derive(Accounts)]
+pub struct InitializeTreasury<'info> {
+    #[account(
+        init,
+        payer = authority,
+        space = TreasuryAccount::LEN,
+        seeds = [b"treasury"],
+        bump
+    )]
+    pub treasury: Account<'info, TreasuryAccount>,
+    
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    
+    pub system_program: Program<'info, System>,
+}
+
+#[account]
+pub struct TreasuryAccount {
+    pub authority: Pubkey,        // Treasury authority
+    pub fee_percentage: u16,      // Fee percentage (basis points)
+    pub total_fees_collected: u64, // Total fees collected
+    pub bump: u8,                 // PDA bump seed
+}
+
+impl TreasuryAccount {
+    pub const LEN: usize = 8 + // discriminator
+        32 + // authority
+        2 +  // fee_percentage
+        8 +  // total_fees_collected
+        1;   // bump
+    
+    pub const FEE_BASIS_POINTS: u16 = 1000; // 10% fee
+}
+```
+
+### User Profile PDAs
+
+```rust
+#[derive(Accounts)]
+pub struct CreateUserProfile<'info> {
+    #[account(
+        init,
+        payer = user,
+        space = UserProfile::LEN,
+        seeds = [
+            b"user_profile",
+            user.key().as_ref()
+        ],
+        bump
+    )]
+    pub user_profile: Account<'info, UserProfile>,
+    
+    #[account(mut)]
+    pub user: Signer<'info>,
+    
+    pub system_program: Program<'info, System>,
+}
+
+#[account]
+pub struct UserProfile {
+    pub owner: Pubkey,
+    pub kyc_verified: bool,
+    pub reputation_score: u32,
+    pub total_escrows_created: u32,
+    pub total_escrows_completed: u32,
+    pub total_volume: u64,
+    pub created_at: i64,
+    pub bump: u8,
+}
+
+impl UserProfile {
+    pub const LEN: usize = 8 + // discriminator
+        32 + // owner
+        1 +  // kyc_verified
+        4 +  // reputation_score
+        4 +  // total_escrows_created
+        4 +  // total_escrows_completed
+        8 +  // total_volume
+        8 +  // created_at
+        1;   // bump
+}
+```
+
+## Role-Based Access Control
+
+### Role Definitions
+
+```rust
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
+pub enum UserRole {
+    Client,           // Can create escrows, fund them
+    Freelancer,       // Can accept escrows, submit work
+    Arbitrator,       // Can resolve disputes
+    Admin,            // Can manage system parameters
+    AIOracle,         // Can submit AI verification results
+    TreasuryManager,  // Can manage treasury operations
+}
+
+#[account]
+pub struct RoleAccount {
+    pub user: Pubkey,
+    pub roles: Vec<UserRole>,
+    pub granted_by: Pubkey,
+    pub granted_at: i64,
+    pub expires_at: Option<i64>,
+    pub is_active: bool,
+}
+```
+
+### Permission Checks
+
+```rust
+impl<'info> EscrowAccount {
+    /// Check if user has permission to modify escrow
+    pub fn check_escrow_permission(
+        &self,
+        user: &Pubkey,
+        action: EscrowAction,
+    ) -> Result<()> {
+        match action {
+            EscrowAction::Fund => {
+                require_eq!(self.client, *user, ErrorCode::UnauthorizedClient);
+                require_eq!(self.state, EscrowState::Created, ErrorCode::InvalidState);
+            },
+            EscrowAction::AcceptWork => {
+                require!(
+                    self.freelancer.is_none() || self.freelancer == Some(*user),
+                    ErrorCode::UnauthorizedFreelancer
+                );
+                require_eq!(self.state, EscrowState::Funded, ErrorCode::InvalidState);
+            },
+            EscrowAction::SubmitWork => {
+                require_eq!(
+                    self.freelancer.unwrap(),
+                    *user,
+                    ErrorCode::UnauthorizedFreelancer
+                );
+                require_eq!(self.state, EscrowState::InProgress, ErrorCode::InvalidState);
+            },
+            EscrowAction::ApproveWork => {
+                require_eq!(self.client, *user, ErrorCode::UnauthorizedClient);
+                require_eq!(self.state, EscrowState::SubmittedForReview, ErrorCode::InvalidState);
+            },
+            EscrowAction::DisputeWork => {
+                require!(
+                    self.client == *user || self.freelancer == Some(*user),
+                    ErrorCode::UnauthorizedDispute
+                );
+            },
+            EscrowAction::ResolveDispute => {
+                // Only arbitrators can resolve disputes
+                require!(
+                    self.has_role(user, UserRole::Arbitrator)?,
+                    ErrorCode::UnauthorizedArbitrator
+                );
+            },
+        }
+        Ok(())
+    }
+
+    /// Check if user has specific role
+    pub fn has_role(&self, user: &Pubkey, role: UserRole) -> Result<bool> {
+        // Implementation would check role account
+        // This is a simplified version
+        Ok(match role {
+            UserRole::Client => self.client == *user,
+            UserRole::Freelancer => self.freelancer == Some(*user),
+            _ => false, // Would check role account in real implementation
+        })
+    }
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub enum EscrowAction {
+    Fund,
+    AcceptWork,
+    SubmitWork,
+    ApproveWork,
+    DisputeWork,
+    ResolveDispute,
+}
+```
+
+### Admin Functions
+
+```rust
+#[derive(Accounts)]
+pub struct AdminFunction<'info> {
+    #[account(mut)]
+    pub admin: Signer<'info>,
+    
+    #[account(
+        seeds = [b"admin_config"],
+        bump,
+        has_one = admin @ ErrorCode::UnauthorizedAdmin
+    )]
+    pub admin_config: Account<'info, AdminConfig>,
+}
+
+#[account]
+pub struct AdminConfig {
+    pub admin: Pubkey,
+    pub fee_percentage: u16,
+    pub max_escrow_amount: u64,
+    pub min_escrow_amount: u64,
+    pub dispute_timeout: i64,
+    pub ai_oracle_key: Pubkey,
+}
+
+impl<'info> AdminFunction<'info> {
+    pub fn update_fee_percentage(
+        ctx: Context<AdminFunction>,
+        new_fee_percentage: u16,
+    ) -> Result<()> {
+        require!(
+            new_fee_percentage <= 2000, // Max 20%
+            ErrorCode::FeeTooHigh
+        );
+        
+        let admin_config = &mut ctx.accounts.admin_config;
+        admin_config.fee_percentage = new_fee_percentage;
+        
+        msg!("Fee percentage updated to: {}%", new_fee_percentage as f64 / 100.0);
+        Ok(())
+    }
+
+    pub fn update_ai_oracle(
+        ctx: Context<AdminFunction>,
+        new_oracle_key: Pubkey,
+    ) -> Result<()> {
+        let admin_config = &mut ctx.accounts.admin_config;
+        admin_config.ai_oracle_key = new_oracle_key;
+        
+        msg!("AI Oracle updated to: {}", new_oracle_key);
+        Ok(())
+    }
+}
+```
+
+## Permission Matrix
+
+| Role | Create Escrow | Fund Escrow | Accept Work | Submit Work | Approve Work | Dispute | Resolve Dispute | Admin Functions |
+|------|---------------|-------------|-------------|-------------|--------------|---------|-----------------|-----------------|
+| **Client** | ✅ | ✅ (own) | ❌ | ❌ | ✅ (own) | ✅ (own) | ❌ | ❌ |
+| **Freelancer** | ✅ | ❌ | ✅ | ✅ (assigned) | ❌ | ✅ (assigned) | ❌ | ❌ |
+| **Arbitrator** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Admin** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
+| **AI Oracle** | ❌ | ❌ | ❌ | ❌ | ✅ (AI result) | ❌ | ❌ | ❌ |
+| **Treasury Manager** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ (treasury) |
+
+### Permission Implementation
+
+```rust
+pub fn check_permission(
+    user: &Pubkey,
+    role: UserRole,
+    action: SystemAction,
+    context: &ActionContext,
+) -> Result<()> {
+    match (role, action) {
+        (UserRole::Client, SystemAction::CreateEscrow) => Ok(()),
+        (UserRole::Client, SystemAction::FundEscrow) => {
+            require_eq!(context.escrow_client, *user, ErrorCode::NotEscrowOwner);
+            Ok(())
+        },
+        (UserRole::Freelancer, SystemAction::AcceptWork) => {
+            require!(
+                context.escrow_freelancer.is_none() || 
+                context.escrow_freelancer == Some(*user),
+                ErrorCode::WorkAlreadyAccepted
+            );
+            Ok(())
+        },
+        (UserRole::Arbitrator, SystemAction::ResolveDispute) => {
+            require_eq!(context.escrow_state, EscrowState::Disputed, ErrorCode::NotInDispute);
+            Ok(())
+        },
+        (UserRole::Admin, SystemAction::UpdateSystemConfig) => Ok(()),
+        (UserRole::AIOracle, SystemAction::SubmitAIResult) => {
+            require_eq!(*user, context.ai_oracle_key, ErrorCode::UnauthorizedOracle);
+            Ok(())
+        },
+        _ => Err(ErrorCode::InsufficientPermissions.into()),
+    }
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub enum SystemAction {
+    CreateEscrow,
+    FundEscrow,
+    AcceptWork,
+    SubmitWork,
+    ApproveWork,
+    DisputeWork,
+    ResolveDispute,
+    UpdateSystemConfig,
+    SubmitAIResult,
+}
+
+pub struct ActionContext {
+    pub escrow_client: Pubkey,
+    pub escrow_freelancer: Option<Pubkey>,
+    pub escrow_state: EscrowState,
+    pub ai_oracle_key: Pubkey,
+}
+```
+
+## Multi-Signature Requirements
+
+### Treasury Multi-Sig
+
+```rust
+#[derive(Accounts)]
+pub struct MultisigTreasuryOperation<'info> {
+    #[account(mut)]
+    pub treasury: Account<'info, TreasuryAccount>,
+    
+    #[account(
+        mut,
+        seeds = [b"multisig", treasury.key().as_ref()],
+        bump
+    )]
+    pub multisig: Account<'info, MultisigAccount>,
+    
+    pub signer: Signer<'info>,
+}
+
+#[account]
+pub struct MultisigAccount {
+    pub owners: Vec<Pubkey>,          // List of authorized signers
+    pub threshold: u8,                // Required signatures
+    pub nonce: u64,                   // Transaction nonce
+    pub pending_transactions: Vec<PendingTransaction>,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct PendingTransaction {
+    pub id: u64,
+    pub transaction_type: TransactionType,
+    pub data: Vec<u8>,
+    pub signatures: Vec<Pubkey>,
+    pub created_at: i64,
+    pub expires_at: i64,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub enum TransactionType {
+    WithdrawFees,
+    UpdateFeePercentage,
+    AddOwner,
+    RemoveOwner,
+    ChangeThreshold,
+}
+
+impl<'info> MultisigTreasuryOperation<'info> {
+    pub fn propose_transaction(
+        ctx: Context<MultisigTreasuryOperation>,
+        transaction_type: TransactionType,
+        data: Vec<u8>,
+    ) -> Result<()> {
+        let multisig = &mut ctx.accounts.multisig;
+        let signer = ctx.accounts.signer.key();
+        
+        // Check if signer is authorized owner
+        require!(
+            multisig.owners.contains(&signer),
+            ErrorCode::UnauthorizedSigner
+        );
+        
+        // Create pending transaction
+        let transaction = PendingTransaction {
+            id: multisig.nonce,
+            transaction_type,
+            data,
+            signatures: vec![signer],
+            created_at: Clock::get()?.unix_timestamp,
+            expires_at: Clock::get()?.unix_timestamp + 86400, // 24 hours
+        };
+        
+        multisig.pending_transactions.push(transaction);
+        multisig.nonce += 1;
+        
+        msg!("Transaction proposed with ID: {}", multisig.nonce - 1);
+        Ok(())
+    }
+
+    pub fn sign_transaction(
+        ctx: Context<MultisigTreasuryOperation>,
+        transaction_id: u64,
+    ) -> Result<()> {
+        let multisig = &mut ctx.accounts.multisig;
+        let signer = ctx.accounts.signer.key();
+        
+        // Find transaction
+        let transaction = multisig.pending_transactions
+            .iter_mut()
+            .find(|tx| tx.id == transaction_id)
+            .ok_or(ErrorCode::TransactionNotFound)?;
+        
+        // Check if already signed
+        require!(
+            !transaction.signatures.contains(&signer),
+            ErrorCode::AlreadySigned
+        );
+        
+        // Check if not expired
+        require!(
+            Clock::get()?.unix_timestamp < transaction.expires_at,
+            ErrorCode::TransactionExpired
+        );
+        
+        // Add signature
+        transaction.signatures.push(signer);
+        
+        // Execute if threshold reached
+        if transaction.signatures.len() >= multisig.threshold as usize {
+            Self::execute_transaction(ctx, transaction_id)?;
+        }
+        
+        Ok(())
+    }
+
+    fn execute_transaction(
+        ctx: Context<MultisigTreasuryOperation>,
+        transaction_id: u64,
+    ) -> Result<()> {
+        let multisig = &mut ctx.accounts.multisig;
+        let treasury = &mut ctx.accounts.treasury;
+        
+        // Find and remove transaction
+        let transaction_index = multisig.pending_transactions
+            .iter()
+            .position(|tx| tx.id == transaction_id)
+            .ok_or(ErrorCode::TransactionNotFound)?;
+        
+        let transaction = multisig.pending_transactions.remove(transaction_index);
+        
+        // Execute based on transaction type
+        match transaction.transaction_type {
+            TransactionType::WithdrawFees => {
+                let amount = u64::from_le_bytes(
+                    transaction.data[0..8].try_into().unwrap()
+                );
+                Self::withdraw_fees(treasury, amount)?;
+            },
+            TransactionType::UpdateFeePercentage => {
+                let new_fee = u16::from_le_bytes(
+                    transaction.data[0..2].try_into().unwrap()
+                );
+                treasury.fee_percentage = new_fee;
+            },
+            TransactionType::AddOwner => {
+                let new_owner = Pubkey::new_from_array(
+                    transaction.data[0..32].try_into().unwrap()
+                );
+                multisig.owners.push(new_owner);
+            },
+            TransactionType::RemoveOwner => {
+                let owner_to_remove = Pubkey::new_from_array(
+                    transaction.data[0..32].try_into().unwrap()
+                );
+                multisig.owners.retain(|&owner| owner != owner_to_remove);
+            },
+            TransactionType::ChangeThreshold => {
+                let new_threshold = transaction.data[0];
+                require!(
+                    new_threshold <= multisig.owners.len() as u8,
+                    ErrorCode::ThresholdTooHigh
+                );
+                multisig.threshold = new_threshold;
+            },
+        }
+        
+        msg!("Transaction {} executed successfully", transaction_id);
+        Ok(())
+    }
+
+    fn withdraw_fees(treasury: &mut TreasuryAccount, amount: u64) -> Result<()> {
+        require!(
+            amount <= treasury.total_fees_collected,
+            ErrorCode::InsufficientFees
+        );
+        
+        treasury.total_fees_collected -= amount;
+        
+        // Transfer logic would be implemented here
+        msg!("Withdrew {} lamports from treasury", amount);
+        Ok(())
+    }
+}
+```
+
+### Dispute Resolution Multi-Sig
+
+```rust
+#[derive(Accounts)]
+pub struct ArbitratorPanel<'info> {
+    #[account(mut)]
+    pub escrow: Account<'info, EscrowAccount>,
+    
+    #[account(
+        seeds = [b"arbitrator_panel", escrow.key().as_ref()],
+        bump
+    )]
+    pub panel: Account<'info, ArbitratorPanelAccount>,
+    
+    pub arbitrator: Signer<'info>,
+}
+
+#[account]
+pub struct ArbitratorPanelAccount {
+    pub escrow: Pubkey,
+    pub arbitrators: Vec<Pubkey>,     // 3 arbitrators
+    pub votes: Vec<DisputeVote>,      // Votes from arbitrators
+    pub threshold: u8,                // 2 out of 3 required
+    pub resolution: Option<DisputeResolution>,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct DisputeVote {
+    pub arbitrator: Pubkey,
+    pub decision: DisputeDecision,
+    pub reasoning: String,
+    pub timestamp: i64,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub enum DisputeDecision {
+    FavorClient,      // Refund to client
+    FavorFreelancer,  // Pay freelancer
+    Split(u8),        // Split percentage to freelancer
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone)]
+pub struct DisputeResolution {
+    pub decision: DisputeDecision,
+    pub executed_at: i64,
+    pub final_votes: Vec<DisputeVote>,
+}
+```
+
+## Access Control Validation
+
+### Runtime Checks
+
+```rust
+pub fn validate_access_control(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> Result<()> {
+    // Validate PDA derivation
+    let (expected_pda, bump) = Pubkey::find_program_address(
+        &[b"escrow", b"test_id", accounts[1].key.as_ref()],
+        program_id,
+    );
+    
+    require_eq!(
+        *accounts[0].key,
+        expected_pda,
+        ErrorCode::InvalidPDADerivation
+    );
+    
+    // Validate signer requirements
+    require!(
+        accounts[1].is_signer,
+        ErrorCode::MissingSigner
+    );
+    
+    // Validate account ownership
+    require_eq!(
+        *accounts[0].owner,
+        *program_id,
+        ErrorCode::InvalidAccountOwner
+    );
+    
+    Ok(())
+}
+```
+
+### Security Audit Checklist
+
+#### PDA Security
+- [ ] **Seed Uniqueness**: All PDA seeds are unique and collision-resistant
+- [ ] **Bump Validation**: Canonical bump seeds are used consistently
+- [ ] **Cross-Program Invocation**: Only authorized programs can invoke
+- [ ] **Account Ownership**: All accounts owned by correct programs
+
+#### Role-Based Access
+- [ ] **Role Assignment**: Only authorized entities can assign roles
+- [ ] **Permission Checks**: All actions validate user permissions
+- [ ] **Role Expiration**: Time-based role expiration implemented
+- [ ] **Privilege Escalation**: No unauthorized privilege escalation paths
+
+#### Multi-Signature
+- [ ] **Threshold Security**: Appropriate signature thresholds set
+- [ ] **Signer Validation**: All signers are authorized and verified
+- [ ] **Transaction Expiry**: Pending transactions have expiration times
+- [ ] **Replay Protection**: Nonces prevent transaction replay
+
+#### General Security
+- [ ] **Input Validation**: All inputs are properly validated
+- [ ] **State Consistency**: Account states remain consistent
+- [ ] **Error Handling**: Proper error messages without information leakage
+- [ ] **Reentrancy Protection**: No reentrancy vulnerabilities
+
+## Error Codes
+
+```rust
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Unauthorized client access")]
+    UnauthorizedClient = 6000,
+    
+    #[msg("Unauthorized freelancer access")]
+    UnauthorizedFreelancer,
+    
+    #[msg("Unauthorized arbitrator access")]
+    UnauthorizedArbitrator,
+    
+    #[msg("Unauthorized admin access")]
+    UnauthorizedAdmin,
+    
+    #[msg("Invalid escrow state for this action")]
+    InvalidState,
+    
+    #[msg("Insufficient permissions for this action")]
+    InsufficientPermissions,
+    
+    #[msg("Invalid PDA derivation")]
+    InvalidPDADerivation,
+    
+    #[msg("Missing required signer")]
+    MissingSigner,
+    
+    #[msg("Invalid account owner")]
+    InvalidAccountOwner,
+    
+    #[msg("Transaction not found")]
+    TransactionNotFound,
+    
+    #[msg("Transaction already signed by this user")]
+    AlreadySigned,
+    
+    #[msg("Transaction has expired")]
+    TransactionExpired,
+    
+    #[msg("Threshold too high for number of owners")]
+    ThresholdTooHigh,
+    
+    #[msg("Insufficient fees in treasury")]
+    InsufficientFees,
+    
+    #[msg("Fee percentage too high")]
+    FeeTooHigh,
+    
+    #[msg("Not the escrow owner")]
+    NotEscrowOwner,
+    
+    #[msg("Work already accepted by another freelancer")]
+    WorkAlreadyAccepted,
+    
+    #[msg("Escrow not in dispute state")]
+    NotInDispute,
+    
+    #[msg("Unauthorized oracle")]
+    UnauthorizedOracle,
+    
+    #[msg("Unauthorized signer")]
+    UnauthorizedSigner,
+}
+```
+
+This comprehensive access control system ensures that AetherLock maintains strict security boundaries while providing the flexibility needed for a decentralized escrow protocol.

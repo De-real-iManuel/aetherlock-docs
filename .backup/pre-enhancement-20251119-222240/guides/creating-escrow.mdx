@@ -1,0 +1,757 @@
+---
+title: "Creating an Escrow"
+description: "Step-by-step guide to create secure escrow transactions on AetherLock Protocol"
+---
+
+# Creating an Escrow Guide
+
+Learn how to create secure escrow transactions on AetherLock Protocol. This guide covers everything from initial setup to transaction confirmation.
+
+## Before You Start
+
+### Prerequisites
+
+<Checklist>
+- [ ] Wallet connected to AetherLock ([Wallet Connection Guide](/guides/wallet-connection))
+- [ ] KYC verification completed ([KYC Guide](/guides/kyc-verification))
+- [ ] Sufficient funds for escrow amount + gas fees
+- [ ] Clear project requirements and deliverables defined
+- [ ] Service provider identified (optional - can be open escrow)
+</Checklist>
+
+### Understanding Escrow Types
+
+<Tabs>
+<Tab title="Direct Escrow">
+**Use Case**: Working with a specific freelancer/service provider
+**Setup**: Invite specific wallet address
+**Security**: Higher - both parties pre-verified
+**Timeline**: Faster setup and execution
+**Best For**: Ongoing relationships, trusted providers
+</Tab>
+
+<Tab title="Open Escrow">
+**Use Case**: Finding the best service provider
+**Setup**: Public listing for applications
+**Security**: Standard - providers verified during application
+**Timeline**: Longer due to selection process
+**Best For**: New projects, competitive bidding
+</Tab>
+
+<Tab title="Milestone Escrow">
+**Use Case**: Large projects with multiple deliverables
+**Setup**: Multiple payment stages
+**Security**: Highest - incremental verification
+**Timeline**: Extended over project duration
+**Best For**: Complex projects, long-term engagements
+</Tab>
+</Tabs>
+
+## Step-by-Step Escrow Creation
+
+### Step 1: Access Escrow Creation
+
+<Steps>
+<Step title="Navigate to Dashboard">
+1. Log into your AetherLock dashboard
+2. Ensure your wallet is connected (green indicator)
+3. Verify your KYC status is approved
+4. Click "Create New Escrow" button
+</Step>
+
+<Step title="Choose Escrow Type">
+1. Select from the three escrow types
+2. Review the differences and requirements
+3. Consider your project needs and timeline
+4. Click "Continue" with your selection
+</Step>
+</Steps>
+
+### Step 2: Project Details
+
+<Steps>
+<Step title="Basic Information">
+Fill out the project overview:
+
+**Project Title**: Clear, descriptive name (max 100 characters)
+```
+✅ Good: "E-commerce Website Design with Payment Integration"
+❌ Bad: "Website stuff"
+```
+
+**Category**: Select from predefined categories
+- Web Development
+- Mobile App Development  
+- Graphic Design
+- Content Writing
+- Marketing & SEO
+- Data Analysis
+- Consulting
+- Other (specify)
+
+**Description**: Detailed project requirements (max 2000 characters)
+```markdown
+## Project Overview
+Build a responsive e-commerce website for handmade jewelry business
+
+## Key Requirements
+- Product catalog with 200+ items
+- Shopping cart and checkout system
+- Payment integration (Stripe, PayPal)
+- Mobile-responsive design
+- Admin dashboard for inventory management
+
+## Deliverables
+- Complete website files
+- Documentation
+- 30 days post-launch support
+```
+</Step>
+
+<Step title="Timeline and Budget">
+**Project Duration**: 
+- Start Date: When work should begin
+- End Date: Final delivery deadline
+- Milestones: Key checkpoints (for milestone escrows)
+
+**Budget Information**:
+- Total Amount: Full project value
+- Currency: Choose from supported tokens
+- Payment Schedule: Lump sum or milestone-based
+</Step>
+
+<Step title="Requirements and Deliverables">
+**Detailed Requirements**:
+```markdown
+### Technical Specifications
+- Framework: React.js with Next.js
+- Database: PostgreSQL
+- Hosting: Vercel or similar
+- Performance: <3s page load time
+
+### Design Requirements  
+- Brand colors: #1a1a1a, #f0f0f0, #gold
+- Mobile-first approach
+- Accessibility compliance (WCAG 2.1)
+
+### Functional Requirements
+- User registration/login
+- Product search and filtering
+- Inventory management
+- Order tracking
+- Email notifications
+```
+
+**Acceptance Criteria**:
+Define clear, measurable success criteria:
+- [ ] All pages load in under 3 seconds
+- [ ] Mobile responsive on all devices
+- [ ] Payment processing works correctly
+- [ ] Admin can add/edit products
+- [ ] Site passes accessibility audit
+</Step>
+</Steps>
+
+### Step 3: Financial Configuration
+
+<Steps>
+<Step title="Choose Payment Token">
+Select your preferred cryptocurrency:
+
+<Tabs>
+<Tab title="Solana Tokens">
+- **SOL**: Native Solana token
+- **USDC**: USD Coin (stable)
+- **USDT**: Tether (stable)
+- **RAY**: Raydium token
+- **SRM**: Serum token
+</Tab>
+
+<Tab title="Sui Tokens">
+- **SUI**: Native Sui token  
+- **USDC**: USD Coin on Sui
+- **WETH**: Wrapped Ethereum
+</Tab>
+
+<Tab title="TON Tokens">
+- **TON**: Native TON token
+- **jUSDT**: Jetton USDT
+- **jUSDC**: Jetton USDC
+</Tab>
+</Tabs>
+
+**Amount Configuration**:
+```typescript
+// Example: Escrow amount calculation
+const escrowConfig = {
+  projectAmount: 5000,      // Main payment to service provider
+  currency: "USDC",         // Stable coin for predictable value
+  aetherLockFee: 500,      // 10% platform fee
+  gasFee: 0.01,            // Estimated transaction costs
+  totalLocked: 5500.01     // Total amount locked in escrow
+};
+```
+</Step>
+
+<Step title="Payment Schedule">
+**Single Payment**:
+- Entire amount released upon completion
+- Simplest option for small projects
+- Fastest resolution time
+
+**Milestone Payments**:
+```markdown
+### Milestone 1: Design & Planning (30%)
+- Wireframes and mockups
+- Technical architecture document
+- Project timeline
+- **Amount**: 1,500 USDC
+
+### Milestone 2: Development (50%)  
+- Core functionality implemented
+- Basic UI/UX complete
+- Initial testing completed
+- **Amount**: 2,500 USDC
+
+### Milestone 3: Final Delivery (20%)
+- Bug fixes and polish
+- Documentation complete
+- Deployment and handover
+- **Amount**: 1,000 USDC
+```
+</Step>
+
+<Step title="Security Settings">
+**Dispute Resolution**:
+- **Automatic**: AI-only verification (faster, lower cost)
+- **Hybrid**: AI + human arbitrator if needed (balanced)
+- **Manual**: Human arbitrator required (highest security)
+
+**Verification Requirements**:
+- **Evidence Type**: Screenshots, videos, live demos, code repositories
+- **Submission Deadline**: How long after delivery to submit evidence
+- **Review Period**: Time allowed for client review and approval
+
+**Refund Policy**:
+- **Full Refund**: If project not started
+- **Partial Refund**: Based on milestone completion
+- **No Refund**: After final delivery and approval
+</Step>
+</Steps>
+
+### Step 4: Service Provider Selection
+
+<Tabs>
+<Tab title="Direct Escrow">
+<Steps>
+<Step title="Invite Specific Provider">
+1. Enter the service provider's wallet address
+2. Add their email for notification (optional)
+3. Include a personal message explaining the project
+4. Set invitation expiry (default: 7 days)
+</Step>
+
+<Step title="Provider Verification">
+The system will check:
+- ✅ Wallet address is valid
+- ✅ Provider has completed KYC
+- ✅ Provider has sufficient reputation (if applicable)
+- ✅ Provider is not blacklisted
+</Step>
+</Steps>
+</Tab>
+
+<Tab title="Open Escrow">
+<Steps>
+<Step title="Application Settings">
+1. **Application Period**: How long to accept applications
+2. **Required Qualifications**: Minimum requirements for applicants
+3. **Portfolio Requirements**: What work samples to request
+4. **Screening Questions**: Custom questions for applicants
+</Step>
+
+<Step title="Selection Criteria">
+Define how you'll choose the provider:
+- **Automatic**: Highest-rated applicant selected
+- **Manual**: You review and choose manually
+- **Auction**: Lowest bid wins (with minimum quality threshold)
+</Step>
+</Steps>
+</Tab>
+
+<Tab title="Milestone Escrow">
+<Steps>
+<Step title="Provider Assignment">
+1. Choose direct or open selection method
+2. Define milestone-specific requirements
+3. Set individual milestone deadlines
+4. Configure milestone approval process
+</Step>
+
+<Step title="Milestone Management">
+Each milestone includes:
+- **Deliverable Description**: What must be completed
+- **Acceptance Criteria**: How success is measured
+- **Payment Amount**: Funds released for this milestone
+- **Deadline**: When milestone must be completed
+</Step>
+</Steps>
+</Tab>
+</Tabs>
+
+### Step 5: Review and Confirmation
+
+<Steps>
+<Step title="Review Escrow Details">
+Carefully review all information:
+
+**Project Summary**:
+- Title and description accuracy
+- Timeline and budget correctness
+- Requirements clarity and completeness
+
+**Financial Details**:
+- Payment amounts and schedule
+- Fee calculations and total cost
+- Token selection and network
+
+**Security Configuration**:
+- Dispute resolution method
+- Verification requirements
+- Refund policy terms
+</Step>
+
+<Step title="Terms and Conditions">
+1. Read the AetherLock Terms of Service
+2. Review the specific escrow agreement
+3. Understand dispute resolution procedures
+4. Acknowledge fee structure and payment terms
+5. Check the box to accept all terms
+</Step>
+
+<Step title="Final Confirmation">
+1. Click "Create Escrow" to proceed
+2. Review the transaction summary popup
+3. Verify the total amount to be locked
+4. Confirm gas fee estimates
+5. Click "Confirm Transaction"
+</Step>
+</Steps>
+
+## Transaction Signing Process
+
+### Wallet Interaction
+
+<Tabs>
+<Tab title="Phantom (Solana)">
+<Steps>
+<Step title="Transaction Approval">
+1. Phantom popup will appear automatically
+2. Review transaction details:
+   - **To**: AetherLock Escrow Program
+   - **Amount**: Your specified escrow amount
+   - **Fee**: Network gas fee (usually <$0.01)
+3. Click "Approve" to sign the transaction
+4. Wait for confirmation (usually 1-2 seconds)
+</Step>
+
+<Step title="Transaction Details">
+```json
+{
+  "instruction": "create_escrow",
+  "accounts": {
+    "escrow": "NEW_ESCROW_ACCOUNT",
+    "client": "YOUR_WALLET_ADDRESS", 
+    "mint": "USDC_TOKEN_MINT",
+    "amount": 5500010000
+  },
+  "data": "base58_encoded_escrow_data"
+}
+```
+</Step>
+</Steps>
+</Tab>
+
+<Tab title="Sui Wallet">
+<Steps>
+<Step title="Transaction Approval">
+1. Sui Wallet extension will prompt for approval
+2. Review the transaction object:
+   - **Function**: `create_escrow`
+   - **Package**: AetherLock Protocol Package
+   - **Gas Budget**: Estimated gas cost
+3. Enter your wallet password if required
+4. Click "Approve Transaction"
+</Step>
+
+<Step title="Gas Fee Estimation">
+Sui transactions typically cost:
+- **Simple Escrow**: 0.001-0.005 SUI
+- **Complex Escrow**: 0.01-0.02 SUI
+- **Milestone Escrow**: 0.02-0.05 SUI
+</Step>
+</Steps>
+</Tab>
+
+<Tab title="Tonkeeper (TON)">
+<Steps>
+<Step title="Transaction Approval">
+1. Tonkeeper will show transaction details
+2. Review the smart contract interaction:
+   - **Contract**: AetherLock Escrow Contract
+   - **Method**: `createEscrow`
+   - **Amount**: Escrow amount + fees
+3. Confirm with your PIN or biometric
+4. Wait for blockchain confirmation
+</Step>
+
+<Step title="TON Network Fees">
+TON transaction costs:
+- **Base Fee**: ~0.01 TON
+- **Storage Fee**: ~0.001 TON per day
+- **Gas Fee**: Variable based on complexity
+</Step>
+</Steps>
+</Tab>
+</Tabs>
+
+### Transaction Confirmation
+
+<Steps>
+<Step title="Blockchain Confirmation">
+1. Transaction is broadcast to the network
+2. Wait for block confirmation:
+   - **Solana**: 1-2 seconds (400ms slots)
+   - **Sui**: 2-3 seconds (instant finality)
+   - **TON**: 5-10 seconds (block time)
+3. Receive confirmation notification
+</Step>
+
+<Step title="Escrow Activation">
+Once confirmed:
+1. Escrow contract is created on-chain
+2. Funds are locked in the smart contract
+3. Escrow ID is generated and displayed
+4. Email notifications sent to all parties
+5. Escrow appears in your dashboard
+</Step>
+</Steps>
+
+## Post-Creation Management
+
+### Escrow Dashboard
+
+Access your escrow management interface:
+
+<Steps>
+<Step title="View Escrow Details">
+1. Navigate to "My Escrows" in the dashboard
+2. Click on your newly created escrow
+3. Review the escrow status and timeline
+4. Check for any pending actions
+</Step>
+
+<Step title="Monitor Progress">
+Track escrow progress:
+- **Status**: Created, Active, In Progress, Under Review, Completed
+- **Timeline**: Key dates and milestones
+- **Communications**: Messages with service provider
+- **Evidence**: Submitted work and verification status
+</Step>
+</Steps>
+
+### Communication Tools
+
+<Tabs>
+<Tab title="In-App Messaging">
+- Secure messaging with service provider
+- File sharing for requirements and updates
+- Automatic translation for international projects
+- Message history and timestamps
+</Tab>
+
+<Tab title="Email Notifications">
+Automatic emails for:
+- Escrow creation confirmation
+- Provider acceptance/application
+- Milestone completions
+- Evidence submissions
+- Dispute notifications
+- Payment releases
+</Tab>
+
+<Tab title="Real-Time Updates">
+WebSocket notifications for:
+- Status changes
+- New messages
+- Evidence uploads
+- AI verification results
+- Payment confirmations
+</Tab>
+</Tabs>
+
+### Escrow Modifications
+
+<Warning>
+Some escrow parameters cannot be changed after creation to ensure security and prevent fraud.
+</Warning>
+
+**Modifiable Elements**:
+- Project description (with provider agreement)
+- Timeline extensions (mutual consent required)
+- Additional requirements (if agreed upon)
+- Communication preferences
+
+**Immutable Elements**:
+- Payment amount and currency
+- Service provider (once accepted)
+- Core deliverables and acceptance criteria
+- Dispute resolution method
+
+## Common Escrow Scenarios
+
+### Scenario 1: Website Development
+
+```markdown
+**Project**: E-commerce Website
+**Budget**: 5,000 USDC
+**Timeline**: 6 weeks
+**Type**: Milestone Escrow
+
+### Milestone Structure:
+1. **Design Phase** (2 weeks, 30%): 1,500 USDC
+   - Wireframes and mockups
+   - Design system and branding
+   
+2. **Development Phase** (3 weeks, 50%): 2,500 USDC
+   - Frontend implementation
+   - Backend API development
+   - Payment integration
+   
+3. **Testing & Launch** (1 week, 20%): 1,000 USDC
+   - Bug fixes and optimization
+   - Deployment and documentation
+   - Post-launch support setup
+```
+
+### Scenario 2: Content Creation
+
+```markdown
+**Project**: Blog Content Series
+**Budget**: 1,200 USDC
+**Timeline**: 4 weeks
+**Type**: Single Payment
+
+### Deliverables:
+- 12 blog posts (1,000+ words each)
+- SEO optimization for each post
+- Featured images and graphics
+- Social media promotion content
+
+### Acceptance Criteria:
+- Original content (plagiarism check)
+- SEO score >80 (Yoast/similar tool)
+- Proper formatting and structure
+- Delivery in Google Docs format
+```
+
+### Scenario 3: Mobile App Development
+
+```markdown
+**Project**: iOS/Android Fitness App
+**Budget**: 15,000 USDC
+**Timeline**: 12 weeks
+**Type**: Milestone Escrow
+
+### Complex Milestone Structure:
+1. **Planning & Design** (2 weeks, 20%): 3,000 USDC
+2. **Core Development** (6 weeks, 50%): 7,500 USDC
+3. **Testing & Polish** (3 weeks, 20%): 3,000 USDC
+4. **App Store Submission** (1 week, 10%): 1,500 USDC
+
+### Special Requirements:
+- App Store approval required
+- Performance benchmarks
+- Security audit completion
+- User acceptance testing
+```
+
+## Troubleshooting
+
+### Common Creation Issues
+
+#### Insufficient Funds
+
+**Problem**: Not enough tokens to cover escrow + fees
+
+**Solution**:
+1. Check your wallet balance
+2. Account for platform fees (10% of escrow amount)
+3. Ensure sufficient gas fees for transaction
+4. Consider using a stablecoin for predictable costs
+
+```typescript
+// Calculate total required funds
+const calculateTotalCost = (escrowAmount: number) => {
+  const platformFee = escrowAmount * 0.10;  // 10% AetherLock fee
+  const gasFee = 0.01;                      // Estimated gas
+  return escrowAmount + platformFee + gasFee;
+};
+```
+
+#### KYC Issues
+
+**Problem**: KYC verification not recognized
+
+**Solutions**:
+1. Refresh the page and reconnect wallet
+2. Check KYC status in account settings
+3. Complete verification if still pending
+4. Contact support if verification is approved but not recognized
+
+#### Network Congestion
+
+**Problem**: Transaction fails due to network issues
+
+**Solutions**:
+1. Increase gas fee for faster processing
+2. Wait for network congestion to decrease
+3. Try during off-peak hours
+4. Switch to a less congested network if available
+
+### Form Validation Errors
+
+#### Required Fields
+
+Ensure all required fields are completed:
+- Project title and description
+- Budget amount and currency
+- Timeline and deadlines
+- Acceptance criteria
+- Service provider information (for direct escrows)
+
+#### Character Limits
+
+Stay within specified limits:
+- **Title**: 100 characters maximum
+- **Description**: 2,000 characters maximum
+- **Requirements**: 5,000 characters maximum
+- **Acceptance Criteria**: 1,000 characters per criterion
+
+#### Invalid Addresses
+
+For direct escrows, ensure:
+- Wallet address is valid for the selected network
+- Address is properly formatted (base58 for Solana, hex for others)
+- Provider has completed KYC verification
+- Address is not blacklisted or flagged
+
+## Security Best Practices
+
+### Before Creating Escrow
+
+<Checklist>
+- [ ] Verify service provider's reputation and portfolio
+- [ ] Clearly define project scope and deliverables
+- [ ] Set realistic timelines with buffer time
+- [ ] Use stablecoins for price predictability
+- [ ] Review dispute resolution options
+- [ ] Understand refund policies
+- [ ] Keep communication records
+</Checklist>
+
+### During Escrow Creation
+
+<Checklist>
+- [ ] Double-check all amounts and addresses
+- [ ] Review transaction details before signing
+- [ ] Verify network and gas fees
+- [ ] Save escrow ID and transaction hash
+- [ ] Screenshot important details
+- [ ] Confirm email notifications are working
+</Checklist>
+
+### After Escrow Creation
+
+<Checklist>
+- [ ] Monitor escrow status regularly
+- [ ] Maintain clear communication with provider
+- [ ] Document any changes or agreements
+- [ ] Prepare evidence requirements early
+- [ ] Set calendar reminders for key dates
+- [ ] Keep backup of all project files
+</Checklist>
+
+## Next Steps
+
+After creating your escrow:
+
+1. **Wait for Provider Acceptance**: Monitor for acceptance notifications
+2. **Establish Communication**: Start project discussions with your provider
+3. **Prepare for Evidence**: Understand what evidence you'll need to submit
+4. **Set Up Monitoring**: Configure notifications and check-ins
+5. **Plan for Verification**: Review the AI verification process
+
+<Card title="Escrow Created Successfully!" icon="check-circle">
+  Your escrow is now live on the blockchain. Learn about [submitting evidence](/guides/submitting-evidence) or [understanding verification results](/guides/understanding-verification).
+</Card>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+<Accordion title="Can I cancel an escrow after creation?">
+Yes, but only under specific conditions:
+- Before the service provider accepts (full refund minus gas fees)
+- If provider doesn't accept within the invitation period
+- Mutual agreement with the provider (may incur fees)
+- In case of fraud or terms violation (requires dispute resolution)
+</Accordion>
+
+<Accordion title="What happens if I make a mistake in the escrow details?">
+Minor details can often be updated with provider agreement. Major changes (amount, deliverables) may require creating a new escrow. Contact support immediately if you notice critical errors.
+</Accordion>
+
+<Accordion title="How long does escrow creation take?">
+The creation process typically takes 2-5 minutes:
+- Form completion: 2-3 minutes
+- Transaction signing: 30 seconds
+- Blockchain confirmation: 1-10 seconds (depending on network)
+- System processing: 10-30 seconds
+</Accordion>
+
+<Accordion title="Can I create multiple escrows simultaneously?">
+Yes, there's no limit on concurrent escrows. However, ensure you have sufficient funds for all escrows plus platform fees. Each escrow is independent and managed separately.
+</Accordion>
+
+<Accordion title="What if the service provider doesn't accept my escrow?">
+If a provider doesn't accept within the invitation period (default 7 days), the escrow automatically expires and funds are returned to your wallet minus gas fees. You can then create a new escrow or invite a different provider.
+</Accordion>
+
+<Accordion title="Are there any restrictions on escrow amounts?">
+Minimum and maximum amounts depend on your KYC verification level:
+- **Basic**: $100 - $10,000
+- **Enhanced**: $100 - $100,000  
+- **Premium**: $100 - Unlimited
+
+Higher amounts may require additional verification steps.
+</Accordion>
+</AccordionGroup>
+
+---
+
+#
+# Related Documentation
+
+**Prerequisites:**
+- [Wallet Connection Guide](./wallet-connection.mdx) - Connect your wallet first
+- [KYC Verification Guide](./kyc-verification.mdx) - Complete KYC before creating escrows
+
+**Next Steps:**
+- [Submitting Evidence Guide](./submitting-evidence.mdx) - How to submit work
+- [Understanding Verification Results](./understanding-verification.mdx) - Verification process
+
+**Technical Details:**
+- [Solana Escrow Contract](../design/solana-escrow-contract.mdx) - Smart contract details
+- [Smart Contract API](../api/smart-contracts.mdx) - Contract interface
+
+*See [CROSS-REFERENCES.md](../CROSS-REFERENCES.md) for complete documentation map.*

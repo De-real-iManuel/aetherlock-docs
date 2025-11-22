@@ -1,0 +1,989 @@
+---
+title: "Replay Protection"
+description: "Nonce management, message uniqueness guarantees, and replay attack prevention in AetherLock"
+---
+
+# Replay Protection
+
+AetherLock implements comprehensive replay protection mechanisms to prevent malicious actors from reusing valid transactions, signatures, or messages. This document details nonce management strategies, message uniqueness guarantees, and implementation examples across all protocol components.
+
+## Overview of Replay Attacks
+
+### What are Replay Attacks?
+
+Replay attacks occur when an attacker intercepts and retransmits valid network communications to:
+- Execute the same transaction multiple times
+- Reuse authentication credentials
+- Bypass security controls
+- Drain user funds through repeated operations
+
+### AetherLock's Multi-Layer Protection
+
+1. **Transaction Nonces**: Prevent duplicate blockchain transactions
+2. **Message Timestamps**: Time-bound message validity
+3. **Signature Uniqueness**: One-time signature usage
+4. **Cross-Chain Sequence Numbers**: Ordered cross-chain operations
+5. **Session Tokens**: Time-limited authentication
+
+## Solana Transaction Nonces
+
+### Built-in Solana Protection
+
+Solana provides built-in replay protection through:
+- **Recent Blockhash**: Transactions must reference a recent blockhash
+- **Signature Deduplication**: Duplicate signatures are rejected
+- **Account Sequence**: Account modifications increment sequence numbers
+
+```rust
+use anchor_lang::prelude::*;
+use solana_program::sysvar::recent_blockhashes::RecentBlockhashes;
+
+#[derive(Accounts)]
+pub struct ReplayProtectedTransaction<'info> {
+    #[account(mut)]
+    pub escrow: Account<'info, EscrowAccount>,
+    
+    #[account(mut)]
+    pub user: Signer<'info>,
+    
+    /// Recent blockhashes sysvar for validation
+    pub recent_blockhashes: Sysvar<'info, RecentBlockhashes>,
+}
+
+#[account]
+pub struct EscrowAccount {
+    pub id: String,
+    pub nonce: u64,                    // Custom nonce for additional protection
+    pub last_transaction_hash: [u8; 32], // Track last transaction
+    pub last_update_slot: u64,         // Solana slot number
+    // ... other fields
+}
+
+impl<'info> ReplayProtectedTransaction<'info> {
+    pub fn execute_with_nonce(
+        ctx: Context<ReplayProtectedTransaction>,
+        expected_nonce: u64,
+        transaction_data: Vec<u8>,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        let current_slot = Clock::get()?.slot;
+        
+        // 1. Verify nonce sequence
+        require_eq!(
+            escrow.nonce + 1,
+            expected_nonce,
+            ErrorCode::InvalidNonce
+        );
+        
+        // 2. Verify minimum time between transactions (rate limiting)
+        require!(
+            current_slot > escrow.last_update_slot + 1, // At least 1 slot difference
+            ErrorCode::TransactionTooFrequent
+        );
+        
+        // 3. Generate transaction hash for uniqueness check
+        let transaction_hash = solana_program::keccak::hash(&[
+            &escrow.nonce.to_le_bytes(),
+            &transaction_data,
+            &ctx.accounts.user.key().to_bytes(),
+        ]).to_bytes();
+        
+        // 4. Verify this isn't a duplicate transaction
+        require_ne!(
+            escrow.last_transaction_hash,
+            transaction_hash,
+            ErrorCode::DuplicateTransaction
+        );
+        
+        // 5. Update nonce and tracking data
+        escrow.nonce = expected_nonce;
+        escrow.last_transaction_hash = transaction_hash;
+        escrow.last_update_slot = current_slot;
+        
+        msg!("Transaction executed with nonce: {}", expected_nonce);
+        Ok(())
+    }
+}
+```
+
+### Custom Nonce Management
+
+```rust
+#[account]
+pub struct NonceAccount {
+    pub authority: Pubkey,
+    pub nonce: u64,
+    pub used_nonces: Vec<u64>,        // Track recently used nonces
+    pub nonce_window: u64,            // Valid nonce range
+}
+
+impl NonceAccount {
+    pub const MAX_USED_NONCES: usize = 100;
+    pub const NONCE_WINDOW: u64 = 1000;
+
+    pub fn validate_nonce(&mut self, nonce: u64) -> Result<()> {
+        // 1. Check if nonce is within valid window
+        require!(
+            nonce > self.nonce && nonce <= self.nonce + Self::NONCE_WINDOW,
+            ErrorCode::NonceOutOfRange
+        );
+        
+        // 2. Check if nonce was already used
+        require!(
+            !self.used_nonces.contains(&nonce),
+            ErrorCode::NonceAlreadyUsed
+        );
+        
+        // 3. Add to used nonces list
+        self.used_nonces.push(nonce);
+        
+        // 4. Maintain sliding window of used nonces
+        if self.used_nonces.len() > Self::MAX_USED_NONCES {
+            self.used_nonces.remove(0);
+        }
+        
+        // 5. Update current nonce if this is the next sequential nonce
+        if nonce == self.nonce + 1 {
+            self.nonce = nonce;
+        }
+        
+        Ok(())
+    }
+}
+```
+
+## Cross-Chain Message Protection
+
+### ZetaChain Message Sequencing
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@zetachain/protocol-contracts/contracts/zevm/SystemContract.sol";
+import "@zetachain/protocol-contracts/contracts/zevm/interfaces/zContract.sol";
+
+contract AetherLockUniversalApp is zContract {
+    struct MessageSequence {
+        uint256 nonce;
+        bytes32 messageHash;
+        uint256 timestamp;
+        address sender;
+        bool executed;
+    }
+    
+    // Chain ID => Sender => Nonce => Message
+    mapping(uint256 => mapping(address => mapping(uint256 => MessageSequence))) public messageSequences;
+    
+    // Chain ID => Sender => Current Nonce
+    mapping(uint256 => mapping(address => uint256)) public currentNonces;
+    
+    // Message hash => Execution status
+    mapping(bytes32 => bool) public executedMessages;
+    
+    uint256 public constant MESSAGE_TIMEOUT = 1 hours;
+    uint256 public constant MAX_NONCE_GAP = 100;
+    
+    event MessageExecuted(
+        uint256 indexed sourceChain,
+        address indexed sender,
+        uint256 nonce,
+        bytes32 messageHash
+    );
+    
+    modifier replayProtection(
+        uint256 sourceChain,
+        address sender,
+        uint256 nonce,
+        bytes calldata message
+    ) {
+        bytes32 messageHash = keccak256(abi.encodePacked(
+            sourceChain,
+            sender,
+            nonce,
+            message,
+            block.chainid
+        ));
+        
+        // 1. Check message hasn't been executed
+        require(!executedMessages[messageHash], "Message already executed");
+        
+        // 2. Validate nonce sequence
+        uint256 expectedNonce = currentNonces[sourceChain][sender] + 1;
+        require(
+            nonce >= expectedNonce && nonce <= expectedNonce + MAX_NONCE_GAP,
+            "Invalid nonce"
+        );
+        
+        // 3. Check message isn't too old
+        MessageSequence storage sequence = messageSequences[sourceChain][sender][nonce];
+        if (sequence.timestamp != 0) {
+            require(
+                block.timestamp <= sequence.timestamp + MESSAGE_TIMEOUT,
+                "Message expired"
+            );
+        }
+        
+        // 4. Record message execution
+        executedMessages[messageHash] = true;
+        messageSequences[sourceChain][sender][nonce] = MessageSequence({
+            nonce: nonce,
+            messageHash: messageHash,
+            timestamp: block.timestamp,
+            sender: sender,
+            executed: true
+        });
+        
+        // 5. Update current nonce if sequential
+        if (nonce == expectedNonce) {
+            currentNonces[sourceChain][sender] = nonce;
+        }
+        
+        emit MessageExecuted(sourceChain, sender, nonce, messageHash);
+        _;
+    }
+    
+    function onCrossChainCall(
+        zContext calldata context,
+        address zrc20,
+        uint256 amount,
+        bytes calldata message
+    ) external override replayProtection(
+        context.chainID,
+        BytesHelperLib.bytesToAddress(context.origin, 0),
+        abi.decode(message[0:32], (uint256)), // First 32 bytes = nonce
+        message[32:] // Rest = actual message
+    ) {
+        // Process cross-chain message
+        _processCrossChainMessage(context, zrc20, amount, message[32:]);
+    }
+    
+    function _processCrossChainMessage(
+        zContext calldata context,
+        address zrc20,
+        uint256 amount,
+        bytes calldata message
+    ) internal {
+        // Implementation of cross-chain message processing
+        // This is where the actual escrow logic would be executed
+    }
+}
+```
+
+### Message Uniqueness Guarantees
+
+```typescript
+import { keccak256 } from 'ethers/lib/utils';
+
+interface CrossChainMessage {
+  sourceChain: string;
+  destinationChain: string;
+  sender: string;
+  nonce: number;
+  payload: any;
+  timestamp: number;
+  signature?: string;
+}
+
+class CrossChainMessageManager {
+  private processedMessages: Set<string> = new Set();
+  private nonceTracking: Map<string, number> = new Map();
+  private readonly MESSAGE_TIMEOUT = 60 * 60 * 1000; // 1 hour
+
+  /**
+   * Create unique message with replay protection
+   */
+  createMessage(
+    sourceChain: string,
+    destinationChain: string,
+    sender: string,
+    payload: any
+  ): CrossChainMessage {
+    const senderKey = `${sourceChain}:${sender}`;
+    const currentNonce = this.nonceTracking.get(senderKey) || 0;
+    const nextNonce = currentNonce + 1;
+
+    const message: CrossChainMessage = {
+      sourceChain,
+      destinationChain,
+      sender,
+      nonce: nextNonce,
+      payload,
+      timestamp: Date.now(),
+    };
+
+    // Update nonce tracking
+    this.nonceTracking.set(senderKey, nextNonce);
+
+    return message;
+  }
+
+  /**
+   * Validate message for replay protection
+   */
+  validateMessage(message: CrossChainMessage): {
+    valid: boolean;
+    reason?: string;
+  } {
+    // 1. Generate unique message hash
+    const messageHash = this.generateMessageHash(message);
+
+    // 2. Check if already processed
+    if (this.processedMessages.has(messageHash)) {
+      return { valid: false, reason: 'Message already processed' };
+    }
+
+    // 3. Check timestamp validity
+    const now = Date.now();
+    if (now - message.timestamp > this.MESSAGE_TIMEOUT) {
+      return { valid: false, reason: 'Message expired' };
+    }
+
+    // 4. Validate nonce sequence
+    const senderKey = `${message.sourceChain}:${message.sender}`;
+    const expectedNonce = (this.nonceTracking.get(senderKey) || 0) + 1;
+    
+    if (message.nonce < expectedNonce) {
+      return { valid: false, reason: 'Nonce too low (replay attempt)' };
+    }
+
+    if (message.nonce > expectedNonce + 100) {
+      return { valid: false, reason: 'Nonce too high (out of sequence)' };
+    }
+
+    return { valid: true };
+  }
+
+  /**
+   * Process message with replay protection
+   */
+  processMessage(message: CrossChainMessage): boolean {
+    const validation = this.validateMessage(message);
+    
+    if (!validation.valid) {
+      console.error('Message validation failed:', validation.reason);
+      return false;
+    }
+
+    // Generate and record message hash
+    const messageHash = this.generateMessageHash(message);
+    this.processedMessages.add(messageHash);
+
+    // Update nonce if sequential
+    const senderKey = `${message.sourceChain}:${message.sender}`;
+    const expectedNonce = (this.nonceTracking.get(senderKey) || 0) + 1;
+    
+    if (message.nonce === expectedNonce) {
+      this.nonceTracking.set(senderKey, message.nonce);
+    }
+
+    console.log(`Message processed: ${messageHash}`);
+    return true;
+  }
+
+  /**
+   * Generate unique hash for message
+   */
+  private generateMessageHash(message: CrossChainMessage): string {
+    const messageString = JSON.stringify({
+      sourceChain: message.sourceChain,
+      destinationChain: message.destinationChain,
+      sender: message.sender,
+      nonce: message.nonce,
+      payload: message.payload,
+      timestamp: message.timestamp,
+    });
+
+    return keccak256(Buffer.from(messageString));
+  }
+
+  /**
+   * Clean up old processed messages (garbage collection)
+   */
+  cleanupOldMessages(): void {
+    const cutoffTime = Date.now() - this.MESSAGE_TIMEOUT;
+    
+    // In a real implementation, you'd need to track message timestamps
+    // and remove messages older than the cutoff time
+    console.log(`Cleaned up messages older than ${new Date(cutoffTime)}`);
+  }
+}
+```
+
+## AI Verification Replay Protection
+
+### Signature-Based Protection
+
+```typescript
+import { sign, verify } from 'tweetnacl';
+import { encode, decode } from 'bs58';
+
+interface AIVerificationResult {
+  escrowId: string;
+  confidence: number;
+  decision: 'approved' | 'rejected' | 'review';
+  timestamp: number;
+  nonce: number;
+  evidenceHash: string;
+}
+
+class AIVerificationManager {
+  private usedSignatures: Set<string> = new Set();
+  private nonceTracker: Map<string, number> = new Map();
+  private readonly RESULT_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+
+  /**
+   * Create AI verification result with replay protection
+   */
+  createVerificationResult(
+    escrowId: string,
+    confidence: number,
+    decision: 'approved' | 'rejected' | 'review',
+    evidenceHash: string,
+    privateKey: Uint8Array
+  ): {
+    result: AIVerificationResult;
+    signature: string;
+  } {
+    // Get next nonce for this escrow
+    const currentNonce = this.nonceTracker.get(escrowId) || 0;
+    const nextNonce = currentNonce + 1;
+
+    const result: AIVerificationResult = {
+      escrowId,
+      confidence,
+      decision,
+      timestamp: Date.now(),
+      nonce: nextNonce,
+      evidenceHash,
+    };
+
+    // Create canonical message for signing
+    const message = this.createCanonicalMessage(result);
+    const messageBytes = new TextEncoder().encode(message);
+
+    // Sign the message
+    const signature = sign.detached(messageBytes, privateKey);
+    const signatureB58 = encode(signature);
+
+    // Update nonce tracker
+    this.nonceTracker.set(escrowId, nextNonce);
+
+    return {
+      result,
+      signature: signatureB58,
+    };
+  }
+
+  /**
+   * Verify AI result with replay protection
+   */
+  verifyResult(
+    result: AIVerificationResult,
+    signature: string,
+    publicKey: Uint8Array
+  ): {
+    valid: boolean;
+    reason?: string;
+  } {
+    try {
+      // 1. Check signature uniqueness
+      if (this.usedSignatures.has(signature)) {
+        return { valid: false, reason: 'Signature already used' };
+      }
+
+      // 2. Check timestamp validity
+      const now = Date.now();
+      if (now - result.timestamp > this.RESULT_TIMEOUT) {
+        return { valid: false, reason: 'Result expired' };
+      }
+
+      // 3. Validate nonce sequence
+      const expectedNonce = (this.nonceTracker.get(result.escrowId) || 0) + 1;
+      if (result.nonce < expectedNonce) {
+        return { valid: false, reason: 'Nonce too low (replay attempt)' };
+      }
+
+      // 4. Verify signature
+      const message = this.createCanonicalMessage(result);
+      const messageBytes = new TextEncoder().encode(message);
+      const signatureBytes = decode(signature);
+
+      const isValidSignature = verify.detached(
+        messageBytes,
+        signatureBytes,
+        publicKey
+      );
+
+      if (!isValidSignature) {
+        return { valid: false, reason: 'Invalid signature' };
+      }
+
+      // 5. Record signature as used
+      this.usedSignatures.add(signature);
+
+      // 6. Update nonce if sequential
+      if (result.nonce === expectedNonce) {
+        this.nonceTracker.set(result.escrowId, result.nonce);
+      }
+
+      return { valid: true };
+    } catch (error) {
+      return { valid: false, reason: `Verification error: ${error.message}` };
+    }
+  }
+
+  /**
+   * Create canonical message format for signing
+   */
+  private createCanonicalMessage(result: AIVerificationResult): string {
+    return [
+      `escrow:${result.escrowId}`,
+      `confidence:${result.confidence.toFixed(6)}`,
+      `decision:${result.decision}`,
+      `timestamp:${result.timestamp}`,
+      `nonce:${result.nonce}`,
+      `evidence:${result.evidenceHash}`,
+    ].join('|');
+  }
+}
+```
+
+## Session-Based Replay Protection
+
+### JWT Token Management
+
+```typescript
+import jwt from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
+
+interface SessionToken {
+  userId: string;
+  sessionId: string;
+  nonce: number;
+  issuedAt: number;
+  expiresAt: number;
+}
+
+class SessionManager {
+  private activeSessions: Map<string, SessionToken> = new Set();
+  private usedTokens: Set<string> = new Set();
+  private readonly SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours
+  private readonly JWT_SECRET: string;
+
+  constructor(jwtSecret: string) {
+    this.JWT_SECRET = jwtSecret;
+  }
+
+  /**
+   * Create new session with replay protection
+   */
+  createSession(userId: string): {
+    token: string;
+    sessionId: string;
+  } {
+    const sessionId = randomBytes(32).toString('hex');
+    const now = Date.now();
+
+    const sessionData: SessionToken = {
+      userId,
+      sessionId,
+      nonce: 0,
+      issuedAt: now,
+      expiresAt: now + this.SESSION_TIMEOUT,
+    };
+
+    // Store session
+    this.activeSessions.set(sessionId, sessionData);
+
+    // Create JWT token
+    const token = jwt.sign(
+      {
+        userId,
+        sessionId,
+        nonce: sessionData.nonce,
+        iat: Math.floor(now / 1000),
+        exp: Math.floor(sessionData.expiresAt / 1000),
+      },
+      this.JWT_SECRET
+    );
+
+    return { token, sessionId };
+  }
+
+  /**
+   * Validate token with replay protection
+   */
+  validateToken(token: string): {
+    valid: boolean;
+    sessionData?: SessionToken;
+    reason?: string;
+  } {
+    try {
+      // 1. Check if token was already used (for one-time operations)
+      if (this.usedTokens.has(token)) {
+        return { valid: false, reason: 'Token already used' };
+      }
+
+      // 2. Verify JWT signature and expiration
+      const decoded = jwt.verify(token, this.JWT_SECRET) as any;
+
+      // 3. Check if session exists and is active
+      const session = this.activeSessions.get(decoded.sessionId);
+      if (!session) {
+        return { valid: false, reason: 'Session not found' };
+      }
+
+      // 4. Check session expiration
+      if (Date.now() > session.expiresAt) {
+        this.activeSessions.delete(decoded.sessionId);
+        return { valid: false, reason: 'Session expired' };
+      }
+
+      // 5. Validate nonce (for operations requiring sequence)
+      if (decoded.nonce < session.nonce) {
+        return { valid: false, reason: 'Invalid nonce (replay attempt)' };
+      }
+
+      return { valid: true, sessionData: session };
+    } catch (error) {
+      return { valid: false, reason: `Token validation failed: ${error.message}` };
+    }
+  }
+
+  /**
+   * Invalidate session (logout)
+   */
+  invalidateSession(sessionId: string): void {
+    this.activeSessions.delete(sessionId);
+  }
+
+  /**
+   * Mark token as used (for one-time operations)
+   */
+  markTokenUsed(token: string): void {
+    this.usedTokens.add(token);
+  }
+
+  /**
+   * Clean up expired sessions and used tokens
+   */
+  cleanup(): void {
+    const now = Date.now();
+
+    // Remove expired sessions
+    for (const [sessionId, session] of this.activeSessions.entries()) {
+      if (now > session.expiresAt) {
+        this.activeSessions.delete(sessionId);
+      }
+    }
+
+    // Clear used tokens (they expire with JWT expiration)
+    this.usedTokens.clear();
+  }
+}
+```
+
+## Database-Level Replay Protection
+
+### Unique Constraint Implementation
+
+```sql
+-- PostgreSQL schema for replay protection
+CREATE TABLE processed_transactions (
+    id SERIAL PRIMARY KEY,
+    transaction_hash VARCHAR(64) UNIQUE NOT NULL,
+    user_address VARCHAR(44) NOT NULL,
+    nonce BIGINT NOT NULL,
+    processed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Composite unique constraint for user + nonce
+    UNIQUE(user_address, nonce)
+);
+
+-- Index for efficient lookups
+CREATE INDEX idx_processed_transactions_user_nonce 
+ON processed_transactions(user_address, nonce);
+
+-- Cleanup old transactions (older than 24 hours)
+CREATE OR REPLACE FUNCTION cleanup_old_transactions()
+RETURNS void AS $$
+BEGIN
+    DELETE FROM processed_transactions 
+    WHERE processed_at < NOW() - INTERVAL '24 hours';
+END;
+$$ LANGUAGE plpgsql;
+
+-- Schedule cleanup to run every hour
+SELECT cron.schedule('cleanup-transactions', '0 * * * *', 'SELECT cleanup_old_transactions();');
+```
+
+```typescript
+// Database replay protection service
+import { Pool } from 'pg';
+
+class DatabaseReplayProtection {
+  private pool: Pool;
+
+  constructor(connectionString: string) {
+    this.pool = new Pool({ connectionString });
+  }
+
+  /**
+   * Check and record transaction to prevent replay
+   */
+  async checkAndRecordTransaction(
+    transactionHash: string,
+    userAddress: string,
+    nonce: number
+  ): Promise<{ allowed: boolean; reason?: string }> {
+    const client = await this.pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+
+      // 1. Check if transaction hash already exists
+      const hashCheck = await client.query(
+        'SELECT id FROM processed_transactions WHERE transaction_hash = $1',
+        [transactionHash]
+      );
+
+      if (hashCheck.rows.length > 0) {
+        await client.query('ROLLBACK');
+        return { allowed: false, reason: 'Transaction hash already processed' };
+      }
+
+      // 2. Check nonce sequence for user
+      const nonceCheck = await client.query(
+        'SELECT MAX(nonce) as max_nonce FROM processed_transactions WHERE user_address = $1',
+        [userAddress]
+      );
+
+      const maxNonce = nonceCheck.rows[0]?.max_nonce || 0;
+      
+      if (nonce <= maxNonce) {
+        await client.query('ROLLBACK');
+        return { allowed: false, reason: 'Nonce too low (replay attempt)' };
+      }
+
+      if (nonce > maxNonce + 100) {
+        await client.query('ROLLBACK');
+        return { allowed: false, reason: 'Nonce too high (out of sequence)' };
+      }
+
+      // 3. Record transaction
+      await client.query(
+        'INSERT INTO processed_transactions (transaction_hash, user_address, nonce) VALUES ($1, $2, $3)',
+        [transactionHash, userAddress, nonce]
+      );
+
+      await client.query('COMMIT');
+      return { allowed: true };
+
+    } catch (error) {
+      await client.query('ROLLBACK');
+      
+      if (error.code === '23505') { // Unique constraint violation
+        return { allowed: false, reason: 'Duplicate transaction detected' };
+      }
+      
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+}
+```
+
+## Implementation Examples
+
+### Complete Escrow Transaction with Replay Protection
+
+```typescript
+import { Connection, Keypair, Transaction, SystemProgram } from '@solana/web3.js';
+import { Program, AnchorProvider, Wallet } from '@project-serum/anchor';
+
+class ReplayProtectedEscrowManager {
+  private connection: Connection;
+  private program: Program;
+  private wallet: Wallet;
+  private nonceManager: Map<string, number> = new Map();
+
+  constructor(connection: Connection, program: Program, wallet: Wallet) {
+    this.connection = connection;
+    this.program = program;
+    this.wallet = wallet;
+  }
+
+  /**
+   * Create escrow with replay protection
+   */
+  async createEscrow(
+    escrowId: string,
+    freelancer: string,
+    amount: number,
+    deadline: number
+  ): Promise<string> {
+    // 1. Get next nonce for this user
+    const userKey = this.wallet.publicKey.toBase58();
+    const currentNonce = this.nonceManager.get(userKey) || 0;
+    const nextNonce = currentNonce + 1;
+
+    // 2. Get recent blockhash for replay protection
+    const { blockhash } = await this.connection.getLatestBlockhash();
+
+    // 3. Create transaction with nonce
+    const tx = await this.program.methods
+      .createEscrow(escrowId, freelancer, amount, deadline, nextNonce)
+      .accounts({
+        escrow: await this.getEscrowPDA(escrowId),
+        client: this.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .transaction();
+
+    // 4. Set recent blockhash
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = this.wallet.publicKey;
+
+    // 5. Sign and send transaction
+    const signedTx = await this.wallet.signTransaction(tx);
+    const signature = await this.connection.sendRawTransaction(signedTx.serialize());
+
+    // 6. Update nonce tracker on success
+    this.nonceManager.set(userKey, nextNonce);
+
+    return signature;
+  }
+
+  /**
+   * Submit work with replay protection
+   */
+  async submitWork(
+    escrowId: string,
+    evidenceHash: string,
+    aiSignature: string
+  ): Promise<string> {
+    const userKey = this.wallet.publicKey.toBase58();
+    const currentNonce = this.nonceManager.get(userKey) || 0;
+    const nextNonce = currentNonce + 1;
+
+    // Create unique submission hash
+    const submissionHash = this.createSubmissionHash(
+      escrowId,
+      evidenceHash,
+      nextNonce,
+      Date.now()
+    );
+
+    const { blockhash } = await this.connection.getLatestBlockhash();
+
+    const tx = await this.program.methods
+      .submitWork(escrowId, evidenceHash, aiSignature, nextNonce, submissionHash)
+      .accounts({
+        escrow: await this.getEscrowPDA(escrowId),
+        freelancer: this.wallet.publicKey,
+      })
+      .transaction();
+
+    tx.recentBlockhash = blockhash;
+    tx.feePayer = this.wallet.publicKey;
+
+    const signedTx = await this.wallet.signTransaction(tx);
+    const signature = await this.connection.sendRawTransaction(signedTx.serialize());
+
+    this.nonceManager.set(userKey, nextNonce);
+    return signature;
+  }
+
+  private createSubmissionHash(
+    escrowId: string,
+    evidenceHash: string,
+    nonce: number,
+    timestamp: number
+  ): string {
+    const data = `${escrowId}:${evidenceHash}:${nonce}:${timestamp}`;
+    return require('crypto').createHash('sha256').update(data).digest('hex');
+  }
+
+  private async getEscrowPDA(escrowId: string): Promise<PublicKey> {
+    const [pda] = await PublicKey.findProgramAddress(
+      [
+        Buffer.from('escrow'),
+        Buffer.from(escrowId),
+        this.wallet.publicKey.toBuffer(),
+      ],
+      this.program.programId
+    );
+    return pda;
+  }
+}
+```
+
+## Security Audit Checklist
+
+### Nonce Management
+- [ ] **Sequential Nonces**: Nonces increment sequentially without gaps
+- [ ] **Nonce Validation**: All operations validate nonce sequence
+- [ ] **Nonce Storage**: Nonces are persistently stored and tracked
+- [ ] **Nonce Cleanup**: Old nonces are cleaned up to prevent memory leaks
+
+### Message Uniqueness
+- [ ] **Hash Uniqueness**: All messages have unique cryptographic hashes
+- [ ] **Timestamp Validation**: Messages have valid timestamps within acceptable range
+- [ ] **Signature Uniqueness**: Each signature can only be used once
+- [ ] **Cross-Chain Coordination**: Cross-chain messages are properly sequenced
+
+### Database Protection
+- [ ] **Unique Constraints**: Database enforces uniqueness at schema level
+- [ ] **Transaction Isolation**: Database transactions prevent race conditions
+- [ ] **Cleanup Procedures**: Old records are automatically cleaned up
+- [ ] **Index Optimization**: Queries are optimized with proper indexes
+
+### Implementation Security
+- [ ] **Error Handling**: Proper error messages without information leakage
+- [ ] **Rate Limiting**: Protection against rapid-fire replay attempts
+- [ ] **Monitoring**: All replay attempts are logged and monitored
+- [ ] **Recovery Procedures**: Clear procedures for handling replay attacks
+
+## Error Codes
+
+```rust
+#[error_code]
+pub enum ReplayProtectionError {
+    #[msg("Invalid nonce: expected sequential nonce")]
+    InvalidNonce = 7000,
+    
+    #[msg("Nonce already used")]
+    NonceAlreadyUsed,
+    
+    #[msg("Nonce out of valid range")]
+    NonceOutOfRange,
+    
+    #[msg("Transaction too frequent")]
+    TransactionTooFrequent,
+    
+    #[msg("Duplicate transaction detected")]
+    DuplicateTransaction,
+    
+    #[msg("Message already processed")]
+    MessageAlreadyProcessed,
+    
+    #[msg("Message expired")]
+    MessageExpired,
+    
+    #[msg("Signature already used")]
+    SignatureAlreadyUsed,
+    
+    #[msg("Invalid message sequence")]
+    InvalidMessageSequence,
+    
+    #[msg("Session expired")]
+    SessionExpired,
+    
+    #[msg("Token already used")]
+    TokenAlreadyUsed,
+}
+```
+
+This comprehensive replay protection system ensures that AetherLock is secure against all forms of replay attacks while maintaining efficient operation across multiple blockchain networks and services.

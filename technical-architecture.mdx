@@ -81,6 +81,823 @@ graph TB
 | **Redis Cache** | Performance optimization | Session management, rate limiting | Backend API |
 | **Chainlink Oracle** | AI result authentication | Ed25519 signature verification | Arcanum.ai, Smart Contracts |
 
+## 🔗 On-Chain vs Off-Chain Responsibilities
+
+Understanding the clear separation between on-chain and off-chain operations is critical for security, scalability, and cost optimization in AetherLock's architecture.
+
+### On-Chain Responsibilities (Blockchain Layer)
+
+**Solana Program (Primary Escrow Layer)**
+- **Fund Management**: Locking, holding, and releasing escrow funds with cryptographic security
+- **State Transitions**: Managing escrow lifecycle states (Created → Funded → InProgress → Verified → Released)
+- **PDA Validation**: Ensuring Program Derived Addresses are correctly computed and authorized
+- **Access Control**: Enforcing signer requirements and permission checks
+- **Fee Collection**: Automatically deducting 10% platform fee during fund release
+- **Event Emission**: Publishing on-chain events for off-chain indexing and processing
+- **Atomic Operations**: Ensuring fund transfers are atomic and cannot be partially executed
+
+**ZetaChain Gateway (Cross-Chain Messaging)**
+- **Message Routing**: Relaying cross-chain messages between Solana, Somnia, and other chains
+- **State Synchronization**: Maintaining consistent escrow state across multiple blockchains
+- **Callback Handling**: Processing onCall, onRevert, and onAbort callbacks for cross-chain operations
+- **Finality Proofs**: Verifying transaction finality before executing cross-chain actions
+
+**Somnia Contract (Optional High-Speed Settlement)**
+- **Reputation Tracking**: Recording user reputation scores on-chain for transparency
+- **Task Rewards**: Distributing bonus rewards for high-quality task completion
+- **Fast Settlement**: Providing high-throughput settlement for time-sensitive escrows
+
+### Off-Chain Responsibilities (Application & AI Layer)
+
+**Express Backend API**
+- **Business Logic**: Orchestrating complex workflows that don't require blockchain consensus
+- **User Authentication**: Managing JWT tokens and wallet signature verification
+- **Database Operations**: Storing user profiles, transaction history, and metadata
+- **IPFS Coordination**: Uploading evidence files and managing content addressing
+- **WebSocket Management**: Providing real-time updates to connected clients
+- **Event Processing**: Listening to blockchain events and triggering appropriate actions
+
+**Arcanum.ai Verification Service**
+- **Evidence Analysis**: Analyzing submitted work evidence using AI models
+- **Semantic Matching**: Comparing task requirements against submitted deliverables
+- **Quality Scoring**: Generating confidence scores (0-100%) for verification decisions
+- **Anomaly Detection**: Identifying potential fraud or low-quality submissions
+- **Result Signing**: Creating Ed25519 signatures for verification results
+
+**Chainlink Oracle Network**
+- **AI Result Authentication**: Verifying Ed25519 signatures from Arcanum.ai
+- **Off-Chain Computation**: Executing complex verification logic off-chain
+- **On-Chain Delivery**: Submitting verified results to smart contracts
+
+**zkMe KYC Service**
+- **Identity Verification**: Processing KYC documents and generating zero-knowledge proofs
+- **Privacy Preservation**: Ensuring no PII is stored on-chain
+- **Credential Management**: Issuing and managing verifiable credentials
+
+### Rationale for Separation
+
+| Operation Type | Location | Reason |
+|----------------|----------|--------|
+| Fund Transfers | On-Chain | Requires trustless execution and atomic guarantees |
+| AI Verification | Off-Chain | Computationally expensive, requires specialized models |
+| Evidence Storage | Off-Chain (IPFS) | Large file storage is cost-prohibitive on-chain |
+| User Profiles | Off-Chain (PostgreSQL) | Mutable data that changes frequently |
+| Real-Time Updates | Off-Chain (WebSocket) | Requires low-latency bidirectional communication |
+| State Transitions | On-Chain | Requires consensus and immutability |
+| KYC Processing | Off-Chain (zkMe) | Privacy-sensitive, only proofs go on-chain |
+| Event Logs | On-Chain | Provides immutable audit trail |
+
+## 💎 Solana Smart Contract Structure
+
+AetherLock's Solana program is built using the Anchor framework, providing type-safe instructions and automatic account validation. The program manages escrow accounts, fund locking/release, and cross-chain message coordination.
+
+### Program Architecture
+
+```rust
+// Program ID (Devnet): AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+use anchor_lang::prelude::*;
+
+declare_id!("AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+#[program]
+pub mod aetherlock_escrow {
+    use super::*;
+
+    /// Initialize a new escrow account
+    pub fn create_escrow(
+        ctx: Context<CreateEscrow>,
+        escrow_id: String,
+        amount: u64,
+        payee: Pubkey,
+        deadline: i64,
+        task_requirements_hash: [u8; 32],
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        escrow.escrow_id = escrow_id;
+        escrow.payer = ctx.accounts.payer.key();
+        escrow.payee = payee;
+        escrow.amount = amount;
+        escrow.deadline = deadline;
+        escrow.task_requirements_hash = task_requirements_hash;
+        escrow.status = EscrowStatus::Created;
+        escrow.created_at = Clock::get()?.unix_timestamp;
+        escrow.bump = *ctx.bumps.get("escrow").unwrap();
+        
+        emit!(EscrowCreatedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            payer: escrow.payer,
+            payee: escrow.payee,
+            amount: escrow.amount,
+            timestamp: escrow.created_at,
+        });
+        
+        Ok(())
+    }
+
+    /// Fund the escrow by transferring SOL to the escrow PDA
+    pub fn fund_escrow(
+        ctx: Context<FundEscrow>,
+        escrow_id: String,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        require!(escrow.status == EscrowStatus::Created, ErrorCode::InvalidEscrowStatus);
+        
+        // Transfer SOL from payer to escrow PDA
+        let transfer_amount = escrow.amount;
+        let cpi_context = CpiContext::new(
+            ctx.accounts.system_program.to_account_info(),
+            anchor_lang::system_program::Transfer {
+                from: ctx.accounts.payer.to_account_info(),
+                to: ctx.accounts.escrow.to_account_info(),
+            },
+        );
+        anchor_lang::system_program::transfer(cpi_context, transfer_amount)?;
+        
+        escrow.status = EscrowStatus::Funded;
+        escrow.funded_at = Some(Clock::get()?.unix_timestamp);
+        
+        emit!(EscrowFundedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            amount: transfer_amount,
+            timestamp: escrow.funded_at.unwrap(),
+        });
+        
+        Ok(())
+    }
+
+    /// Submit evidence hash for verification
+    pub fn submit_evidence(
+        ctx: Context<SubmitEvidence>,
+        escrow_id: String,
+        evidence_hash: [u8; 32],
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        require!(escrow.status == EscrowStatus::Funded, ErrorCode::InvalidEscrowStatus);
+        require!(ctx.accounts.submitter.key() == escrow.payee, ErrorCode::Unauthorized);
+        
+        escrow.evidence_hash = Some(evidence_hash);
+        escrow.status = EscrowStatus::EvidenceSubmitted;
+        escrow.evidence_submitted_at = Some(Clock::get()?.unix_timestamp);
+        
+        emit!(EvidenceSubmittedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            evidence_hash,
+            submitter: ctx.accounts.submitter.key(),
+            timestamp: escrow.evidence_submitted_at.unwrap(),
+        });
+        
+        Ok(())
+    }
+
+    /// Update verification result from Chainlink oracle
+    pub fn update_verification(
+        ctx: Context<UpdateVerification>,
+        escrow_id: String,
+        verification_result: VerificationResult,
+        confidence_score: u8,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        require!(escrow.status == EscrowStatus::EvidenceSubmitted, ErrorCode::InvalidEscrowStatus);
+        require!(ctx.accounts.oracle.key() == CHAINLINK_ORACLE_PUBKEY, ErrorCode::Unauthorized);
+        
+        escrow.verification_result = Some(verification_result);
+        escrow.confidence_score = Some(confidence_score);
+        escrow.status = EscrowStatus::Verified;
+        escrow.verified_at = Some(Clock::get()?.unix_timestamp);
+        
+        emit!(VerificationCompletedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            result: verification_result,
+            confidence_score,
+            timestamp: escrow.verified_at.unwrap(),
+        });
+        
+        Ok(())
+    }
+
+    /// Release funds to payee (90%) and treasury (10%)
+    pub fn release_funds(
+        ctx: Context<ReleaseFunds>,
+        escrow_id: String,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        require!(escrow.status == EscrowStatus::Verified, ErrorCode::InvalidEscrowStatus);
+        require!(
+            escrow.verification_result == Some(VerificationResult::Approved),
+            ErrorCode::VerificationNotApproved
+        );
+        
+        let total_amount = escrow.amount;
+        let platform_fee = total_amount.checked_mul(10).unwrap().checked_div(100).unwrap(); // 10%
+        let payee_amount = total_amount.checked_sub(platform_fee).unwrap(); // 90%
+        
+        // Transfer to payee
+        **ctx.accounts.escrow.to_account_info().try_borrow_mut_lamports()? -= payee_amount;
+        **ctx.accounts.payee.to_account_info().try_borrow_mut_lamports()? += payee_amount;
+        
+        // Transfer to treasury
+        **ctx.accounts.escrow.to_account_info().try_borrow_mut_lamports()? -= platform_fee;
+        **ctx.accounts.treasury.to_account_info().try_borrow_mut_lamports()? += platform_fee;
+        
+        escrow.status = EscrowStatus::Released;
+        escrow.released_at = Some(Clock::get()?.unix_timestamp);
+        
+        emit!(FundsReleasedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            payee: escrow.payee,
+            payee_amount,
+            platform_fee,
+            timestamp: escrow.released_at.unwrap(),
+        });
+        
+        Ok(())
+    }
+
+    /// Refund to payer if verification fails or deadline expires
+    pub fn refund_escrow(
+        ctx: Context<RefundEscrow>,
+        escrow_id: String,
+    ) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+        let current_time = Clock::get()?.unix_timestamp;
+        
+        // Allow refund if verification rejected or deadline passed
+        let can_refund = escrow.verification_result == Some(VerificationResult::Rejected)
+            || current_time > escrow.deadline;
+        
+        require!(can_refund, ErrorCode::RefundNotAllowed);
+        
+        let refund_amount = escrow.amount;
+        
+        // Transfer back to payer
+        **ctx.accounts.escrow.to_account_info().try_borrow_mut_lamports()? -= refund_amount;
+        **ctx.accounts.payer.to_account_info().try_borrow_mut_lamports()? += refund_amount;
+        
+        escrow.status = EscrowStatus::Refunded;
+        escrow.refunded_at = Some(Clock::get()?.unix_timestamp);
+        
+        emit!(EscrowRefundedEvent {
+            escrow_id: escrow.escrow_id.clone(),
+            payer: escrow.payer,
+            amount: refund_amount,
+            timestamp: escrow.refunded_at.unwrap(),
+        });
+        
+        Ok(())
+    }
+}
+
+/// Escrow account structure
+#[account]
+pub struct Escrow {
+    pub escrow_id: String,              // Unique identifier (32 bytes)
+    pub payer: Pubkey,                  // Client who creates escrow (32 bytes)
+    pub payee: Pubkey,                  // Freelancer who receives payment (32 bytes)
+    pub amount: u64,                    // Total escrow amount in lamports (8 bytes)
+    pub deadline: i64,                  // Unix timestamp deadline (8 bytes)
+    pub task_requirements_hash: [u8; 32], // IPFS hash of requirements (32 bytes)
+    pub evidence_hash: Option<[u8; 32]>, // IPFS hash of evidence (33 bytes)
+    pub verification_result: Option<VerificationResult>, // AI verification result (2 bytes)
+    pub confidence_score: Option<u8>,   // 0-100 confidence score (2 bytes)
+    pub status: EscrowStatus,           // Current escrow state (1 byte)
+    pub created_at: i64,                // Creation timestamp (8 bytes)
+    pub funded_at: Option<i64>,         // Funding timestamp (9 bytes)
+    pub evidence_submitted_at: Option<i64>, // Evidence submission timestamp (9 bytes)
+    pub verified_at: Option<i64>,       // Verification timestamp (9 bytes)
+    pub released_at: Option<i64>,       // Release timestamp (9 bytes)
+    pub refunded_at: Option<i64>,       // Refund timestamp (9 bytes)
+    pub bump: u8,                       // PDA bump seed (1 byte)
+}
+
+/// Escrow status enum
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
+pub enum EscrowStatus {
+    Created,            // Escrow initialized but not funded
+    Funded,             // Funds locked in escrow
+    EvidenceSubmitted,  // Freelancer submitted work evidence
+    Verified,           // AI verification completed
+    Released,           // Funds released to payee
+    Refunded,           // Funds refunded to payer
+}
+
+/// Verification result enum
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
+pub enum VerificationResult {
+    Approved,   // >90% confidence, auto-approve
+    Review,     // 50-90% confidence, needs human review
+    Rejected,   // <50% confidence, auto-reject
+}
+
+/// Error codes
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Invalid escrow status for this operation")]
+    InvalidEscrowStatus,
+    #[msg("Unauthorized: signer does not have permission")]
+    Unauthorized,
+    #[msg("Verification not approved, cannot release funds")]
+    VerificationNotApproved,
+    #[msg("Refund not allowed at this time")]
+    RefundNotAllowed,
+}
+```
+
+### Account Validation Contexts
+
+```rust
+#[derive(Accounts)]
+#[instruction(escrow_id: String)]
+pub struct CreateEscrow<'info> {
+    #[account(
+        init,
+        payer = payer,
+        space = 8 + 32 + 32 + 32 + 8 + 8 + 32 + 33 + 2 + 2 + 1 + 8 + 9 + 9 + 9 + 9 + 9 + 1,
+        seeds = [b"escrow", escrow_id.as_bytes()],
+        bump
+    )]
+    pub escrow: Account<'info, Escrow>,
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(escrow_id: String)]
+pub struct FundEscrow<'info> {
+    #[account(
+        mut,
+        seeds = [b"escrow", escrow_id.as_bytes()],
+        bump = escrow.bump,
+        has_one = payer
+    )]
+    pub escrow: Account<'info, Escrow>,
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(escrow_id: String)]
+pub struct SubmitEvidence<'info> {
+    #[account(
+        mut,
+        seeds = [b"escrow", escrow_id.as_bytes()],
+        bump = escrow.bump
+    )]
+    pub escrow: Account<'info, Escrow>,
+    pub submitter: Signer<'info>,
+}
+
+#[derive(Accounts)]
+#[instruction(escrow_id: String)]
+pub struct ReleaseFunds<'info> {
+    #[account(
+        mut,
+        seeds = [b"escrow", escrow_id.as_bytes()],
+        bump = escrow.bump
+    )]
+    pub escrow: Account<'info, Escrow>,
+    /// CHECK: Validated against escrow.payee
+    #[account(mut)]
+    pub payee: AccountInfo<'info>,
+    /// CHECK: Treasury account
+    #[account(mut)]
+    pub treasury: AccountInfo<'info>,
+    pub system_program: Program<'info, System>,
+}
+```
+
+### Key Design Decisions
+
+**Program Derived Addresses (PDAs)**
+- Escrow accounts use PDAs derived from `["escrow", escrow_id]` seeds
+- Ensures deterministic account addresses without requiring keypair generation
+- Provides built-in authorization through seed validation
+
+**Fee Structure**
+- 10% platform fee automatically deducted during fund release
+- 90% goes to freelancer, 10% to treasury
+- Atomic execution ensures fees cannot be bypassed
+
+**State Machine**
+- Strict state transitions prevent invalid operations
+- Each instruction validates current state before execution
+- Events emitted for off-chain indexing and UI updates
+
+**Security Features**
+- Signer validation on all state-changing operations
+- PDA bump seed stored to prevent account recreation attacks
+- Oracle pubkey validation for verification updates
+- Deadline enforcement for refund protection
+
+## 🌉 ZetaChain Cross-Chain Integration
+
+ZetaChain enables AetherLock to operate as a truly omnichain protocol, allowing escrows created on Solana to settle on Somnia, Sui, TON, or any connected blockchain.
+
+### ZetaChain Universal App Pattern
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+import "@zetachain/protocol-contracts/contracts/zevm/interfaces/UniversalContract.sol";
+import "@zetachain/protocol-contracts/contracts/zevm/interfaces/IGatewayZEVM.sol";
+
+contract AetherLockZetaGateway is UniversalContract {
+    IGatewayZEVM public gateway;
+    address public solanaGatewayAddress;
+    
+    // Mapping of escrow IDs to cross-chain state
+    mapping(bytes32 => CrossChainEscrow) public escrows;
+    
+    struct CrossChainEscrow {
+        bytes32 escrowId;
+        address sourceChain;
+        address destinationChain;
+        uint256 amount;
+        address payee;
+        EscrowStatus status;
+        uint256 createdAt;
+    }
+    
+    enum EscrowStatus {
+        Pending,
+        Confirmed,
+        Settled,
+        Reverted
+    }
+    
+    event CrossChainEscrowCreated(
+        bytes32 indexed escrowId,
+        address sourceChain,
+        address destinationChain,
+        uint256 amount
+    );
+    
+    event CrossChainSettlement(
+        bytes32 indexed escrowId,
+        address destinationChain,
+        bool success
+    );
+
+    constructor(address gatewayAddress, address _solanaGatewayAddress) {
+        gateway = IGatewayZEVM(gatewayAddress);
+        solanaGatewayAddress = _solanaGatewayAddress;
+    }
+
+    /// @notice Called when a cross-chain message is received
+    /// @param context Message context including source chain and sender
+    /// @param message Encoded message data
+    function onCall(
+        MessageContext calldata context,
+        bytes calldata message
+    ) external override returns (bytes4) {
+        require(msg.sender == address(gateway), "Unauthorized");
+        
+        // Decode message
+        (
+            bytes32 escrowId,
+            uint256 amount,
+            address payee,
+            address destinationChain,
+            bytes32 taskHash
+        ) = abi.decode(message, (bytes32, uint256, address, address, bytes32));
+        
+        // Create cross-chain escrow record
+        escrows[escrowId] = CrossChainEscrow({
+            escrowId: escrowId,
+            sourceChain: context.sender,
+            destinationChain: destinationChain,
+            amount: amount,
+            payee: payee,
+            status: EscrowStatus.Confirmed,
+            createdAt: block.timestamp
+        });
+        
+        emit CrossChainEscrowCreated(
+            escrowId,
+            context.sender,
+            destinationChain,
+            amount
+        );
+        
+        // Forward to destination chain if not ZetaChain
+        if (destinationChain != address(this)) {
+            _forwardToDestination(escrowId, destinationChain, message);
+        }
+        
+        return this.onCall.selector;
+    }
+
+    /// @notice Called when a cross-chain call is reverted
+    /// @param context Revert context
+    /// @param message Original message that was reverted
+    function onRevert(
+        RevertContext calldata context,
+        bytes calldata message
+    ) external override {
+        require(msg.sender == address(gateway), "Unauthorized");
+        
+        // Decode escrow ID from message
+        (bytes32 escrowId, , , , ) = abi.decode(
+            message,
+            (bytes32, uint256, address, address, bytes32)
+        );
+        
+        // Update escrow status to reverted
+        CrossChainEscrow storage escrow = escrows[escrowId];
+        require(escrow.escrowId == escrowId, "Escrow not found");
+        
+        escrow.status = EscrowStatus.Reverted;
+        
+        // Notify source chain to refund
+        _notifySourceChainRefund(escrow.sourceChain, escrowId);
+        
+        emit CrossChainSettlement(escrowId, escrow.destinationChain, false);
+    }
+
+    /// @notice Called when a cross-chain call is aborted
+    /// @param escrowId The escrow that was aborted
+    function onAbort(bytes32 escrowId) external {
+        require(msg.sender == address(gateway), "Unauthorized");
+        
+        CrossChainEscrow storage escrow = escrows[escrowId];
+        require(escrow.escrowId == escrowId, "Escrow not found");
+        require(escrow.status == EscrowStatus.Pending, "Invalid status");
+        
+        escrow.status = EscrowStatus.Reverted;
+        
+        // Refund on source chain
+        _notifySourceChainRefund(escrow.sourceChain, escrowId);
+    }
+
+    /// @notice Settle escrow on destination chain after verification
+    /// @param escrowId The escrow to settle
+    /// @param verificationProof Proof from Chainlink oracle
+    function settleEscrow(
+        bytes32 escrowId,
+        bytes calldata verificationProof
+    ) external {
+        CrossChainEscrow storage escrow = escrows[escrowId];
+        require(escrow.status == EscrowStatus.Confirmed, "Invalid status");
+        
+        // Verify proof from Chainlink oracle
+        require(_verifyChainlinkProof(verificationProof), "Invalid proof");
+        
+        // Send settlement message to destination chain
+        bytes memory settlementMessage = abi.encode(
+            escrowId,
+            escrow.amount,
+            escrow.payee
+        );
+        
+        gateway.call(
+            escrow.destinationChain,
+            settlementMessage,
+            0 // No gas limit, use default
+        );
+        
+        escrow.status = EscrowStatus.Settled;
+        
+        emit CrossChainSettlement(escrowId, escrow.destinationChain, true);
+    }
+
+    function _forwardToDestination(
+        bytes32 escrowId,
+        address destinationChain,
+        bytes memory message
+    ) internal {
+        gateway.call(destinationChain, message, 0);
+    }
+
+    function _notifySourceChainRefund(
+        address sourceChain,
+        bytes32 escrowId
+    ) internal {
+        bytes memory refundMessage = abi.encode(escrowId, true);
+        gateway.call(sourceChain, refundMessage, 0);
+    }
+
+    function _verifyChainlinkProof(
+        bytes calldata proof
+    ) internal view returns (bool) {
+        // Verify Ed25519 signature from Chainlink oracle
+        // Implementation depends on Chainlink Functions setup
+        return true; // Simplified for example
+    }
+}
+```
+
+### Cross-Chain Message Flow
+
+**onCall Flow (Successful Path)**
+1. Solana program emits cross-chain escrow creation event
+2. ZetaChain gateway receives message via `onCall`
+3. Gateway validates message format and sender
+4. Creates cross-chain escrow record on ZetaChain
+5. Forwards message to destination chain (e.g., Somnia)
+6. Destination chain confirms receipt
+7. Returns success callback to Solana
+
+**onRevert Flow (Failure Path)**
+1. Destination chain rejects message (insufficient gas, invalid state, etc.)
+2. ZetaChain gateway receives revert notification
+3. Gateway calls `onRevert` with original message
+4. Updates escrow status to `Reverted`
+5. Sends refund notification to Solana
+6. Solana program refunds client
+
+**onAbort Flow (Timeout Path)**
+1. Cross-chain message times out (no response from destination)
+2. ZetaChain gateway calls `onAbort`
+3. Updates escrow status to `Reverted`
+4. Triggers automatic refund on source chain
+
+### Integration Benefits
+
+- **Omnichain Flexibility**: Escrows can settle on any connected blockchain
+- **Atomic Guarantees**: Either full settlement or full refund, no partial states
+- **Gas Optimization**: Pay gas only on source chain, ZetaChain handles routing
+- **Failure Recovery**: Automatic revert and refund on any failure
+
+## 🚀 Somnia Integration (Optional High-Speed Settlement)
+
+Somnia provides high-throughput, low-latency settlement for AetherLock escrows, along with on-chain reputation tracking and task rewards.
+
+### Somnia Settlement Contract
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
+    // Reputation tracking
+    mapping(address => UserReputation) public reputations;
+    
+    // Task rewards pool
+    uint256 public rewardPool;
+    uint256 public constant BONUS_THRESHOLD = 95; // 95% confidence for bonus
+    uint256 public constant BONUS_PERCENTAGE = 5; // 5% bonus on top of payment
+    
+    struct UserReputation {
+        uint256 totalTasksCompleted;
+        uint256 totalTasksRejected;
+        uint256 averageConfidenceScore;
+        uint256 totalEarnings;
+        uint256 reputationScore; // 0-1000
+        uint256 lastUpdated;
+    }
+    
+    event ReputationUpdated(
+        address indexed user,
+        uint256 newScore,
+        uint256 tasksCompleted
+    );
+    
+    event BonusRewarded(
+        address indexed freelancer,
+        uint256 bonusAmount,
+        uint256 confidenceScore
+    );
+    
+    event SettlementExecuted(
+        bytes32 indexed escrowId,
+        address indexed freelancer,
+        uint256 amount,
+        uint256 timestamp
+    );
+
+    /// @notice Settle escrow and update reputation
+    /// @param escrowId Unique escrow identifier
+    /// @param freelancer Address receiving payment
+    /// @param amount Payment amount
+    /// @param confidenceScore AI verification confidence (0-100)
+    function settleEscrow(
+        bytes32 escrowId,
+        address freelancer,
+        uint256 amount,
+        uint8 confidenceScore
+    ) external onlyOwner nonReentrant {
+        require(freelancer != address(0), "Invalid freelancer");
+        require(amount > 0, "Invalid amount");
+        require(confidenceScore >= 50, "Confidence too low");
+        
+        // Update reputation
+        _updateReputation(freelancer, confidenceScore, amount);
+        
+        // Calculate bonus if high confidence
+        uint256 totalPayout = amount;
+        if (confidenceScore >= BONUS_THRESHOLD && rewardPool > 0) {
+            uint256 bonus = (amount * BONUS_PERCENTAGE) / 100;
+            if (bonus <= rewardPool) {
+                totalPayout += bonus;
+                rewardPool -= bonus;
+                
+                emit BonusRewarded(freelancer, bonus, confidenceScore);
+            }
+        }
+        
+        // Execute settlement
+        (bool success, ) = freelancer.call{value: totalPayout}("");
+        require(success, "Settlement failed");
+        
+        emit SettlementExecuted(escrowId, freelancer, totalPayout, block.timestamp);
+    }
+
+    /// @notice Update user reputation based on task completion
+    function _updateReputation(
+        address user,
+        uint8 confidenceScore,
+        uint256 earnings
+    ) internal {
+        UserReputation storage rep = reputations[user];
+        
+        // Update task counts
+        rep.totalTasksCompleted += 1;
+        rep.totalEarnings += earnings;
+        
+        // Update average confidence score (weighted average)
+        uint256 totalTasks = rep.totalTasksCompleted + rep.totalTasksRejected;
+        rep.averageConfidenceScore = (
+            (rep.averageConfidenceScore * (totalTasks - 1)) + confidenceScore
+        ) / totalTasks;
+        
+        // Calculate reputation score (0-1000)
+        // Formula: (completion_rate * 500) + (avg_confidence * 5)
+        uint256 completionRate = (rep.totalTasksCompleted * 100) / totalTasks;
+        rep.reputationScore = (completionRate * 5) + (rep.averageConfidenceScore * 5);
+        
+        rep.lastUpdated = block.timestamp;
+        
+        emit ReputationUpdated(user, rep.reputationScore, rep.totalTasksCompleted);
+    }
+
+    /// @notice Record rejected task for reputation
+    function recordRejection(address user) external onlyOwner {
+        UserReputation storage rep = reputations[user];
+        rep.totalTasksRejected += 1;
+        
+        // Recalculate reputation score
+        uint256 totalTasks = rep.totalTasksCompleted + rep.totalTasksRejected;
+        uint256 completionRate = (rep.totalTasksCompleted * 100) / totalTasks;
+        rep.reputationScore = (completionRate * 5) + (rep.averageConfidenceScore * 5);
+        
+        rep.lastUpdated = block.timestamp;
+        
+        emit ReputationUpdated(user, rep.reputationScore, rep.totalTasksCompleted);
+    }
+
+    /// @notice Fund the reward pool
+    function fundRewardPool() external payable {
+        rewardPool += msg.value;
+    }
+
+    /// @notice Get user reputation details
+    function getReputation(address user) external view returns (
+        uint256 tasksCompleted,
+        uint256 tasksRejected,
+        uint256 avgConfidence,
+        uint256 totalEarnings,
+        uint256 reputationScore
+    ) {
+        UserReputation memory rep = reputations[user];
+        return (
+            rep.totalTasksCompleted,
+            rep.totalTasksRejected,
+            rep.averageConfidenceScore,
+            rep.totalEarnings,
+            rep.reputationScore
+        );
+    }
+}
+```
+
+### Somnia Integration Benefits
+
+**High-Speed Settlement**
+- Sub-second transaction finality
+- Low gas costs for frequent settlements
+- Optimized for high-throughput escrow operations
+
+**On-Chain Reputation**
+- Transparent reputation scores (0-1000 scale)
+- Weighted by completion rate and confidence scores
+- Immutable history of task performance
+
+**Task Rewards**
+- 5% bonus for high-confidence completions (>95%)
+- Funded by platform reward pool
+- Incentivizes quality work
+
+**Why Somnia?**
+- **Speed**: 400,000+ TPS for instant settlements
+- **Cost**: Minimal gas fees compared to Ethereum L1
+- **Compatibility**: EVM-compatible, easy integration
+- **Scalability**: Handles high escrow volume without congestion
+
 ## 🔗 Integration Point Documentation
 
 ### Frontend ↔ Backend Integration
@@ -737,6 +1554,178 @@ flowchart TB
     style O1 fill:#14F195
 ```
 
+## 📋 Detailed Sequence Diagrams
+
+### Escrow Creation Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Frontend
+    participant Wallet
+    participant Solana
+    participant Backend
+    participant ZetaChain
+    
+    Client->>Frontend: Click "Create Escrow"
+    Frontend->>Client: Show escrow form
+    Client->>Frontend: Enter details (amount, payee, deadline, requirements)
+    Frontend->>Frontend: Validate inputs
+    
+    Frontend->>Wallet: Request signature
+    Wallet->>Client: Approve transaction?
+    Client->>Wallet: Approve
+    
+    Wallet->>Solana: createEscrow(escrowId, amount, payee, deadline, taskHash)
+    Solana->>Solana: Derive PDA for escrow
+    Solana->>Solana: Initialize escrow account
+    Solana->>Solana: Emit EscrowCreatedEvent
+    Solana-->>Wallet: Transaction signature
+    
+    Wallet-->>Frontend: Success + signature
+    Frontend->>Backend: POST /escrows (metadata)
+    Backend->>Backend: Store escrow metadata in PostgreSQL
+    Backend-->>Frontend: Escrow record created
+    
+    Solana->>Backend: Event: EscrowCreated
+    Backend->>ZetaChain: xCall(createEscrow, destinationChain, data)
+    ZetaChain->>ZetaChain: Route cross-chain message
+    ZetaChain-->>Backend: Message sent
+    
+    Frontend->>Client: Show success + escrow ID
+    Frontend->>Frontend: Navigate to escrow details
+```
+
+### Task Submission Flow
+
+```mermaid
+sequenceDiagram
+    participant Freelancer
+    participant Frontend
+    participant IPFS
+    participant Wallet
+    participant Solana
+    participant Backend
+    
+    Freelancer->>Frontend: Navigate to escrow
+    Frontend->>Frontend: Verify freelancer is payee
+    Freelancer->>Frontend: Upload evidence files
+    
+    Frontend->>Frontend: Validate file types/sizes
+    Frontend->>IPFS: Upload files
+    IPFS->>IPFS: Generate content hash
+    IPFS-->>Frontend: Evidence hash (CID)
+    
+    Frontend->>Wallet: Request signature for submitEvidence
+    Wallet->>Freelancer: Approve transaction?
+    Freelancer->>Wallet: Approve
+    
+    Wallet->>Solana: submitEvidence(escrowId, evidenceHash)
+    Solana->>Solana: Verify submitter is payee
+    Solana->>Solana: Update escrow.evidence_hash
+    Solana->>Solana: Set status = EvidenceSubmitted
+    Solana->>Solana: Emit EvidenceSubmittedEvent
+    Solana-->>Wallet: Transaction signature
+    
+    Wallet-->>Frontend: Success
+    Frontend->>Backend: POST /evidence (metadata)
+    Backend->>Backend: Store evidence metadata
+    Backend-->>Frontend: Evidence recorded
+    
+    Solana->>Backend: Event: EvidenceSubmitted
+    Backend->>Backend: Queue AI verification job
+    
+    Frontend->>Freelancer: Show "Evidence submitted, verification in progress"
+```
+
+### AI Verification Flow
+
+```mermaid
+sequenceDiagram
+    participant Backend
+    participant IPFS
+    participant Arcanum
+    participant Chainlink
+    participant Solana
+    participant Frontend
+    
+    Backend->>Backend: Dequeue verification job
+    Backend->>IPFS: Fetch evidence by hash
+    IPFS-->>Backend: Evidence files
+    
+    Backend->>IPFS: Fetch task requirements
+    IPFS-->>Backend: Requirements document
+    
+    Backend->>Arcanum: POST /verify (evidence, requirements)
+    Arcanum->>Arcanum: Semantic analysis
+    Arcanum->>Arcanum: Quality assessment
+    Arcanum->>Arcanum: Generate confidence score
+    Arcanum->>Arcanum: Sign result with Ed25519
+    Arcanum-->>Backend: VerificationResult + signature
+    
+    Backend->>Backend: Validate signature
+    Backend->>Chainlink: submitVerification(escrowId, result, signature)
+    Chainlink->>Chainlink: Verify Ed25519 signature
+    Chainlink->>Chainlink: Validate result format
+    
+    Chainlink->>Solana: updateVerification(escrowId, result, confidence)
+    Solana->>Solana: Verify oracle is authorized
+    Solana->>Solana: Update escrow.verification_result
+    Solana->>Solana: Update escrow.confidence_score
+    Solana->>Solana: Set status = Verified
+    Solana->>Solana: Emit VerificationCompletedEvent
+    Solana-->>Chainlink: Success
+    
+    Chainlink-->>Backend: Verification submitted
+    Backend->>Backend: Update database
+    
+    Solana->>Backend: Event: VerificationCompleted
+    Backend->>Frontend: WebSocket: Verification complete
+    Frontend->>Frontend: Show verification result to users
+```
+
+### Cross-Chain Release Flow
+
+```mermaid
+sequenceDiagram
+    participant Solana
+    participant ZetaChain
+    participant Somnia
+    participant Freelancer
+    participant Treasury
+    
+    Note over Solana: Verification approved (>90% confidence)
+    
+    Solana->>Solana: releaseFunds(escrowId)
+    Solana->>Solana: Verify status = Verified
+    Solana->>Solana: Verify result = Approved
+    Solana->>Solana: Calculate: 90% to freelancer, 10% to treasury
+    
+    Solana->>ZetaChain: xCall(releaseFunds, destinationChain, data)
+    ZetaChain->>ZetaChain: Validate message
+    ZetaChain->>ZetaChain: Route to destination
+    
+    ZetaChain->>Somnia: onCall(sourceChain, releaseMessage)
+    Somnia->>Somnia: Validate escrow exists
+    Somnia->>Somnia: Update reputation score
+    Somnia->>Somnia: Calculate bonus (if confidence >95%)
+    
+    Somnia->>Freelancer: Transfer payment + bonus
+    Freelancer->>Freelancer: Receive funds
+    
+    Somnia->>Somnia: Emit SettlementExecuted
+    Somnia-->>ZetaChain: Settlement confirmed
+    
+    ZetaChain-->>Solana: onCallback(success)
+    Solana->>Solana: Set status = Released
+    Solana->>Solana: Emit FundsReleasedEvent
+    
+    Solana->>Treasury: Transfer 10% platform fee
+    Treasury->>Treasury: Receive fee
+    
+    Note over Solana,Treasury: Cross-chain settlement complete
+```
+
 ## 🔄 Event-Driven Architecture
 
 ```mermaid
@@ -956,6 +1945,76 @@ graph TB
     style Dashboard fill:#F46800
     style Alerts fill:#DC382D
 ```
+
+## 📸 Architecture Screenshots & Media
+
+<div className="my-8 p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/30">
+  <h3 className="text-xl font-bold text-white mb-4">🎬 System Architecture Overview Video</h3>
+  <p className="text-gray-300 mb-4">
+    Watch a comprehensive walkthrough of AetherLock's multi-layered architecture, from frontend to blockchain settlement.
+  </p>
+  <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+    <p className="text-gray-400 text-center">
+      📹 Video Placeholder: Architecture Overview<br/>
+      <span className="text-sm">Duration: 5-7 minutes</span>
+    </p>
+  </div>
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+  <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+    <h4 className="text-lg font-bold text-white mb-3">🏗️ System Layer Diagram</h4>
+    <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
+      <p className="text-gray-400 text-center text-sm">
+        Screenshot: Interactive system layer visualization<br/>
+        (UI, Application, Verification, Blockchain, Storage)
+      </p>
+    </div>
+  </div>
+  
+  <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+    <h4 className="text-lg font-bold text-white mb-3">🔗 Cross-Chain Message Flow</h4>
+    <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
+      <p className="text-gray-400 text-center text-sm">
+        Screenshot: ZetaChain gateway routing visualization<br/>
+        (Solana → ZetaChain → Somnia)
+      </p>
+    </div>
+  </div>
+  
+  <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+    <h4 className="text-lg font-bold text-white mb-3">🧠 AI Verification Pipeline</h4>
+    <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
+      <p className="text-gray-400 text-center text-sm">
+        Screenshot: Arcanum.ai verification dashboard<br/>
+        (Evidence analysis, confidence scoring, decision logic)
+      </p>
+    </div>
+  </div>
+  
+  <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+    <h4 className="text-lg font-bold text-white mb-3">💎 Solana Program Explorer</h4>
+    <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
+      <p className="text-gray-400 text-center text-sm">
+        Screenshot: Solana Explorer showing escrow transactions<br/>
+        (Program instructions, account states, events)
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="my-8 p-6 rounded-xl bg-gradient-to-r from-cyan-500/10 to-green-500/10 border border-cyan-500/30">
+  <h3 className="text-xl font-bold text-white mb-4">📊 Performance Metrics Dashboard</h3>
+  <p className="text-gray-300 mb-4">
+    Real-time monitoring of system performance, transaction throughput, and verification accuracy.
+  </p>
+  <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
+    <p className="text-gray-400 text-center">
+      📊 Screenshot Placeholder: Grafana Dashboard<br/>
+      <span className="text-sm">Metrics: TPS, latency, success rate, AI confidence distribution</span>
+    </p>
+  </div>
+</div>
 
 ---
 

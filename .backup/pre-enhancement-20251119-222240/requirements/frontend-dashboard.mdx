@@ -1,0 +1,310 @@
+# Frontend Dashboard Requirements
+
+## Overview
+
+This document defines the requirements for AetherLock's frontend dashboard and user interface. The dashboard provides an intuitive, responsive interface for clients and freelancers to manage escrows, submit evidence, track verification status, and interact with the protocol across multiple blockchain networks.
+
+## User Stories and Acceptance Criteria
+
+### User Story 1: User Connects Multi-Chain Wallet
+
+**As a** user accessing AetherLock  
+**I want to** connect my wallet from multiple blockchain networks  
+**So that** I can interact with escrows on my preferred chain
+
+#### Acceptance Criteria
+
+1. **WHEN** I visit the dashboard **THEN** the system SHALL display a "Connect Wallet" button prominently in the header
+2. **WHEN** I click "Connect Wallet" **THEN** the system SHALL display a modal with wallet options (Phantom, Solflare, MetaMask, Tonkeeper)
+3. **WHEN** I select a wallet **THEN** the system SHALL initiate the connection request and display a loading indicator
+4. **WHEN** the connection succeeds **THEN** the system SHALL display my wallet address (truncated) and network indicator in the header
+5. **WHEN** the connection fails **THEN** the system SHALL display a clear error message with troubleshooting steps
+
+### User Story 2: Dashboard Displays Escrow Overview
+
+**As a** user with connected wallet  
+**I want to** see an overview of all my escrows  
+**So that** I can quickly understand my active transactions and their status
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the dashboard **THEN** the system SHALL display summary cards showing total escrows, active escrows, completed escrows, and total value
+2. **WHEN** summary cards are displayed **THEN** the system SHALL use distinct colors and icons for each metric
+3. **WHEN** I view the escrow list **THEN** the system SHALL display escrows in a table with columns: ID, Task, Amount, Status, Deadline, and Actions
+4. **WHEN** escrows are loading **THEN** the system SHALL display skeleton loaders to indicate data is being fetched
+5. **WHEN** I have no escrows **THEN** the system SHALL display an empty state with a "Create Escrow" call-to-action button
+
+### User Story 3: User Creates New Escrow
+
+**As a** client wanting to hire a freelancer  
+**I want to** create a new escrow through an intuitive form  
+**So that** I can quickly set up a transaction with clear terms
+
+#### Acceptance Criteria
+
+1. **WHEN** I click "Create Escrow" **THEN** the system SHALL display a multi-step form with progress indicators
+2. **WHEN** I fill in task details **THEN** the system SHALL validate inputs in real-time and display inline error messages
+3. **WHEN** I enter the freelancer address **THEN** the system SHALL validate the address format for the selected blockchain
+4. **WHEN** I set the payment amount **THEN** the system SHALL display the amount in both native tokens and USD equivalent
+5. **WHEN** I submit the form **THEN** the system SHALL display a transaction preview and request wallet signature
+
+### User Story 4: User Views Escrow Details
+
+**As a** user involved in an escrow  
+**I want to** view detailed information about a specific escrow  
+**So that** I can track progress and understand the current state
+
+#### Acceptance Criteria
+
+1. **WHEN** I click an escrow in the list **THEN** the system SHALL navigate to a detailed view with all escrow information
+2. **WHEN** the detail page loads **THEN** the system SHALL display task description, parties involved, amount, deadline, and current status
+3. **WHEN** evidence has been submitted **THEN** the system SHALL display links to view the evidence with file type indicators
+4. **WHEN** verification is complete **THEN** the system SHALL display the AI confidence score and decision reasoning
+5. **WHEN** the escrow is in dispute **THEN** the system SHALL display dispute status, assigned arbitrators, and expected resolution time
+
+### User Story 5: Freelancer Submits Evidence
+
+**As a** freelancer who completed work  
+**I want to** submit evidence through a user-friendly upload interface  
+**So that** I can easily provide proof of task completion
+
+#### Acceptance Criteria
+
+1. **WHEN** I access an escrow where I'm the freelancer **THEN** the system SHALL display a "Submit Evidence" button if the escrow is funded
+2. **WHEN** I click "Submit Evidence" **THEN** the system SHALL display a drag-and-drop upload area with file type and size guidance
+3. **WHEN** I drag files into the upload area **THEN** the system SHALL highlight the area and display file names when dropped
+4. **WHEN** files are uploading **THEN** the system SHALL display individual progress bars for each file with percentage and estimated time
+5. **WHEN** upload completes **THEN** the system SHALL display success confirmation and automatically trigger AI verification
+
+### User Story 6: User Tracks Verification Progress
+
+**As a** user waiting for verification  
+**I want to** see real-time updates on verification progress  
+**So that** I know when to expect results
+
+#### Acceptance Criteria
+
+1. **WHEN** verification is triggered **THEN** the system SHALL display a progress indicator with stages: "Uploading", "Processing", "Analyzing", "Deciding"
+2. **WHEN** each stage completes **THEN** the system SHALL update the progress indicator with a checkmark and move to the next stage
+3. **WHEN** verification is in progress **THEN** the system SHALL display an estimated time remaining based on average processing time
+4. **WHEN** verification completes **THEN** the system SHALL display a notification banner with the result
+5. **WHEN** verification fails **THEN** the system SHALL display the error message and provide options to retry or contact support
+
+### User Story 7: Dashboard Displays Transaction History
+
+**As a** user with multiple completed escrows  
+**I want to** view my transaction history  
+**So that** I can track my earnings, payments, and platform usage over time
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the "History" tab **THEN** the system SHALL display all completed and cancelled escrows in chronological order
+2. **WHEN** viewing history **THEN** the system SHALL display transaction date, escrow ID, amount, status, and outcome
+3. **WHEN** I filter by date range **THEN** the system SHALL update the list to show only transactions within the selected range
+4. **WHEN** I export history **THEN** the system SHALL generate a CSV file with all transaction details
+5. **WHEN** I click a historical transaction **THEN** the system SHALL display the full escrow details including evidence and verification results
+
+### User Story 8: User Manages Notifications
+
+**As a** user receiving platform notifications  
+**I want to** manage my notification preferences  
+**So that** I receive important updates without being overwhelmed
+
+#### Acceptance Criteria
+
+1. **WHEN** I access notification settings **THEN** the system SHALL display toggles for email, in-app, and push notifications
+2. **WHEN** I toggle a notification type **THEN** the system SHALL save the preference immediately and display a confirmation message
+3. **WHEN** I receive a notification **THEN** the system SHALL display it in the notification center with timestamp and action buttons
+4. **WHEN** I click a notification **THEN** the system SHALL navigate to the relevant escrow or page
+5. **WHEN** I mark notifications as read **THEN** the system SHALL update the unread count badge in the header
+
+### User Story 9: Dashboard Supports Mobile Devices
+
+**As a** user accessing AetherLock on mobile  
+**I want** a responsive interface optimized for small screens  
+**So that** I can manage escrows on the go
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the dashboard on mobile **THEN** the system SHALL display a responsive layout with touch-optimized controls
+2. **WHEN** viewing the escrow list on mobile **THEN** the system SHALL display escrows as cards instead of a table
+3. **WHEN** I interact with forms on mobile **THEN** the system SHALL use appropriate input types (number pad for amounts, date picker for deadlines)
+4. **WHEN** I upload files on mobile **THEN** the system SHALL allow access to camera and photo library
+5. **WHEN** I navigate on mobile **THEN** the system SHALL use a hamburger menu for navigation with smooth animations
+
+### User Story 10: User Initiates Dispute from Dashboard
+
+**As a** user who disagrees with a verification result  
+**I want to** initiate a dispute directly from the dashboard  
+**So that** I can quickly challenge decisions I believe are incorrect
+
+#### Acceptance Criteria
+
+1. **WHEN** I view an escrow with a disputable result **THEN** the system SHALL display a "Dispute Result" button
+2. **WHEN** I click "Dispute Result" **THEN** the system SHALL display a modal with dispute form and fee information
+3. **WHEN** I fill in the dispute reason **THEN** the system SHALL validate the text length (minimum 50 characters)
+4. **WHEN** I submit the dispute **THEN** the system SHALL display the dispute fee and request wallet signature
+5. **WHEN** the dispute is submitted **THEN** the system SHALL update the escrow status to "In Dispute" and display arbitrator assignment progress
+
+### User Story 11: Dashboard Displays Network Status
+
+**As a** user interacting with blockchain networks  
+**I want to** see the current network status and gas fees  
+**So that** I can make informed decisions about when to submit transactions
+
+#### Acceptance Criteria
+
+1. **WHEN** I view the dashboard **THEN** the system SHALL display the current network (Solana, Ethereum, etc.) in the header
+2. **WHEN** I hover over the network indicator **THEN** the system SHALL display a tooltip with network health status and average transaction time
+3. **WHEN** I initiate a transaction **THEN** the system SHALL display estimated gas fees before requesting signature
+4. **WHEN** network congestion is high **THEN** the system SHALL display a warning banner suggesting to wait for lower fees
+5. **WHEN** I switch networks **THEN** the system SHALL reload the dashboard with escrows from the selected network
+
+### User Story 12: User Accesses Help and Documentation
+
+**As a** new user learning the platform  
+**I want** easy access to help resources and documentation  
+**So that** I can understand how to use AetherLock effectively
+
+#### Acceptance Criteria
+
+1. **WHEN** I access the dashboard **THEN** the system SHALL display a help icon in the header
+2. **WHEN** I click the help icon **THEN** the system SHALL display a dropdown with links to documentation, FAQs, and support
+3. **WHEN** I'm on a specific page **THEN** the system SHALL display contextual help tooltips for complex features
+4. **WHEN** I encounter an error **THEN** the system SHALL provide a link to relevant documentation or troubleshooting guide
+5. **WHEN** I access the FAQ **THEN** the system SHALL display searchable, categorized questions with expandable answers
+
+## Technical Requirements
+
+### UI Framework and Libraries
+- **Framework**: React 18+ with TypeScript
+- **Styling**: Tailwind CSS for utility-first styling
+- **Component Library**: shadcn/ui for consistent, accessible components
+- **State Management**: Zustand for global state, React Query for server state
+- **Routing**: React Router v6 for client-side routing
+
+### Wallet Integration
+- **Solana**: @solana/wallet-adapter-react for Phantom, Solflare, Backpack
+- **Ethereum**: wagmi + viem for MetaMask, WalletConnect
+- **TON**: @tonconnect/ui-react for Tonkeeper
+- **Multi-Chain**: Abstract wallet connection logic to support multiple chains
+
+### Responsive Design
+- **Breakpoints**: Mobile (<640px), Tablet (640-1024px), Desktop (>1024px)
+- **Mobile-First**: Design for mobile first, enhance for larger screens
+- **Touch Targets**: Minimum 44x44px for all interactive elements
+- **Accessibility**: WCAG 2.1 AA compliance with keyboard navigation and screen reader support
+
+### Performance Requirements
+- **Initial Load**: First Contentful Paint (FCP) < 1.5 seconds
+- **Time to Interactive**: < 3 seconds on 3G connection
+- **Bundle Size**: Main bundle < 200KB gzipped
+- **Code Splitting**: Lazy load routes and heavy components
+- **Image Optimization**: Use WebP format with lazy loading
+
+### Real-Time Updates
+- **WebSocket**: Maintain WebSocket connection for real-time escrow updates
+- **Polling Fallback**: Poll every 30 seconds if WebSocket unavailable
+- **Optimistic Updates**: Update UI immediately, rollback on error
+- **Event Subscription**: Subscribe to blockchain events for instant updates
+
+### Data Fetching and Caching
+- **React Query**: Cache API responses with 5-minute stale time
+- **Pagination**: Load escrows in pages of 20 with infinite scroll
+- **Prefetching**: Prefetch escrow details on hover
+- **Background Refetch**: Refetch data when window regains focus
+
+### Error Handling
+- **Error Boundaries**: Catch React errors and display fallback UI
+- **Toast Notifications**: Display non-blocking error messages
+- **Retry Logic**: Automatic retry for failed API requests (3 attempts)
+- **Offline Support**: Display offline banner and queue actions
+
+### Security Requirements
+- **XSS Prevention**: Sanitize all user inputs before rendering
+- **CSRF Protection**: Include CSRF tokens in all state-changing requests
+- **Content Security Policy**: Strict CSP headers to prevent injection attacks
+- **Secure Storage**: Store sensitive data in secure, encrypted storage
+
+## UI/UX Design Requirements
+
+### Design System
+- **Color Palette**: Cyberpunk theme with purple (#8B5CF6), cyan (#06B6D4), dark backgrounds
+- **Typography**: Inter for body text, Space Grotesk for headings
+- **Spacing**: 8px base unit for consistent spacing
+- **Shadows**: Subtle shadows for depth, glowing effects for interactive elements
+
+### Component Specifications
+
+#### Escrow Card
+```tsx
+interface EscrowCardProps {
+  escrowId: string;
+  taskTitle: string;
+  amount: number;
+  currency: string;
+  status: EscrowStatus;
+  deadline: Date;
+  parties: { client: string; freelancer: string };
+  onViewDetails: () => void;
+}
+```
+
+#### Status Badge
+- **Created**: Gray background, "Created" text
+- **Funded**: Blue background, "Funded" text
+- **AwaitingVerification**: Yellow background, "Verifying" text
+- **Approved**: Green background, "Approved" text
+- **Rejected**: Red background, "Rejected" text
+- **InDispute**: Orange background, "In Dispute" text
+- **Completed**: Green background, "Completed" text
+
+#### Progress Indicator
+```tsx
+interface ProgressIndicatorProps {
+  stages: Array<{
+    name: string;
+    status: 'pending' | 'active' | 'complete' | 'error';
+  }>;
+  currentStage: number;
+}
+```
+
+### Accessibility Requirements
+- **Keyboard Navigation**: All interactive elements accessible via keyboard
+- **Focus Indicators**: Clear focus outlines for keyboard users
+- **Screen Reader Support**: Proper ARIA labels and semantic HTML
+- **Color Contrast**: Minimum 4.5:1 contrast ratio for text
+- **Alternative Text**: Descriptive alt text for all images
+
+### Animation and Transitions
+- **Page Transitions**: Smooth fade-in animations (200ms)
+- **Loading States**: Skeleton loaders for content, spinners for actions
+- **Micro-interactions**: Hover effects, button press animations
+- **Reduced Motion**: Respect prefers-reduced-motion media query
+
+## Integration Points
+
+### Backend API Integration
+- **REST API**: Fetch escrow data, user profile, transaction history
+- **WebSocket**: Real-time updates for escrow state changes
+- **GraphQL**: Optional GraphQL endpoint for complex queries
+- **Error Handling**: Standardized error responses with codes and messages
+
+### Blockchain Integration
+- **Transaction Signing**: Request wallet signatures for all blockchain transactions
+- **Event Listening**: Subscribe to smart contract events for real-time updates
+- **Network Switching**: Handle network switching and prompt user when needed
+- **Gas Estimation**: Estimate and display gas fees before transaction submission
+
+### Analytics Integration
+- **Page Views**: Track page views and user navigation patterns
+- **User Actions**: Track button clicks, form submissions, and escrow interactions
+- **Performance Metrics**: Monitor load times, API latency, and error rates
+- **Conversion Tracking**: Track escrow creation, completion, and dispute rates
+
+### Notification Integration
+- **In-App Notifications**: Display notifications in notification center
+- **Push Notifications**: Request permission and send browser push notifications
+- **Email Notifications**: Trigger email notifications for important events
+- **Notification Preferences**: Allow users to customize notification settings

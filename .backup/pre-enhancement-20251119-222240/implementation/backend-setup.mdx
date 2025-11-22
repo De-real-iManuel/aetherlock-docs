@@ -1,0 +1,798 @@
+---
+title: "Backend Deployment Guide"
+description: "Deploy AetherLock Protocol backend services to production environments"
+---
+
+# Backend Deployment Guide
+
+This guide covers deploying the AetherLock Protocol backend services to various production environments including Vercel, Render, AWS Lambda, and self-hosted solutions.
+
+## Architecture Overview
+
+The AetherLock backend consists of several key components:
+
+- **REST API Server**: Express.js application handling escrow operations
+- **WebSocket Server**: Real-time event notifications
+- **AI Verification Service**: Arcanum.ai integration for task verification (primary provider with OpenAI, Claude, and Gemini fallbacks)
+- **zkMe Integration**: Zero-knowledge KYC webhook handlers
+- **Database**: PostgreSQL for persistent data storage
+- **Cache Layer**: Redis for session management and caching
+- **File Storage**: IPFS integration for evidence storage
+
+## Environment Variable Configuration
+
+### Required Environment Variables
+
+Create a `.env` file with the following variables:
+
+```bash
+# Server Configuration
+NODE_ENV=production
+PORT=3001
+API_VERSION=v1
+
+# Database Configuration
+DATABASE_URL=postgresql://username:password@host:port/database
+DATABASE_SSL=true
+DATABASE_POOL_SIZE=10
+
+# Redis Configuration
+REDIS_URL=redis://username:password@host:port
+REDIS_TLS=true
+
+# Solana Configuration
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+SOLANA_PRIVATE_KEY=your_base58_private_key_here
+ESCROW_PROGRAM_ID=AetherLockProgramId1111111111111111111111
+
+# Arcanum.ai Configuration (Primary AI Provider)
+ARCANUM_API_KEY=your_arcanum_api_key
+ARCANUM_ENDPOINT=https://api.arcanum.ai/v1/analyze
+
+# AI Fallback Providers (Optional)
+OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+GEMINI_API_KEY=your_gemini_api_key
+
+# zkMe Integration
+ZKME_API_KEY=your_zkme_api_key
+ZKME_WEBHOOK_SECRET=your_webhook_secret
+ZKME_ENVIRONMENT=production
+
+# ZetaChain Configuration
+ZETACHAIN_RPC_URL=https://zetachain-evm.blockpi.network/v1/rpc/public
+ZETACHAIN_PRIVATE_KEY=your_zetachain_private_key
+UNIVERSAL_APP_ADDRESS=0x1234567890123456789012345678901234567890
+
+# IPFS Configuration
+IPFS_GATEWAY_URL=https://gateway.pinata.cloud/ipfs/
+PINATA_API_KEY=your_pinata_api_key
+PINATA_SECRET_KEY=your_pinata_secret_key
+
+# Security Configuration
+JWT_SECRET=your_jwt_secret_key_here
+CORS_ORIGINS=https://app.aetherlock.io,https://aetherlock.io
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Monitoring and Logging
+LOG_LEVEL=info
+SENTRY_DSN=your_sentry_dsn_here
+DATADOG_API_KEY=your_datadog_api_key
+```
+
+### Network-Specific Configurations
+
+#### Mainnet Configuration
+```bash
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+ZETACHAIN_RPC_URL=https://zetachain-evm.blockpi.network/v1/rpc/public
+ZKME_ENVIRONMENT=production
+```
+
+#### Testnet Configuration
+```bash
+SOLANA_RPC_URL=https://api.devnet.solana.com
+ZETACHAIN_RPC_URL=https://zetachain-athens-evm.blockpi.network/v1/rpc/public
+ZKME_ENVIRONMENT=sandbox
+```
+
+## Docker Setup
+
+### Dockerfile
+
+Create a `Dockerfile` in your backend directory:
+
+```dockerfile
+# Use Node.js 18 Alpine image
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY src/ ./src/
+
+# Build the application
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS production
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Create app user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S backend -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy built application
+COPY --from=builder --chown=backend:nodejs /app/dist ./dist
+COPY --from=builder --chown=backend:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=backend:nodejs /app/package*.json ./
+
+# Switch to app user
+USER backend
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node dist/healthcheck.js
+
+# Start the application
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/server.js"]
+```
+
+### Docker Compose
+
+Create a `docker-compose.yml` for local development with dependencies:
+
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/aetherlock
+      - REDIS_URL=redis://redis:6379
+      - ARCANUM_API_KEY=${ARCANUM_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: aetherlock
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+## Deployment Options
+
+### 1. Vercel Deployment
+
+Vercel is ideal for serverless deployment with automatic scaling.
+
+#### Setup Steps
+
+1. **Install Vercel CLI**:
+```bash
+npm install -g vercel
+```
+
+2. **Create `vercel.json`**:
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/server.ts"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "src/server.ts": {
+      "maxDuration": 30
+    }
+  }
+}
+```
+
+3. **Deploy**:
+```bash
+# Login to Vercel
+vercel login
+
+# Deploy to production
+vercel --prod
+
+# Set environment variables
+vercel env add DATABASE_URL
+vercel env add REDIS_URL
+vercel env add ARCANUM_API_KEY
+vercel env add ARCANUM_ENDPOINT
+# ... add all required environment variables
+```
+
+#### Database Setup for Vercel
+
+Use Vercel's database integrations:
+
+```bash
+# Add PostgreSQL
+vercel integration add neon
+
+# Add Redis
+vercel integration add upstash
+```
+
+### 2. Render Deployment
+
+Render provides a simple platform with managed databases.
+
+#### Setup Steps
+
+1. **Create `render.yaml`**:
+```yaml
+services:
+  - type: web
+    name: aetherlock-backend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aetherlock-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: aetherlock-redis
+          property: connectionString
+
+databases:
+  - name: aetherlock-db
+    databaseName: aetherlock
+    user: aetherlock
+
+services:
+  - type: redis
+    name: aetherlock-redis
+    maxmemoryPolicy: allkeys-lru
+```
+
+2. **Deploy via Git**:
+   - Connect your GitHub repository to Render
+   - Render will automatically deploy on git push
+   - Configure environment variables in the Render dashboard
+
+### 3. AWS Lambda Deployment
+
+For serverless deployment with AWS Lambda and API Gateway.
+
+#### Setup Steps
+
+1. **Install Serverless Framework**:
+```bash
+npm install -g serverless
+npm install --save-dev serverless-offline
+```
+
+2. **Create `serverless.yml`**:
+```yaml
+service: aetherlock-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    NODE_ENV: production
+    DATABASE_URL: ${env:DATABASE_URL}
+    REDIS_URL: ${env:REDIS_URL}
+    ARCANUM_API_KEY: ${env:ARCANUM_API_KEY}
+    ARCANUM_ENDPOINT: ${env:ARCANUM_ENDPOINT}
+
+functions:
+  api:
+    handler: dist/lambda.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+    timeout: 30
+    memorySize: 512
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+```
+
+3. **Create Lambda Handler**:
+```typescript
+// src/lambda.ts
+import serverlessExpress from '@vendia/serverless-express';
+import { app } from './app';
+
+export const handler = serverlessExpress({ app });
+```
+
+4. **Deploy**:
+```bash
+# Deploy to AWS
+serverless deploy --stage production
+
+# Set environment variables
+serverless deploy --stage production --param="DATABASE_URL=your_database_url"
+```
+
+### 4. Self-Hosted Deployment
+
+For maximum control, deploy on your own infrastructure.
+
+#### Setup with PM2
+
+1. **Install PM2**:
+```bash
+npm install -g pm2
+```
+
+2. **Create `ecosystem.config.js`**:
+```javascript
+module.exports = {
+  apps: [{
+    name: 'aetherlock-backend',
+    script: 'dist/server.js',
+    instances: 'max',
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3001
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+```
+
+3. **Deploy**:
+```bash
+# Build the application
+npm run build
+
+# Start with PM2
+pm2 start ecosystem.config.js
+
+# Save PM2 configuration
+pm2 save
+pm2 startup
+```
+
+#### Nginx Configuration
+
+Create `/etc/nginx/sites-available/aetherlock-backend`:
+
+```nginx
+server {
+    listen 80;
+    server_name api.aetherlock.io;
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+## Database Setup
+
+### PostgreSQL Setup
+
+#### Managed Database Services
+
+**Neon (Recommended for Vercel)**:
+```bash
+# Create database
+curl -X POST https://console.neon.tech/api/v2/projects \
+  -H "Authorization: Bearer $NEON_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"project": {"name": "aetherlock"}}'
+```
+
+**AWS RDS**:
+```bash
+# Create RDS instance
+aws rds create-db-instance \
+  --db-instance-identifier aetherlock-db \
+  --db-instance-class db.t3.micro \
+  --engine postgres \
+  --master-username aetherlock \
+  --master-user-password your_password \
+  --allocated-storage 20
+```
+
+#### Database Migrations
+
+Run migrations after deployment:
+
+```bash
+# Install migration tool
+npm install -g db-migrate
+
+# Run migrations
+npm run migrate:up
+
+# Or using Prisma
+npx prisma migrate deploy
+```
+
+### Redis Setup
+
+#### Managed Redis Services
+
+**Upstash (Recommended for Vercel)**:
+```bash
+# Create Redis database via Upstash CLI
+upstash redis create --name aetherlock-cache --region us-east-1
+```
+
+**AWS ElastiCache**:
+```bash
+# Create ElastiCache cluster
+aws elasticache create-cache-cluster \
+  --cache-cluster-id aetherlock-redis \
+  --cache-node-type cache.t3.micro \
+  --engine redis \
+  --num-cache-nodes 1
+```
+
+## Monitoring and Logging
+
+### Health Checks
+
+Create `src/healthcheck.ts`:
+
+```typescript
+import http from 'http';
+
+const options = {
+  hostname: 'localhost',
+  port: process.env.PORT || 3001,
+  path: '/health',
+  method: 'GET',
+  timeout: 2000
+};
+
+const req = http.request(options, (res) => {
+  if (res.statusCode === 200) {
+    process.exit(0);
+  } else {
+    process.exit(1);
+  }
+});
+
+req.on('error', () => {
+  process.exit(1);
+});
+
+req.on('timeout', () => {
+  req.destroy();
+  process.exit(1);
+});
+
+req.end();
+```
+
+### Application Monitoring
+
+#### Sentry Integration
+
+```typescript
+// src/monitoring/sentry.ts
+import * as Sentry from '@sentry/node';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: 1.0,
+});
+
+export { Sentry };
+```
+
+#### Datadog Integration
+
+```typescript
+// src/monitoring/datadog.ts
+import { StatsD } from 'node-statsd';
+
+const statsd = new StatsD({
+  host: 'localhost',
+  port: 8125,
+  prefix: 'aetherlock.backend.'
+});
+
+export { statsd };
+```
+
+### Logging Configuration
+
+```typescript
+// src/utils/logger.ts
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  ]
+});
+
+export { logger };
+```
+
+## Security Configuration
+
+### SSL/TLS Setup
+
+#### Let's Encrypt with Certbot
+
+```bash
+# Install Certbot
+sudo apt-get install certbot python3-certbot-nginx
+
+# Obtain SSL certificate
+sudo certbot --nginx -d api.aetherlock.io
+
+# Auto-renewal
+sudo crontab -e
+# Add: 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+### API Security
+
+#### Rate Limiting
+
+```typescript
+// src/middleware/rateLimiter.ts
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+import Redis from 'ioredis';
+
+const redis = new Redis(process.env.REDIS_URL);
+
+export const apiLimiter = rateLimit({
+  store: new RedisStore({
+    sendCommand: (...args: string[]) => redis.call(...args),
+  }),
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+```
+
+#### CORS Configuration
+
+```typescript
+// src/middleware/cors.ts
+import cors from 'cors';
+
+const corsOptions = {
+  origin: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+export const corsMiddleware = cors(corsOptions);
+```
+
+## Performance Optimization
+
+### Caching Strategy
+
+```typescript
+// src/middleware/cache.ts
+import Redis from 'ioredis';
+
+const redis = new Redis(process.env.REDIS_URL);
+
+export const cacheMiddleware = (ttl: number = 300) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const key = `cache:${req.originalUrl}`;
+    
+    try {
+      const cached = await redis.get(key);
+      if (cached) {
+        return res.json(JSON.parse(cached));
+      }
+      
+      // Store original send function
+      const originalSend = res.json;
+      
+      // Override send function to cache response
+      res.json = function(data) {
+        redis.setex(key, ttl, JSON.stringify(data));
+        return originalSend.call(this, data);
+      };
+      
+      next();
+    } catch (error) {
+      next();
+    }
+  };
+};
+```
+
+### Database Connection Pooling
+
+```typescript
+// src/database/connection.ts
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: parseInt(process.env.DATABASE_POOL_SIZE || '10'),
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
+
+export { pool };
+```
+
+## Deployment Checklist
+
+### Pre-Deployment
+
+- [ ] All environment variables configured
+- [ ] Database migrations completed
+- [ ] SSL certificates installed
+- [ ] Health checks implemented
+- [ ] Monitoring configured
+- [ ] Rate limiting enabled
+- [ ] CORS properly configured
+- [ ] Error handling implemented
+- [ ] Logging configured
+
+### Post-Deployment
+
+- [ ] Health endpoint responding
+- [ ] Database connectivity verified
+- [ ] Redis connectivity verified
+- [ ] Arcanum.ai integration working
+- [ ] AI fallback chain configured (Arcanum.ai → OpenAI → Claude → Gemini)
+- [ ] zkMe webhooks receiving events
+- [ ] IPFS uploads functioning
+- [ ] WebSocket connections stable
+- [ ] Monitoring alerts configured
+- [ ] Performance metrics baseline established
+
+### Rollback Plan
+
+1. **Immediate Rollback**:
+```bash
+# Vercel
+vercel rollback
+
+# Render
+# Use Render dashboard to rollback to previous deployment
+
+# AWS Lambda
+serverless rollback --timestamp <timestamp>
+
+# Self-hosted with PM2
+pm2 reload ecosystem.config.js --update-env
+```
+
+2. **Database Rollback**:
+```bash
+# Run down migrations if needed
+npm run migrate:down
+
+# Restore from backup
+pg_restore -d aetherlock backup.sql
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Errors**:
+   - Check DATABASE_URL format
+   - Verify SSL settings
+   - Check firewall rules
+
+2. **Redis Connection Errors**:
+   - Verify REDIS_URL format
+   - Check TLS settings
+   - Verify authentication
+
+3. **Arcanum.ai API Errors**:
+   - Verify API key is valid
+   - Check endpoint connectivity
+   - Test fallback providers if primary fails
+   - Review API rate limits
+
+4. **Memory Issues**:
+   - Increase container memory limits
+   - Optimize database queries
+   - Implement proper caching
+
+For detailed troubleshooting, see the [Troubleshooting Guide](/implementation/troubleshooting).
+
+## Support
+
+- **Documentation**: [Full Documentation](/)
+- **API Reference**: [REST API](/api/rest-api)
+- **Community**: [Discord Server](https://discord.gg/aetherlock)
+- **Issues**: [GitHub Issues](https://github.com/your-org/aetherlock-protocol/issues)
