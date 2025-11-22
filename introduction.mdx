@@ -346,69 +346,98 @@ Client Request → Frontend → Backend API → Smart Contract
 | Database | PostgreSQL | Persistent data |
 | Cache | Redis | Performance optimization |
 
-## ⚡ How It Works: End-to-End Flow
+## Protocol Execution Flow
 
-<div className="my-8 space-y-4">
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-purple-500/10 border border-purple-500/30">
-    <div className="text-4xl">1️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">Multi-Chain Wallet Connection</h3>
-      <p className="text-gray-300">Users connect via Solflare, Phantom, or Tonkeeper wallets. Unified interface supports Solana, TON, and Sui networks seamlessly.</p>
-    </div>
-  </div>
-  
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-cyan-500/10 border border-cyan-500/30">
-    <div className="text-4xl">2️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">zkMe Identity Verification</h3>
-      <p className="text-gray-300">Automatic KYC verification screen using zkMe SDK. Zero-knowledge proofs ensure privacy while meeting compliance requirements.</p>
-    </div>
-  </div>
-  
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-green-500/10 border border-green-500/30">
-    <div className="text-4xl">3️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">Escrow Creation & Fund Lock</h3>
-      <p className="text-gray-300">UI enables escrow functionality after successful verification. Client specifies task requirements and locks funds (amount + 10% fee) in smart contract.</p>
-    </div>
-  </div>
-  
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
-    <div className="text-4xl">4️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">Work Submission to IPFS</h3>
-      <p className="text-gray-300">Freelancer completes work and uploads evidence to IPFS. Content hash submitted to smart contract for verification.</p>
-    </div>
-  </div>
-  
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-pink-500/10 border border-pink-500/30">
-    <div className="text-4xl">5️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">AI Verification (1.2s)</h3>
-      <p className="text-gray-300">Arcanum.ai analyzes both on-chain and off-chain data. Returns verdict with confidence score and detailed reasoning.</p>
-    </div>
-  </div>
-  
-  <div className="flex items-start gap-4 p-6 rounded-xl bg-blue-500/10 border border-blue-500/30">
-    <div className="text-4xl">6️⃣</div>
-    <div className="flex-1">
-      <h3 className="text-xl font-bold text-white mb-2">Automated Fund Release</h3>
-      <p className="text-gray-300">Smart contract releases 90% to freelancer and 10% to treasury. Instant settlement with automatic fee collection.</p>
-    </div>
-  </div>
-</div>
+### Phase 1: Wallet Connection and Identity Verification
 
-<div className="my-8 p-8 rounded-2xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border border-purple-500/30 text-center">
-  <p className="text-2xl text-gray-200 leading-relaxed">
-    <strong className="text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text">
-      AetherLock represents the future of trustless commerce
-    </strong>
-    <br />
-    <span className="text-lg text-gray-300">
-      where AI and blockchain converge to create truly autonomous financial infrastructure
-    </span>
-  </p>
-</div>
+**Step 1.1: Wallet Connection**
+- User selects wallet provider (Phantom, Solflare, or Tonkeeper)
+- Frontend initiates connection request via wallet adapter
+- User approves connection in wallet extension
+- Frontend receives wallet public key and network information
+
+**Step 1.2: zkMe KYC Verification**
+- Frontend checks if wallet address has valid KYC credential
+- If not verified, zkMe widget launches automatically
+- User completes identity verification off-chain
+- zkMe generates zero-knowledge proof of compliance
+- Proof stored on-chain as verifiable credential
+- Frontend receives verification confirmation
+
+### Phase 2: Escrow Creation
+
+**Step 2.1: Task Specification**
+- Client defines task requirements in natural language
+- Requirements uploaded to IPFS, obtaining CID
+- Client specifies escrow amount and deadline
+- Client identifies freelancer wallet address
+
+**Step 2.2: Fund Locking**
+- Frontend constructs `create_escrow` instruction
+- Client signs transaction with wallet
+- Solana program derives PDA from `[b"escrow", client_pubkey, escrow_id]`
+- Program initializes escrow account with parameters
+- Client transfers funds (amount + 10% fee) to escrow PDA
+- Escrow state transitions to `FUNDED`
+
+### Phase 3: Work Submission
+
+**Step 3.1: Evidence Upload**
+- Freelancer completes work according to requirements
+- Freelancer uploads deliverables to IPFS via Web3.Storage
+- IPFS returns content-addressed hash (CID)
+- Pinata ensures persistent availability
+
+**Step 3.2: On-Chain Submission**
+- Frontend constructs `submit_evidence` instruction with CID
+- Freelancer signs transaction
+- Program validates freelancer is authorized payee
+- Program stores evidence CID in escrow account
+- Escrow state transitions to `EVIDENCE_SUBMITTED`
+
+### Phase 4: AI Verification
+
+**Step 4.1: Oracle Invocation**
+- Chainlink oracle detects `EVIDENCE_SUBMITTED` state
+- Oracle fetches requirements from IPFS using on-chain CID
+- Oracle fetches evidence from IPFS using submitted CID
+
+**Step 4.2: AI Analysis**
+- Oracle invokes Arcanum.ai with requirements and evidence
+- AI analyzes evidence against requirements using NLP
+- AI generates verdict (APPROVED/REJECTED/NEEDS_REVIEW)
+- AI calculates confidence score (0.0-1.0)
+- AI provides detailed reasoning for decision
+- AI signs result with Ed25519 private key
+
+**Step 4.3: Result Submission**
+- Oracle verifies Ed25519 signature using AI public key
+- Oracle constructs `update_verification` instruction
+- Oracle submits signed result to Solana program
+- Program validates oracle authority
+- Program stores verification result in escrow account
+- Escrow state transitions to `VERIFIED`
+
+### Phase 5: Fund Settlement
+
+**Step 5.1: Automatic Release (if APPROVED)**
+- Program calculates freelancer amount: `amount * 0.9`
+- Program calculates treasury fee: `amount * 0.1`
+- Program transfers freelancer amount to payee address
+- Program transfers treasury fee to treasury PDA
+- Escrow state transitions to `RELEASED`
+- Program emits `FundsReleased` event
+
+**Step 5.2: Automatic Refund (if REJECTED)**
+- Program transfers full amount back to client
+- Escrow state transitions to `REFUNDED`
+- Program emits `FundsRefunded` event
+
+**Step 5.3: Manual Arbitration (if NEEDS_REVIEW)**
+- Escrow state transitions to `DISPUTED`
+- Human arbitrator reviews evidence and requirements
+- Arbitrator submits decision via `resolve_dispute` instruction
+- Program executes release or refund based on arbitrator decision
 
 ## 📚 Next Steps
 
