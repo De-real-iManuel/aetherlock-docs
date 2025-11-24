@@ -35,37 +35,59 @@ The system operates across three primary layers: a Solana-based escrow layer for
 
 AetherLock implements a layered architecture separating concerns across blockchain settlement, AI verification, identity management, and decentralized storage:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Application Layer                        │
-│  (React Frontend, Express Backend, WebSocket Server)        │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────┴────────────────────────────────────────┐
-│                  Verification Layer                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │ Arcanum.ai   │  │ zkMe KYC     │  │ Chainlink    │     │
-│  │ AI Analysis  │  │ ZK Proofs    │  │ Oracle       │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────┴────────────────────────────────────────┐
-│                   Blockchain Layer                           │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │ Solana       │  │ ZetaChain    │  │ Somnia       │     │
-│  │ Escrow PDA   │  │ xCall Router │  │ Settlement   │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-┌────────────────────┴────────────────────────────────────────┐
-│                    Storage Layer                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │ IPFS Network │  │ PostgreSQL   │  │ Redis Cache  │     │
-│  │ Evidence     │  │ Metadata     │  │ Sessions     │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-└─────────────────────────────────────────────────────────────┘
-```
+## AetherLock Data Flow
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Wallet as Multi-Chain Wallet
+    participant UI as AetherLock UI
+    participant zkMe as zkMe SDK
+    participant ZetaChain
+    participant Arcanum.ai
+    participant Contract as Smart Contract
+    participant Buyer
+    participant Seller
+
+    Note over User,Seller: 1. Wallet Connection & Identity Verification
+    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
+    Wallet-->>UI: Wallet Connected
+    UI->>zkMe: Launch Identity Verification
+    zkMe->>User: KYC Verification Screen
+    User->>zkMe: Submit Identity Documents
+    zkMe->>ZetaChain: Generate ZK Proof
+    ZetaChain-->>UI: Verification Complete
+    UI-->>User: Access Granted to Escrow Service
+
+    Note over User,Seller: 2. Escrow Creation & Fund Locking
+    User->>UI: Create Escrow Service
+    UI->>Contract: Initialize Escrow
+    Contract->>Wallet: Request Authorization for Amount
+    Wallet->>User: Confirm Transaction Amount
+    User->>Wallet: Approve Transaction
+    Wallet->>Contract: Lock Funds + 2% Fee
+    Contract-->>UI: Funds Locked Successfully
+
+    Note over User,Seller: 3. AI Verification Process
+    Seller->>UI: Submit Work Evidence (On-Chain Data)
+    Buyer->>UI: Submit Requirements (Off-Chain Data)
+    UI->>AI: Send Both On-Chain & Off-Chain Data
+    AI->>AI: Analyze Combined Data Sources
+    AI->>Contract: Send Verification Result
+    
+    Note over User,Seller: 4. Transaction Completion
+    Contract->>Contract: Check AI Verification Status
+    alt AI Verification Approved
+        Contract->>Buyer: Release Funds to Account
+        Contract->>Contract: Collect 2% Station Fee
+        Contract-->>UI: Transaction Complete
+        UI-->>Seller: Payment Received
+        UI-->>Buyer: Service Delivered
+    else AI Verification Failed
+        Contract->>Seller: Refund Original Amount
+        Contract-->>UI: Transaction Cancelled
+    end
+```
 ## Protocol Design Rationale
 
 ### Problem Statement
@@ -248,7 +270,7 @@ The protocol was developed using AI-assisted development tools including Amazon 
 **Evaluated Options:**
 1. AWS Bedrock (Claude 3.5 Sonnet)
 2. Arcanum.ai (specialized task verification)
-3. OpenAI GPT-4
+3. OpenAI GPT-5
 4. Google Gemini
 
 **Selection Criteria:**
@@ -439,5 +461,5 @@ This protocol is under active development. For technical discussions and contrib
 ---
 
 **Protocol Version:** 1.0.0  
-**Last Updated:** 2025-11-22  
+**Last Updated:** 2025-11-25
 **License:** MIT
