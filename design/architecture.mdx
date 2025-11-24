@@ -3,7 +3,60 @@ title: "System Architecture"
 description: "Detailed component descriptions and omnichain infrastructure design"
 ---
 
-# System Architecture
+
+## AetherLock Data Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Wallet as Multi-Chain Wallet
+    participant UI as AetherLock UI
+    participant zkMe as zkMe SDK
+    participant ZetaChain
+    participant AI as AWS Bedrock AI
+    participant Contract as Smart Contract
+    participant Buyer
+    participant Seller
+
+    Note over User,Seller: 1. Wallet Connection & Identity Verification
+    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
+    Wallet-->>UI: Wallet Connected
+    UI->>zkMe: Launch Identity Verification
+    zkMe->>User: KYC Verification Screen
+    User->>zkMe: Submit Identity Documents
+    zkMe->>ZetaChain: Generate ZK Proof
+    ZetaChain-->>UI: Verification Complete
+    UI-->>User: Access Granted to Escrow Service
+
+    Note over User,Seller: 2. Escrow Creation & Fund Locking
+    User->>UI: Create Escrow Service
+    UI->>Contract: Initialize Escrow
+    Contract->>Wallet: Request Authorization for Amount
+    Wallet->>User: Confirm Transaction Amount
+    User->>Wallet: Approve Transaction
+    Wallet->>Contract: Lock Funds + 2% Fee
+    Contract-->>UI: Funds Locked Successfully
+
+    Note over User,Seller: 3. AI Verification Process
+    Seller->>UI: Submit Work Evidence (On-Chain Data)
+    Buyer->>UI: Submit Requirements (Off-Chain Data)
+    UI->>AI: Send Both On-Chain & Off-Chain Data
+    AI->>AI: Analyze Combined Data Sources
+    AI->>Contract: Send Verification Result
+    
+    Note over User,Seller: 4. Transaction Completion
+    Contract->>Contract: Check AI Verification Status
+    alt AI Verification Approved
+        Contract->>Buyer: Release Funds to Account
+        Contract->>Contract: Collect 2% Station Fee
+        Contract-->>UI: Transaction Complete
+        UI-->>Seller: Payment Received
+        UI-->>Buyer: Service Delivered
+    else AI Verification Failed
+        Contract->>Seller: Refund Original Amount
+        Contract-->>UI: Transaction Cancelled
+    end
+```
 
 ## Component Overview
 
@@ -612,59 +665,7 @@ This comprehensive architecture ensures AetherLock can scale to handle millions 
 
 # Architecture
 
-## AetherLock Data Flow
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Wallet as Multi-Chain Wallet
-    participant UI as AetherLock UI
-    participant zkMe as zkMe SDK
-    participant ZetaChain
-    participant AI as AWS Bedrock AI
-    participant Contract as Smart Contract
-    participant Buyer
-    participant Seller
-
-    Note over User,Seller: 1. Wallet Connection & Identity Verification
-    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
-    Wallet-->>UI: Wallet Connected
-    UI->>zkMe: Launch Identity Verification
-    zkMe->>User: KYC Verification Screen
-    User->>zkMe: Submit Identity Documents
-    zkMe->>ZetaChain: Generate ZK Proof
-    ZetaChain-->>UI: Verification Complete
-    UI-->>User: Access Granted to Escrow Service
-
-    Note over User,Seller: 2. Escrow Creation & Fund Locking
-    User->>UI: Create Escrow Service
-    UI->>Contract: Initialize Escrow
-    Contract->>Wallet: Request Authorization for Amount
-    Wallet->>User: Confirm Transaction Amount
-    User->>Wallet: Approve Transaction
-    Wallet->>Contract: Lock Funds + 2% Fee
-    Contract-->>UI: Funds Locked Successfully
-
-    Note over User,Seller: 3. AI Verification Process
-    Seller->>UI: Submit Work Evidence (On-Chain Data)
-    Buyer->>UI: Submit Requirements (Off-Chain Data)
-    UI->>AI: Send Both On-Chain & Off-Chain Data
-    AI->>AI: Analyze Combined Data Sources
-    AI->>Contract: Send Verification Result
-    
-    Note over User,Seller: 4. Transaction Completion
-    Contract->>Contract: Check AI Verification Status
-    alt AI Verification Approved
-        Contract->>Buyer: Release Funds to Account
-        Contract->>Contract: Collect 2% Station Fee
-        Contract-->>UI: Transaction Complete
-        UI-->>Seller: Payment Received
-        UI-->>Buyer: Service Delivered
-    else AI Verification Failed
-        Contract->>Seller: Refund Original Amount
-        Contract-->>UI: Transaction Cancelled
-    end
-```
 
 ## Multi-Chain Wallet Integration
 
