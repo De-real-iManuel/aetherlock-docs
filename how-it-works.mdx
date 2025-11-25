@@ -21,7 +21,7 @@ description: "4 simple steps from lock to release"
   <div className="p-6 rounded-xl bg-green-500/10 border border-green-500/30">
     <div className="text-4xl mb-3">3️⃣</div>
     <h3 className="text-lg font-bold text-white mb-2">AI Verifies</h3>
-    <p className="text-sm text-gray-400">Arcanum.ai analyzes in 1.2 seconds</p>
+    <p className="text-sm text-gray-400">Complete verification in 2.5 seconds</p>
   </div>
   <div className="p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
     <div className="text-4xl mb-3">4️⃣</div>
@@ -84,7 +84,7 @@ sequenceDiagram
     W-->>F: Payment received: $900
     W-->>C: Escrow completed successfully
     
-    Note over C,T: Total Time: ~2.5 seconds (after submission)
+    Note over C,T: Total Time: ~2.5 seconds complete PoTV verification
 ```
 
 ## Step-by-Step Breakdown
@@ -402,7 +402,8 @@ async function fetchFromIPFS(cid: string): Promise<any> {
 - **Confidence < 50%**: Auto-reject
 
 **User Experience**:
-- Takes 1.2 seconds average
+- AI analysis: 1.2 seconds
+- Complete PoTV verification: 2.5 seconds average
 - Real-time progress updates
 - Detailed AI reasoning shown
 - Transparent confidence score
@@ -762,23 +763,37 @@ pub enum EscrowError {
 
 ## Why This Works
 
-### For Clients
-✅ Only pay for verified work  
-✅ No trust needed in freelancer  
-✅ Instant verification (vs. weeks)  
-✅ 50% cheaper fees than Upwork
+### For Buyers (Physical Goods)
+✅ Proof of delivery with tamper detection  
+✅ No trust needed in seller or courier  
+✅ Instant verification (vs. weeks of disputes)  
+✅ Protection against counterfeit/damaged goods  
+✅ Privacy-preserving location verification
 
-### For Freelancers
-✅ Get paid instantly  
-✅ No payment disputes  
-✅ Fair AI verification  
+### For Sellers (Physical Goods)
+✅ Get paid instantly upon verified delivery  
+✅ No chargeback fraud  
+✅ Fair AI verification with multi-source evidence  
+✅ Keep 90% of transaction value
+
+### For Clients (Digital Tasks)
+✅ Only pay for verified work quality  
+✅ No trust needed in freelancer  
+✅ Instant verification (2.1s vs. 7-14 days)  
+✅ Fraud detection (plagiarism, AI-generated content)
+
+### For Freelancers (Digital Tasks)
+✅ Get paid instantly upon approval  
+✅ No payment disputes or withholding  
+✅ Objective AI verification (no human bias)  
 ✅ Keep 90% of earnings
 
-### For AetherLock
+### For AetherLock Protocol
 ✅ 10% revenue per transaction  
-✅ Fully automated (no humans)  
-✅ Scales infinitely  
-✅ 99.98% profit margins
+✅ Fully automated (no human verification)  
+✅ Scales infinitely across physical + digital  
+✅ 99.98% profit margins  
+✅ First-mover advantage in trustless real-world verification
 
 ## Try It Yourself
 
