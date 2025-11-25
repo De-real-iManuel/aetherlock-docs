@@ -62,8 +62,14 @@
         "design/overview",
         "design/architecture",
         "design/data-models",
-        "design/potv-mechanism",
         "technical-architecture"
+      ]
+    },
+    {
+      "group": "PoTV Consensus",
+      "pages": [
+        "potv-consensus",
+        "potv-technical-specification"
       ]
     },
     {
