@@ -2,28 +2,38 @@
 
 ## Overview
 
-ZetaChain serves as the omnichain orchestration layer for AetherLock, enabling seamless cross-chain escrow operations between Solana, Somnia, and other supported blockchains. As a Universal Blockchain, ZetaChain provides native cross-chain messaging, asset routing, and state synchronization capabilities that make AetherLock truly omnichain.
+**Status**: ⚠️ TESTNET ONLY - NOT PRODUCTION READY
 
-## ZetaChain's Role in AetherLock
+ZetaChain is intended to serve as the omnichain orchestration layer for AetherLock, enabling cross-chain escrow operations between Solana, Somnia, and other supported blockchains. **Current deployment is on ZetaChain Athens Testnet only.** Production cross-chain functionality is not yet implemented.
 
-### Omnichain Orchestration Layer
-ZetaChain acts as the central coordination hub that:
-- **Routes cross-chain messages** between different blockchain networks
-- **Synchronizes escrow state** across all participating chains
-- **Manages universal identity** through zkMe integration
-- **Coordinates AI verification** results across chains
-- **Handles cross-chain asset transfers** and settlements
+**Deployment**: ZetaChain Athens-3 Testnet  
+**Mainnet Status**: ❌ Not deployed  
+**Cross-Chain Settlement**: ❌ Not production-ready
 
-### Key Benefits
-- **Universal Connectivity**: Connect any blockchain without bridges
-- **Native Asset Support**: Handle native assets (SOL, ETH, etc.) directly
-- **Atomic Cross-Chain Operations**: Ensure transaction atomicity across chains
-- **Unified State Management**: Single source of truth for escrow states
-- **Gas Optimization**: Intelligent routing for minimal transaction costs
+## ZetaChain's Role in AetherLock (Testnet Only)
 
-## Complete Universal App Contract
+### Omnichain Orchestration Layer (Planned)
+ZetaChain is intended to act as the central coordination hub for:
+- **Cross-chain messages** between different blockchain networks - ⚠️ Testnet only
+- **Escrow state synchronization** across participating chains - ❌ Not implemented
+- **Universal identity management** through zkMe - ❌ Not implemented
+- **AI verification coordination** across chains - ❌ Not implemented
+- **Cross-chain asset transfers** and settlements - ❌ Not production-ready
 
-### Contract Architecture
+### Intended Benefits (Not Yet Realized)
+- **Universal Connectivity**: ⚠️ Testnet only, limited chains
+- **Native Asset Support**: ⚠️ Testnet only
+- **Atomic Cross-Chain Operations**: ❌ Not production-ready
+- **Unified State Management**: ❌ Not implemented
+- **Gas Optimization**: ❌ Not implemented
+
+**Current Reality**: ZetaChain integration exists on testnet for proof-of-concept purposes. Production cross-chain settlement is not operational.
+
+## Universal App Contract (Testnet Deployment)
+
+**⚠️ TESTNET ONLY**: This contract is deployed on ZetaChain Athens-3 Testnet for testing purposes. It is NOT production-ready.
+
+### Contract Architecture (Conceptual)
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -495,45 +505,10 @@ contract AetherLockUniversal is zContract, ReentrancyGuard, Ownable {
         }
     }
     
-    /// @dev Handle cross-chain call reversion
-    function onRevert(RevertContext calldata revertContext) external override {
-        // Handle failed cross-chain operations
-        // Log the failure and potentially retry or refund
-        
-        // Decode the original message to understand what failed
-        (uint256 escrowId, string memory operation) = abi.decode(
-            revertContext.revertMessage, 
-            (uint256, string)
-        );
-        
-        CrossChainEscrow storage escrow = escrows[escrowId];
-        
-        if (keccak256(bytes(operation)) == keccak256("settlement")) {
-            // Settlement failed, mark for manual intervention
-            escrow.status = EscrowStatus.Disputed;
-        }
-        
-        // Emit event for monitoring
-        emit CrossChainOperationFailed(escrowId, operation, revertContext.revertMessage);
-    }
-    
-    /// @dev Handle cross-chain call abortion
-    function onAbort(
-        MessageContext calldata context,
-        address zrc20,
-        uint256 amount,
-        bytes calldata message
-    ) external override {
-        // Handle aborted cross-chain operations
-        // Similar to onRevert but for aborted transactions
-        
-        (uint256 escrowId, string memory operation) = abi.decode(message, (uint256, string));
-        
-        CrossChainEscrow storage escrow = escrows[escrowId];
-        escrow.status = EscrowStatus.Disputed; // Mark for manual review
-        
-        emit CrossChainOperationAborted(escrowId, operation);
-    }
+    // NOTE: onRevert and onAbort handlers are NOT implemented
+    // These are mentioned in ZetaChain documentation but not yet integrated in AetherLock
+    // Production deployment will require proper error handling for failed cross-chain operations
+    // Current testnet deployment does not handle cross-chain failures gracefully
     
     // Internal helper functions
     
@@ -574,3 +549,152 @@ contract AetherLockUniversal is zContract, ReentrancyGuard, Ownable {
             );
             
             // U
+
+
+---
+
+## Current Limitations (Testnet Deployment)
+
+### What's Not Working
+
+1. **onRevert Handler**: Not implemented - failed cross-chain operations are not handled
+2. **onAbort Handler**: Not implemented - aborted transactions are not handled
+3. **Cross-Chain Settlement**: Testnet only, not production-ready
+4. **Error Recovery**: No automatic retry or refund mechanisms
+5. **Gas Optimization**: Not implemented
+6. **Multi-Chain Support**: Limited to testnet chains only
+7. **State Synchronization**: Not implemented across chains
+8. **Mainnet Deployment**: Not deployed to any mainnet
+
+### Cross-Chain Message Flow Limitations
+
+**Current Testnet Flow**:
+1. Message sent from source chain (e.g., Solana testnet)
+2. ZetaChain testnet receives and processes message
+3. Message forwarded to destination chain (e.g., Somnia testnet)
+4. **If any step fails**: No automatic handling, manual intervention required
+
+**Missing Components**:
+- Automatic retry logic
+- Refund mechanisms for failed transfers
+- Cross-chain state rollback
+- Gas fee estimation and optimization
+- Multi-signature validation
+- Timeout handling
+
+---
+
+## Planned for Production
+
+### Phase 1: Error Handling (3-4 weeks)
+
+**Implement onRevert Handler**:
+```solidity
+function onRevert(RevertContext calldata context) external override {
+    // Decode failed operation
+    (uint256 escrowId, bytes memory operation) = abi.decode(
+        context.revertMessage,
+        (uint256, bytes)
+    );
+    
+    // Automatic refund logic
+    CrossChainEscrow storage escrow = escrows[escrowId];
+    escrow.status = EscrowStatus.Failed;
+    
+    // Initiate refund to source chain
+    _initiateRefund(escrowId, context.sourceChain);
+    
+    emit CrossChainOperationReverted(escrowId, context.sourceChain);
+}
+```
+
+**Implement onAbort Handler**:
+```solidity
+function onAbort(
+    MessageContext calldata context,
+    address zrc20,
+    uint256 amount,
+    bytes calldata message
+) external override {
+    // Handle aborted operations
+    (uint256 escrowId) = abi.decode(message, (uint256));
+    
+    // Mark escrow as aborted
+    CrossChainEscrow storage escrow = escrows[escrowId];
+    escrow.status = EscrowStatus.Aborted;
+    
+    // Automatic refund
+    _refundToSource(escrowId, zrc20, amount);
+    
+    emit CrossChainOperationAborted(escrowId);
+}
+```
+
+### Phase 2: Mainnet Deployment (2-3 weeks)
+
+**Prerequisites**:
+- Complete security audit of Universal App contract
+- Test all cross-chain flows on testnet
+- Implement error handling (Phase 1)
+- Set up monitoring and alerting
+- Prepare mainnet deployment scripts
+
+**Deployment Steps**:
+1. Deploy to ZetaChain mainnet
+2. Configure supported mainnet chains (Solana, Ethereum, BSC)
+3. Set up cross-chain gateways
+4. Initialize AI oracle authority
+5. Test with small amounts
+6. Gradual rollout to users
+
+### Phase 3: Advanced Features (4-6 weeks)
+
+**State Synchronization**:
+- Implement cross-chain state sync
+- Add merkle proof validation
+- Enable multi-chain escrow tracking
+
+**Gas Optimization**:
+- Implement intelligent routing
+- Add gas price oracles
+- Optimize message batching
+
+**Multi-Signature Support**:
+- Add multi-sig for high-value escrows
+- Implement timelock mechanisms
+- Add governance controls
+
+### Phase 4: Additional Chains (Ongoing)
+
+**Planned Chain Support**:
+- TON blockchain integration
+- Sui blockchain integration
+- Additional EVM chains (Polygon, Arbitrum, Optimism)
+- Non-EVM chains (Cosmos, Polkadot)
+
+---
+
+## Summary
+
+**Current Status (Testnet)**:
+- ✅ Basic cross-chain message passing (testnet)
+- ✅ Escrow creation across chains (testnet)
+- ✅ onCall handler implemented
+- ❌ onRevert handler not implemented
+- ❌ onAbort handler not implemented
+- ❌ Mainnet deployment
+- ❌ Production-ready error handling
+
+**Timeline to Production**:
+- Phase 1 (Error Handling): 3-4 weeks
+- Phase 2 (Mainnet Deployment): 2-3 weeks
+- Phase 3 (Advanced Features): 4-6 weeks
+- **Total**: 9-13 weeks to production-ready cross-chain functionality
+
+**Estimated Cost**:
+- Security audit: $50K-$100K
+- Development: $150K-$200K
+- Testing and QA: $50K-$75K
+- **Total**: $250K-$375K
+
+**Recommendation**: Focus on completing Solana mainnet deployment and D-PoTV production readiness before investing heavily in cross-chain functionality. ZetaChain integration can remain on testnet until core escrow functionality is battle-tested on mainnet.

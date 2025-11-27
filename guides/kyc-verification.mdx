@@ -5,14 +5,29 @@ description: "Complete guide to zero-knowledge identity verification using zkMe"
 
 # KYC Verification Guide
 
-AetherLock Protocol uses zkMe for zero-knowledge identity verification, ensuring your privacy while meeting compliance requirements. This guide walks you through the complete KYC process.
+<Warning>
+**Current Implementation Status**: AetherLock is actively integrating with zkMe, our official partner for zero-knowledge KYC. A **mock KYC flow** is currently available for development and testing purposes. **Real Integration Coming Soon** - Full zkMe SDK integration with zero-knowledge proofs will be available in the production release.
+</Warning>
+
+AetherLock Protocol uses zkMe for zero-knowledge identity verification, ensuring your privacy while meeting compliance requirements. This guide describes both the current mock implementation and the planned full integration.
 
 ## What is zkMe?
 
-zkMe is AetherLock's official Integration Partner for zero-knowledge KYC (Know Your Customer) verification. It allows you to prove your identity without revealing personal information on-chain.
+<Note>
+**Integration Partner**: zkMe is AetherLock's official Integration Partner for zero-knowledge KYC. The integration is currently in progress. The mock flow simulates the verification process for development purposes.
+</Note>
 
-### Key Benefits
+zkMe provides zero-knowledge KYC (Know Your Customer) verification, allowing you to prove your identity without revealing personal information on-chain.
 
+### Current Status: Mock KYC Flow
+
+<Card title="Mock Implementation Active" icon="flask">
+  The current implementation uses a **mock KYC flow** for development and testing. This simulates the verification process without actual identity verification. All features described below represent the planned full integration.
+</Card>
+
+### Key Benefits (Planned for Full Integration)
+
+**Planned Features with Real zkMe SDK Integration**:
 - **Privacy-First**: Personal data never leaves your device
 - **Zero-Knowledge Proofs**: Verify identity without exposing details  
 - **Compliance Ready**: Meets regulatory requirements
@@ -46,17 +61,30 @@ zkMe is AetherLock's official Integration Partner for zero-knowledge KYC (Know Y
 </Tab>
 </Tabs>
 
-### Privacy Guarantees
+### Privacy Guarantees (Planned for Full Integration)
 
-<Note>
-zkMe uses zero-knowledge cryptography to verify your identity without storing or transmitting your personal information. Only a cryptographic proof of verification is recorded on-chain.
-</Note>
+<Warning>
+**Real Integration Coming Soon**: The full zkMe SDK integration will use zero-knowledge cryptography to verify your identity without storing or transmitting your personal information. Only a cryptographic proof of verification will be recorded on-chain.
 
-**What zkMe Sees**: Document validity, age verification, country of residence (encrypted)
-**What's Never Stored**: Your name, address, document numbers, biometric data
-**What Goes On-Chain**: Anonymous verification status and compliance score
+**Current Status**: Mock KYC flow simulates verification without actual identity processing.
+</Warning>
+
+**Planned Privacy Features (Full zkMe SDK Integration)**:
+- **What zkMe Sees**: Document validity, age verification, country of residence (encrypted)
+- **What's Never Stored**: Your name, address, document numbers, biometric data
+- **What Goes On-Chain**: Anonymous verification status and compliance score
+
+**Current Mock Flow**: Simulates the verification process for development and testing purposes only.
 
 ## Step-by-Step Verification Process
+
+<Warning>
+**Current Implementation: Mock Flow Only**
+
+The current implementation uses a **mock KYC flow** for development and testing purposes. The steps below describe the planned full zkMe SDK integration that will be available in the production release.
+
+**Real Integration Coming Soon** - Full zero-knowledge verification with zkMe SDK is in active development.
+</Warning>
 
 ### Step 1: Access KYC Verification
 
@@ -78,7 +106,11 @@ zkMe uses zero-knowledge cryptography to verify your identity without storing or
 
 ### Step 2: Choose Verification Level
 
-AetherLock supports multiple verification tiers:
+<Note>
+**Planned Feature**: Verification tiers will be available with the full zkMe SDK integration. Current mock flow provides basic verification status only.
+</Note>
+
+AetherLock will support multiple verification tiers:
 
 <Tabs>
 <Tab title="Basic Verification">
@@ -116,6 +148,10 @@ AetherLock supports multiple verification tiers:
 
 ### Step 3: Document Scanning
 
+<Note>
+**Planned Feature**: Document scanning will be available with the full zkMe SDK integration. Current mock flow simulates this process.
+</Note>
+
 <Steps>
 <Step title="Prepare Your Document">
 1. Ensure good lighting conditions
@@ -143,6 +179,10 @@ AetherLock supports multiple verification tiers:
 </Steps>
 
 ### Step 4: Biometric Verification
+
+<Note>
+**Planned Feature**: Biometric verification will be available with the full zkMe SDK integration. Current mock flow simulates this process.
+</Note>
 
 <Steps>
 <Step title="Prepare for Selfie">
@@ -173,6 +213,10 @@ This prevents fraud and ensures you're a real person.
 </Steps>
 
 ### Step 5: Additional Information
+
+<Note>
+**Planned Feature**: Additional information collection will be available with the full zkMe SDK integration. Current mock flow simulates this process.
+</Note>
 
 <Steps>
 <Step title="Personal Details">
@@ -224,7 +268,11 @@ For premium verification:
 
 ## Verification Processing
 
-### Processing Times
+<Warning>
+**Current Mock Flow**: The mock implementation provides instant verification for development purposes. Processing times below describe the planned full zkMe SDK integration.
+</Warning>
+
+### Processing Times (Planned for Full Integration)
 
 <Tabs>
 <Tab title="Automated Processing">
@@ -251,10 +299,14 @@ For premium verification:
 
 ### Status Tracking
 
+<Note>
+**Current Implementation**: Mock flow provides basic status tracking. Full status tracking with verification levels will be available with zkMe SDK integration.
+</Note>
+
 Monitor your verification status in real-time:
 
 ```typescript
-// Example: Check verification status
+// Example: Check verification status (Planned API)
 const checkKYCStatus = async (walletAddress: string) => {
   const response = await fetch(`/api/kyc/status/${walletAddress}`);
   const status = await response.json();
@@ -303,7 +355,17 @@ const checkKYCStatus = async (walletAddress: string) => {
 
 ## Managing Your KYC Credentials
 
-### Credential Dashboard
+<Warning>
+**Real Integration Coming Soon**: Full credential management features will be available once the zkMe SDK integration is complete. 
+
+**Current Status**: Mock flow provides basic verification status only. Advanced credential management features are planned for the production release.
+</Warning>
+
+### Credential Dashboard (Planned)
+
+<Note>
+**Planned Feature**: Full credential dashboard will be available with zkMe SDK integration.
+</Note>
 
 Access your KYC management panel:
 
@@ -330,9 +392,13 @@ Access your KYC management panel:
 </Step>
 </Steps>
 
-### Credential Renewal
+### Credential Renewal (Planned)
 
-KYC credentials expire annually for security:
+<Note>
+**Planned Feature**: Credential renewal will be available with the full zkMe SDK integration.
+</Note>
+
+KYC credentials will expire annually for security:
 
 <Warning>
 Your KYC verification expires 12 months after approval. You'll receive email reminders 30, 14, and 7 days before expiry.
@@ -347,7 +413,11 @@ Your KYC verification expires 12 months after approval. You'll receive email rem
 
 **Grace Period**: 30 days after expiry to complete renewal
 
-### Privacy Controls
+### Privacy Controls (Planned)
+
+<Note>
+**Planned Feature**: Privacy controls will be available with the full zkMe SDK integration.
+</Note>
 
 Manage your privacy settings:
 
@@ -379,7 +449,11 @@ Manage your privacy settings:
 
 ## Troubleshooting
 
-### Common Issues
+<Note>
+**Current Mock Flow**: Most troubleshooting scenarios below apply to the planned full zkMe SDK integration. The current mock flow has minimal troubleshooting requirements.
+</Note>
+
+### Common Issues (Planned Full Integration)
 
 #### Document Scanning Problems
 
@@ -475,12 +549,18 @@ If you encounter persistent issues:
 
 ## Security and Privacy
 
-### Zero-Knowledge Technology
+### Zero-Knowledge Technology (Planned)
 
-AetherLock's KYC implementation uses advanced cryptography:
+<Warning>
+**Real Integration Coming Soon**: The full zkMe SDK integration with zero-knowledge proofs is currently in active development with our integration partner zkMe. The production release will include complete privacy-preserving verification.
+
+**Current Status**: Mock KYC flow for development and testing purposes.
+</Warning>
+
+AetherLock's planned KYC implementation will use advanced cryptography:
 
 ```typescript
-// Example: Zero-knowledge proof verification
+// Example: Zero-knowledge proof verification (Planned Implementation)
 interface ZKProof {
   proof: string;           // Cryptographic proof
   publicSignals: string[]; // Public verification data
@@ -493,16 +573,17 @@ const verifyIdentity = (proof: ZKProof): boolean => {
 };
 ```
 
-### Data Protection
+### Data Protection (Planned)
 
-**Encryption**: All data encrypted with AES-256
-**Storage**: Minimal data stored, maximum privacy
-**Access**: Strict access controls and audit logs
-**Compliance**: GDPR, CCPA, and SOC 2 compliant
+**Planned Security Features**:
+- **Encryption**: All data encrypted with AES-256
+- **Storage**: Minimal data stored, maximum privacy
+- **Access**: Strict access controls and audit logs
+- **Compliance**: GDPR, CCPA, and SOC 2 compliant
 
-### Regulatory Compliance
+### Regulatory Compliance (Planned)
 
-AetherLock's KYC meets requirements for:
+AetherLock's planned KYC implementation will meet requirements for:
 - **AML (Anti-Money Laundering)**: Transaction monitoring
 - **CFT (Counter-Financing of Terrorism)**: Risk assessment
 - **FATF Guidelines**: International standards compliance
@@ -510,7 +591,11 @@ AetherLock's KYC meets requirements for:
 
 ## Next Steps
 
-After successful KYC verification:
+<Note>
+**Current Mock Flow**: The mock KYC implementation allows you to test the platform functionality. Full verification features will be available with the zkMe SDK integration.
+</Note>
+
+After successful KYC verification (mock or real):
 
 1. **Create Your First Escrow**: Start with a small test transaction
 2. **Explore Advanced Features**: Access higher-tier functionality
@@ -518,18 +603,18 @@ After successful KYC verification:
 4. **Provide Feedback**: Help improve the verification process
 
 <Card title="Ready to Create an Escrow?" icon="shield-check">
-  Your identity is now verified! Learn how to [create your first escrow](/guides/creating-escrow) or explore [evidence submission](/guides/submitting-evidence).
+  Your identity verification is complete (mock flow)! Learn how to [create your first escrow](/guides/creating-escrow) or explore [evidence submission](/guides/submitting-evidence).
 </Card>
 
 ## Frequently Asked Questions
 
 <AccordionGroup>
 <Accordion title="Is my personal information stored on the blockchain?">
-No. Only an anonymous cryptographic proof of your verification is stored on-chain. Your personal information never leaves your device and is not stored by AetherLock or zkMe.
+**Planned Implementation**: Once the full zkMe SDK integration is complete, only an anonymous cryptographic proof of your verification will be stored on-chain. Your personal information will never leave your device and will not be stored by AetherLock or zkMe. The current mock flow simulates this process for development purposes.
 </Accordion>
 
 <Accordion title="How long does KYC verification take?">
-Most verifications complete automatically within 2 minutes. Complex cases may require manual review, taking up to 24 hours. You'll receive email updates throughout the process.
+**Current Mock Flow**: Instant verification for development and testing purposes. **Planned Production**: Most verifications will complete automatically within 2 minutes once the full zkMe SDK integration is live. Complex cases may require manual review, taking up to 24 hours.
 </Accordion>
 
 <Accordion title="Can I use the same KYC for multiple wallets?">

@@ -57,7 +57,7 @@ Conservative Estimate:
 | **Upwork** | 20% | 7-14 days | ❌ No |
 | **Fiverr** | 20% | 7-14 days | ❌ No |
 | **Freelancer** | 10-20% | 7-14 days | ❌ No |
-| **AetherLock** | **10%** | **2.3 seconds** | ✅ Yes |
+| **AetherLock** | **10%** | **2.1 seconds** | ✅ Yes |
 
 ### Value Proposition
 
@@ -95,7 +95,7 @@ graph TD
 | Component | Percentage | Purpose | Example ($1000 escrow) |
 |-----------|------------|---------|------------------------|
 | **Protocol Treasury** | 7.0% | Development, operations, team | $70 |
-| **AI Infrastructure** | 2.0% | Arcanum.ai, compute costs | $20 |
+| **AI Infrastructure** | 2.0% | Arcanum.ai (current provider) | $20 |
 | **Network Rewards** | 1.0% | Validator incentives, staking | $10 |
 | **Total Platform Fee** | **10.0%** | **Complete service** | **$100** |
 
@@ -118,21 +118,23 @@ graph TD
 | **Realistic** | 0.1% | $450M | $45M | 96% |
 | **Optimistic** | 1.0% | $4.5B | $450M | 97% |
 
-### Future Revenue Streams
+### Future Revenue Streams (Planned)
 
-1. **Premium Features** (Year 2) - $5M ARR potential
+**Status**: These are planned revenue streams not yet implemented in the current MVP.
+
+1. **Premium Features** (Planned - Year 2) - $5M ARR potential
    - Priority AI verification: +$5/transaction
    - Advanced analytics dashboard: $50/month per user
    - API access for integrations: $200/month per developer
    - Custom verification models: $500/month per enterprise
 
-2. **Enterprise Plans** (Year 2) - $10M ARR potential
+2. **Enterprise Plans** (Planned - Year 2) - $10M ARR potential
    - White-label escrow solution: $10,000/month setup + 5% revenue share
    - Custom AI training on company data: $5,000/month
    - Dedicated support and SLA: $2,000/month
    - Multi-signature enterprise controls: $1,000/month
 
-3. **Network Token Economy** (Year 3) - $50M market cap potential
+3. **Network Token Economy** (Planned - Year 3) - $50M market cap potential
    - AETH governance token staking rewards
    - Fee discounts for token holders (up to 50% off)
    - Validator node operation rewards
@@ -236,7 +238,7 @@ Target CAC: $500 (10:1 LTV/CAC ratio)
 
 ### Variable Costs (Scale with Volume)
 
-#### AI Infrastructure Costs
+#### AI Infrastructure Costs (Current Provider: Arcanum.ai)
 ```
 Arcanum.ai Pricing:
 - Flat rate: $0.05 per verification
@@ -250,9 +252,9 @@ Annual AI Costs by Volume:
 - 1M transactions: $50,000
 - 10M transactions: $500,000
 
-Revenue vs AI Costs:
-- $1,000 escrow → $100 revenue → $0.05 AI cost → 99.95% margin
-- $10,000 escrow → $1,000 revenue → $0.05 AI cost → 99.995% margin
+Revenue vs AI Costs (2% of 10% platform fee):
+- $1,000 escrow → $100 revenue (10%) → $20 AI allocation (2%) → $0.05 AI cost
+- $10,000 escrow → $1,000 revenue (10%) → $200 AI allocation (2%) → $0.05 AI cost
 
 Volume Discounts (Arcanum.ai Partnership):
 - 100K+ verifications/year: 10% discount ($0.045/verification)
@@ -275,107 +277,60 @@ Cross-chain Messaging (ZetaChain):
 Total Blockchain Costs per Transaction: $0.30
 ```
 
-### Why Arcanum.ai Over AWS Bedrock
+### Current AI Provider: Arcanum.ai
 
-#### Technical Advantages
+**Current Implementation**: AetherLock uses Arcanum.ai as the AI verification provider for the MVP deployment.
+
+#### Why Arcanum.ai for MVP
 ```
 Specialized Task Verification:
 - Purpose-built for task completion analysis
-- 15% higher accuracy in edge cases (97% vs 82%)
-- Better understanding of freelance work context
 - Optimized for evidence evaluation
+- Better understanding of freelance work context
 
 Lower Latency:
 - AI analysis time: 1.2 seconds
-- Complete PoTV verification: 2.5 seconds
-- AWS Bedrock average: 2.0 seconds (AI only)
-- 40% faster AI analysis = better UX
+- Complete PoTV verification: 2.1 seconds average
 - Real-time feedback for users
 
 Simpler Integration:
 - Single REST API endpoint
-- No complex IAM configuration
 - Standard authentication (API key)
 - Easier to maintain and debug
 ```
 
-#### Cost Advantages
+#### Cost Structure
 ```
 Predictable Pricing:
 - Flat $0.05 per verification
 - No surprise costs from token overruns
 - Easy to forecast expenses
-- Simple to explain to stakeholders
-
-No Hidden Costs:
-- AWS Bedrock: separate charges for model access, data transfer, CloudWatch
-- Arcanum.ai: all-inclusive pricing
-- No infrastructure management overhead
-- No regional data transfer fees
+- All-inclusive pricing
 
 Volume Discounts:
 - Tiered pricing at scale (up to 30% off)
-- AWS Bedrock: constant per-token pricing
 - Better economics as we grow
 - Partnership benefits for high-volume users
 ```
 
-#### Operational Advantages
-```
-No Vendor Lock-in:
-- Standard REST API (easy to switch if needed)
-- AWS Bedrock: tied to AWS ecosystem
-- Portable to any infrastructure
-- Multi-cloud strategy flexibility
+#### Planned: Multi-Provider Fallback Chain
 
-Easier Compliance:
-- Arcanum.ai handles data residency
-- No complex AWS regional configuration
-- Simpler privacy policy
-- Reduced compliance burden
+**Status**: Future roadmap feature (not yet implemented)
 
-Better Support:
-- Dedicated support for verification use cases
-- Direct partnership with Arcanum.ai team
-- AWS: general support channels
-- Faster issue resolution
-```
+The production architecture will include a multi-provider AI fallback chain for enhanced reliability:
 
-#### Strategic Advantages
-```
-Partnership Alignment:
-- Active collaboration on algorithm improvements
-- Joint roadmap planning
-- Co-marketing opportunities
-- Shared success incentives
+1. **Primary**: Arcanum.ai (specialized task verification)
+2. **Fallback 1**: AWS Bedrock (Claude 3.5 Sonnet) - Planned
+3. **Fallback 2**: OpenAI GPT-4 - Planned
+4. **Fallback 3**: Google Gemini - Planned
 
-Roadmap Influence:
-- As key customer, we influence product direction
-- Custom features for our use case
-- Priority access to new capabilities
-- Beta testing of improvements
+This fallback chain will provide:
+- 99.9%+ uptime through redundancy
+- Cost optimization (route to cheapest available provider)
+- Performance optimization (route to fastest provider)
+- Accuracy validation (cross-check results across providers)
 
-Brand Differentiation:
-- Using specialized AI provider shows technical sophistication
-- Not just another AWS service user
-- Demonstrates careful technology selection
-- Competitive advantage in market positioning
-```
-
-#### Cost Comparison Summary
-
-| Factor | AWS Bedrock | Arcanum.ai | Winner |
-|--------|-------------|------------|--------|
-| **Base Cost** | $0.024/verification | $0.05/verification | AWS Bedrock |
-| **Hidden Costs** | +$0.01 (data transfer, CloudWatch) | $0 | Arcanum.ai |
-| **Volume Discount** | None | Up to 30% off | Arcanum.ai |
-| **Setup Complexity** | High (IAM, regions, quotas) | Low (API key) | Arcanum.ai |
-| **Latency** | 2.0s average | 1.2s average | Arcanum.ai |
-| **Accuracy** | 82% edge cases | 97% edge cases | Arcanum.ai |
-| **Support Quality** | General AWS support | Dedicated partnership | Arcanum.ai |
-| **Vendor Lock-in** | High (AWS ecosystem) | Low (standard API) | Arcanum.ai |
-
-**Decision**: While AWS Bedrock has slightly lower base costs, Arcanum.ai's superior accuracy, lower latency, predictable pricing, and strategic partnership benefits make it the better choice for our specialized use case. The 15% accuracy improvement alone prevents costly disputes and improves user trust.
+**Timeline**: Planned for Phase 2 (Production-Ready) - 2-3 weeks with Kiro IDE
 
 ```
 

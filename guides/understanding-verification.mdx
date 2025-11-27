@@ -9,9 +9,13 @@ Learn how to interpret AI verification results, understand confidence scores, an
 
 ## Verification Process Overview
 
+<Note>
+**Current Implementation**: AetherLock currently supports Digital Proof-of-Task Verification (D-PoTV) for digital deliverables only. This guide focuses on D-PoTV verification. Physical goods verification (P-PoTV) is planned for future releases.
+</Note>
+
 ### How AI Verification Works
 
-AetherLock's Proof-of-Task Verification (PoTV) uses Arcanum.ai, a specialized AI verification provider, to analyze your submitted evidence against the original project requirements. The process involves multiple layers of analysis:
+AetherLock's Digital Proof-of-Task Verification (D-PoTV) uses Arcanum.ai, a specialized AI verification provider, to analyze your submitted evidence against the original project requirements. The process involves multiple layers of analysis:
 
 <Steps>
 <Step title="Evidence Analysis">
@@ -36,11 +40,11 @@ AetherLock's Proof-of-Task Verification (PoTV) uses Arcanum.ai, a specialized AI
 </Step>
 </Steps>
 
-### Verification Timeline
+### Verification Timeline (D-PoTV)
 
 <Tabs>
 <Tab title="Typical Processing Times">
-**Standard Verification**: 2-10 minutes
+**Standard Verification**: 2-10 minutes (Average: 2.1s for D-PoTV)
 - Simple projects with clear evidence
 - Well-documented requirements
 - High-quality submissions
@@ -56,11 +60,11 @@ AetherLock's Proof-of-Task Verification (PoTV) uses Arcanum.ai, a specialized AI
 - High-value escrows requiring extra scrutiny
 </Tab>
 
-<Tab title="Processing Stages">
+<Tab title="Processing Stages (D-PoTV)">
 ```mermaid
 graph TD
-    A[Evidence Submitted] --> B[AI Analysis Initiated]
-    B --> C[Content Processing]
+    A[Evidence Submitted] --> B[AI Analysis Initiated - Arcanum.ai]
+    B --> C[Content Processing - Digital Only]
     C --> D[Requirement Matching]
     D --> E[Confidence Calculation]
     E --> F{Confidence Score}
@@ -191,6 +195,77 @@ const verificationResult = {
   ]
 };
 ```
+
+## Current Limitations (D-PoTV)
+
+<Warning>
+**Digital Tasks Only**: The current implementation supports digital deliverables only. Physical goods verification is not yet available.
+</Warning>
+
+### What D-PoTV Can Verify
+
+<Tabs>
+<Tab title="Supported Verification Types">
+**Digital Deliverables**:
+- Code repositories and software projects
+- Design files (UI/UX, graphics, branding)
+- Written content (articles, documentation, copy)
+- Data analysis and reports
+- Digital marketing assets
+- Spreadsheets and databases
+
+**Evidence Types**:
+- Screenshots and screen recordings
+- Live demos and deployed applications
+- Code repositories (GitHub, GitLab, etc.)
+- Document files (PDF, DOCX, etc.)
+- Video walkthroughs and presentations
+</Tab>
+
+<Tab title="Current Limitations">
+**Not Yet Supported**:
+- Physical goods delivery verification
+- GPS location verification
+- Real-world service completion (cleaning, repairs, etc.)
+- In-person event attendance
+- Physical document authenticity
+
+**Technical Limitations**:
+- No plagiarism detection (use external tools)
+- Limited multi-file code analysis
+- No automated security audits
+- No performance benchmarking
+- Manual testing required for complex functionality
+</Tab>
+</Tabs>
+
+### Edge Cases and Failure Modes
+
+<Steps>
+<Step title="Ambiguous Requirements">
+**Issue**: Vague or subjective requirements are difficult to verify
+**Example**: "Make it look professional" or "Optimize performance"
+**Solution**: Define specific, measurable acceptance criteria upfront
+</Step>
+
+<Step title="Incomplete Evidence">
+**Issue**: Missing evidence for key requirements
+**Example**: No mobile screenshots when responsive design is required
+**Solution**: Review requirements checklist before submission
+</Step>
+
+<Step title="Technical Complexity">
+**Issue**: Some technical aspects require manual testing
+**Example**: Complex authentication flows, edge case handling
+**Solution**: Provide comprehensive test cases and documentation
+</Step>
+
+<Step title="Subjective Quality">
+**Issue**: Design aesthetics and user experience are subjective
+**Example**: "Beautiful design" or "Intuitive interface"
+**Solution**: Use objective metrics (accessibility scores, user testing results)
+</Step>
+</Steps>
 
 ## Verification Outcomes
 
@@ -616,19 +691,19 @@ const verificationResult = {
 
 ## Verification Statistics and Insights
 
-### Platform Performance Metrics
+### Platform Performance Metrics (D-PoTV)
 
 <Tabs>
 <Tab title="AI Accuracy">
-**Overall Accuracy**: 94.2%
-- High confidence decisions: 97.8% accuracy
-- Medium confidence decisions: 89.1% accuracy  
-- Human review agreement: 92.4%
+**D-PoTV Performance** (Digital Tasks Only):
+- Average verification time: 2.1s
+- High confidence decisions: Fast automatic approval
+- Medium confidence decisions: Human review required
+- Accuracy metrics: Validation pending
 
-**Processing Speed**:
-- Average verification time: 4.2 minutes
-- 95% completed within 10 minutes
-- Human review average: 8.3 hours
+<Note>
+**Metrics Status**: Performance metrics are being validated. Current implementation focuses on digital deliverables only.
+</Note>
 </Tab>
 
 <Tab title="Decision Distribution">
@@ -752,26 +827,30 @@ const verificationResult = {
 
 ## AI Provider Information
 
-### Arcanum.ai Verification
+### Arcanum.ai Verification (D-PoTV)
 
-AetherLock uses Arcanum.ai as the primary AI verification provider. Arcanum.ai is purpose-built for task completion analysis, offering:
+AetherLock uses Arcanum.ai as the primary AI verification provider for Digital Proof-of-Task Verification (D-PoTV). Arcanum.ai is purpose-built for digital task completion analysis, offering:
 
-- **Specialized Analysis**: Trained specifically for freelance work verification
-- **High Accuracy**: 94.2% overall accuracy rate across all decisions
-- **Fast Processing**: Average verification time of 4.2 minutes
-- **Fallback Support**: Automatic failover to OpenAI, Claude, or Gemini if needed
+- **Specialized Analysis**: Trained specifically for digital freelance work verification
+- **Fast Processing**: Average verification time of 2.1s for D-PoTV
+- **Digital Focus**: Optimized for code, design, content, and data analysis
+- **Current Implementation**: No fallback chain implemented yet (planned for future releases)
 
 **Why Arcanum.ai?**
-- Lower latency (40% faster than general-purpose AI platforms)
-- Better accuracy for edge cases (15% improvement)
-- Predictable pricing ($0.05 per verification)
-- Specialized training on task verification scenarios
+- Lower latency for digital task verification
+- Specialized training on digital deliverable scenarios
+- Optimized for common freelance work types
+- Predictable performance for digital evidence
+
+<Note>
+**Future Enhancements**: AI fallback chain (OpenAI, Claude, Gemini) and Physical Proof-of-Task Verification (P-PoTV) are planned for future releases.
+</Note>
 
 ## Frequently Asked Questions
 
 <AccordionGroup>
 <Accordion title="How accurate is the AI verification system?">
-AetherLock's AI verification system, powered by Arcanum.ai, maintains a 94.2% accuracy rate across all decisions. High-confidence decisions (85%+ score) have a 97.8% accuracy rate, while medium-confidence decisions requiring human review have an 89.1% accuracy rate. The system is continuously improved based on feedback and outcomes.
+AetherLock's Digital Proof-of-Task Verification (D-PoTV) system is powered by Arcanum.ai and optimized for digital deliverables. The system provides fast verification (2.1s average) for digital tasks including code, design, content, and data analysis. Accuracy metrics are currently being validated. The system is continuously improved based on feedback and outcomes.
 </Accordion>
 
 <Accordion title="Can I request human review even for approved decisions?">
@@ -795,7 +874,7 @@ All evidence is handled with strict confidentiality and security measures. Evide
 </Accordion>
 
 <Accordion title="What AI provider does AetherLock use for verification?">
-AetherLock uses Arcanum.ai as the primary AI verification provider. Arcanum.ai is specialized for task completion analysis and offers superior accuracy and speed compared to general-purpose AI platforms. If Arcanum.ai is unavailable, the system automatically falls back to OpenAI, Claude, or Gemini to ensure continuous service.
+AetherLock uses Arcanum.ai as the AI verification provider for Digital Proof-of-Task Verification (D-PoTV). Arcanum.ai is specialized for digital task completion analysis and offers fast verification (2.1s average) for digital deliverables. AI fallback chain (OpenAI, Claude, Gemini) is planned for future releases to ensure continuous service.
 </Accordion>
 
 <Accordion title="Can I see the detailed AI analysis of my evidence?">

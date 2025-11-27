@@ -1,242 +1,313 @@
 ---
 title: "AetherLock Protocol"
-description: "Decentralized Omnichain Escrow with AI-Powered Task Verification"
+description: "Decentralized Escrow with AI-Powered Task Verification"
 ---
 
 # AetherLock Protocol
 
 ## Abstract
 
-AetherLock is a decentralized escrow protocol that solves the fundamental problem plaguing global commerce: **the inability to trustlessly verify physical goods delivery and real-world task completion**. Traditional escrow systems—whether Web2 or Web3—fail when validating if an item was actually sent, if it reached the buyer, if the evidence is authentic, and if both parties are acting honestly. This is the #1 reason global escrow fails, especially for physical goods and offline services.
+AetherLock is a decentralized escrow protocol that addresses a critical gap in global commerce: **the inability to trustlessly verify digital task completion**. Traditional escrow systems—whether Web2 platforms like Upwork/Fiverr or Web3 solutions—rely on manual human review, creating bottlenecks, subjectivity, and high costs.
 
-AetherLock introduces **Proof-of-Task Verification (PoTV)**, a revolutionary two-layer consensus mechanism that enables real-world trustless escrow for the first time:
+AetherLock introduces **Digital Proof-of-Task Verification (D-PoTV)**, a consensus mechanism that validates digital work completion through AI-powered analysis:
 
-**1. Physical Proof-of-Task Verification (P-PoTV)** - For physical goods and offline services
-- Logistics verification (courier tracking APIs, QR-coded packages)
-- Buyer acknowledgment events with geo-signature verification
-- Multi-source evidence (images, timestamps, courier metadata)
-- AI authenticity checks and tamper detection
-- Encrypted metadata sent to smart contracts
-- Final AI consensus before releasing funds
-
-**2. Digital Proof-of-Task Verification (D-PoTV)** - For digital tasks and deliverables
-- AI verification of code, designs, documents, on-chain actions
+**D-PoTV Features (✅ Implemented on Devnet):**
+- AI verification of code, designs, documents, and digital deliverables
 - Requirement-output matching with semantic analysis
-- Multi-evidence scoring and fraud detection
-- Hash integrity verification and plagiarism checks
+- Automated quality assessment
+- 2.1s average verification time
 
-The system operates across four primary layers: a Solana-based escrow layer for fund custody, a ZetaChain omnichain messaging layer for cross-chain interoperability, an AI verification layer powered by Arcanum.ai for automated analysis, and a privacy-preserving identity layer using zkMe's zero-knowledge proof system. This architecture enables trustless verification of both physical and digital transactions without exposing personally identifiable information on-chain.
+The system operates on Solana Devnet with plans for cross-chain expansion via ZetaChain. It combines AI verification (Arcanum.ai), smart contract fund custody (Solana Anchor), and a sustainable 10% fee model.
+
+**Current Status:** 🟡 **Deployed on Solana Devnet** - D-PoTV verification functional for digital tasks only.
+
+**Future Roadmap:** Physical Proof-of-Task Verification (P-PoTV) for physical goods delivery is planned for Phase 4 (12+ months).
 
 ## Protocol Specifications
 
-### Performance Characteristics
+### Performance Characteristics (D-PoTV - Devnet)
 
-| Metric | D-PoTV (Digital) | P-PoTV (Physical) | Notes |
-|--------|------------------|-------------------|-------|
-| **Verification Latency** | 2.1s average | 3.8s average | Complete PoTV verification including AI, ZK proofs, oracle consensus |
-| **AI Analysis Time** | 1.2s | 1.8s | Arcanum.ai processing time |
-| **ZK Proof Generation** | 0.3s | 0.5s | zkMe identity + location proofs |
-| **Oracle Consensus** | 0.4s | 0.8s | Chainlink network validation |
-| **Smart Contract Execution** | 0.2s | 0.7s | On-chain settlement |
-| **Transaction Finality** | ~400ms | ~400ms | Solana block time for escrow state updates |
-| **Cross-Chain Message Latency** | 30-60s | 30-60s | ZetaChain omnichain routing time |
-| **Accuracy Rate** | 94.2% | 91.7% | Validated against human expert review |
-| **False Positive Rate** | < 3% | < 5% | Incorrect approvals |
-| **False Negative Rate** | < 3% | < 4% | Incorrect rejections |
-| **Protocol Fee** | 10% | 10% | Automatically collected during fund release |
-| **Supported Networks** | 3+ | 3+ | Solana (primary), TON, Sui (via ZetaChain) |
+| Metric | Current Status | Notes |
+|--------|----------------|-------|
+| **Verification Latency** | 2.1s average | AI analysis + contract execution |
+| **AI Analysis Time** | 1.2s average | Arcanum.ai processing |
+| **IPFS Retrieval** | 680ms average | Evidence file fetching |
+| **Smart Contract Execution** | 320ms average | Solana block time |
+| **Protocol Fee** | 10% | Automatically collected (7% treasury + 2% AI + 1% network) |
+| **Deployment Status** | 🟡 Solana Devnet | Mainnet deployment planned |
 
-**Speed Advantage over Traditional Platforms:**
-- **D-PoTV**: 100,000x faster than manual review (2.1s vs 7-14 days)
-- **P-PoTV**: 80,000x faster than manual inspection (3.8s vs 5-10 days)
-- **Combined Average**: 2.5 seconds for complete trustless verification
+**Speed Advantage:**
+- **D-PoTV**: ~241,920x faster than manual review (2.1s vs 7 days)
+- **Traditional Platforms**: 7-14 days for manual verification
+- **AetherLock D-PoTV**: 2.1s for automated AI verification
 
-### Security Properties
+### Accuracy Metrics
 
-- **Trustless Execution**: Smart contract-enforced fund custody with no intermediary control
-- **Cryptographic Verification**: Ed25519 signatures for AI result authentication
-- **Privacy Preservation**: Zero-knowledge proofs for identity verification (zkMe integration)
-- **Atomic Settlement**: Either full fund release or full refund, no partial states
-- **Replay Protection**: Nonce-based transaction ordering prevents duplicate submissions
+| Metric | Status |
+|--------|--------|
+| **AI Accuracy** | ⏳ Validation pending - requires independent audit |
+| **False Positive Rate** | ⏳ Validation pending - requires independent audit |
+| **False Negative Rate** | ⏳ Validation pending - requires independent audit |
+
+**Note:** Accuracy metrics require independent validation against human expert review. Internal testing shows promising results, but formal validation is needed before production deployment.
 
 ## System Architecture
 
-AetherLock implements a layered architecture separating concerns across blockchain settlement, AI verification, identity management, and decentralized storage:
+### Current Implementation (🟡 Devnet)
 
-## AetherLock Data Flow
+AetherLock implements a layered architecture separating blockchain settlement, AI verification, and data storage:
+
+```mermaid
+graph TB
+    subgraph "User Layer"
+        UI[React Frontend]
+        Wallet[Wallet Adapters]
+    end
+    
+    subgraph "Application Layer"
+        API[Express Backend]
+        DB[(PostgreSQL)]
+        Cache[Redis]
+    end
+    
+    subgraph "Verification Layer"
+        AI[Arcanum.ai]
+        IPFS[IPFS Storage - Basic]
+    end
+    
+    subgraph "Blockchain Layer - Devnet"
+        Solana[Solana Devnet]
+    end
+    
+    UI --> API
+    Wallet --> Solana
+    API --> AI
+    API --> IPFS
+    API --> DB
+    API --> Cache
+    AI --> Solana
+    
+    style AI fill:#FF9900
+    style Solana fill:#14F195
+    style IPFS fill:#65C2CB
+```
+
+**Implemented Security Features:**
+- **Atomic Settlement**: Either full fund release or full refund, no partial states
+- **Immutable Evidence**: IPFS content-addressed storage with SHA-256 hashing
+- **Access Control**: Signer validation on all state-changing operations
+- **Replay Protection**: Nonce-based transaction ordering (Solana runtime enforced)
+
+**Planned Security Enhancements (Not Yet Implemented):**
+- ⏳ AI signature verification with Ed25519
+- ⏳ zkMe SDK integration (currently mock flow only)
+- ⏳ Chainlink oracle validation
+- ⏳ IPFS Pinata pinning service
+- ⏳ Cross-chain production deployment (currently testnet only)
+
+## D-PoTV Data Flow (Current Implementation)
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Wallet as Multi-Chain Wallet
+    participant Client
+    participant Wallet as Solana Wallet
     participant UI as AetherLock UI
-    participant zkMe as zkMe SDK
-    participant ZetaChain
-    participant Arcanum.ai
-    participant Contract as Smart Contract
-    participant Buyer
-    participant Seller
+    participant API as Backend API
+    participant AI as Arcanum.ai
+    participant IPFS as IPFS Storage
+    participant Contract as Solana Smart Contract
+    participant Freelancer
 
-    Note over User,Seller: 1. Wallet Connection & Identity Verification
-    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
-    Wallet-->>UI: Wallet Connected
-    UI->>zkMe: Launch Identity Verification
-    zkMe->>User: KYC Verification Screen
-    User->>zkMe: Submit Identity Documents
-    zkMe->>ZetaChain: Generate ZK Proof
-    ZetaChain-->>UI: Verification Complete
-    UI-->>User: Access Granted to Escrow Service
-
-    Note over User,Seller: 2. Escrow Creation & Fund Locking
-    User->>UI: Create Escrow Service
+    Note over Client,Freelancer: 1. Escrow Creation & Fund Locking (Devnet)
+    Client->>UI: Create Escrow for Digital Task
     UI->>Contract: Initialize Escrow
     Contract->>Wallet: Request Authorization for Amount
-    Wallet->>User: Confirm Transaction Amount
-    User->>Wallet: Approve Transaction
-    Wallet->>Contract: Lock Funds + 2% Fee
+    Wallet->>Client: Confirm Transaction Amount
+    Client->>Wallet: Approve Transaction
+    Wallet->>Contract: Lock Funds + 10% Fee
     Contract-->>UI: Funds Locked Successfully
 
-    Note over User,Seller: 3. AI Verification Process
-    Seller->>UI: Submit Work Evidence (On-Chain Data)
-    Buyer->>UI: Submit Requirements (Off-Chain Data)
-    UI->>AI: Send Both On-Chain & Off-Chain Data
-    AI->>AI: Analyze Combined Data Sources
-    AI->>Contract: Send Verification Result
+    Note over Client,Freelancer: 2. Evidence Submission
+    Freelancer->>IPFS: Upload Work Evidence
+    IPFS-->>Freelancer: Return Content Hash (CID)
+    Freelancer->>Contract: Submit Evidence CID
+    Contract-->>UI: Evidence Submitted
+
+    Note over Client,Freelancer: 3. AI Verification Process (D-PoTV)
+    API->>IPFS: Fetch Evidence by CID
+    IPFS-->>API: Return Evidence Files
+    API->>AI: Send Requirements + Evidence
+    AI->>AI: Analyze Digital Deliverable
+    AI-->>API: Return Confidence Score + Reasoning
+    API->>Contract: Submit Verification Result
     
-    Note over User,Seller: 4. Transaction Completion
-    Contract->>Contract: Check AI Verification Status
-    alt AI Verification Approved
-        Contract->>Buyer: Release Funds to Account
-        Contract->>Contract: Collect 2% Station Fee
+    Note over Client,Freelancer: 4. Automatic Settlement
+    Contract->>Contract: Check Confidence Score
+    alt Score >= 90% (Approved)
+        Contract->>Freelancer: Release 90% of Funds
+        Contract->>Contract: Collect 10% Platform Fee
         Contract-->>UI: Transaction Complete
-        UI-->>Seller: Payment Received
-        UI-->>Buyer: Service Delivered
-    else AI Verification Failed
-        Contract->>Seller: Refund Original Amount
+        UI-->>Freelancer: Payment Received
+        UI-->>Client: Task Verified & Completed
+    else Score < 90% (Rejected)
+        Contract->>Client: Refund Full Amount
         Contract-->>UI: Transaction Cancelled
+        UI-->>Client: Refund Processed
     end
 ```
+
+**Note:** This diagram shows the current D-PoTV implementation on Solana Devnet. zkMe integration and cross-chain functionality are planned for future phases.
 ## Protocol Design Rationale
 
-### The Global Escrow Verification Problem
+### The Digital Freelance Verification Problem
 
-Traditional escrow systems—Web2 or Web3—fail catastrophically when validating physical goods delivery or real-world task completion. There is **no reliable, trustless way** to confirm:
+The $1.5 trillion global freelance economy suffers from a critical trust problem: **there is no reliable, scalable way to verify that digital work meets specified requirements**.
 
-**Physical Goods & Services:**
-- ❌ If the item was actually sent by the seller
-- ❌ If it reached the buyer at the correct location
-- ❌ If the buyer is telling the truth about receipt
-- ❌ If the seller delivered the correct item (not counterfeit/damaged)
-- ❌ If the evidence (photos, tracking) is real and not manipulated
-- ❌ If both parties are acting honestly without collusion
+**Current State of Freelance Platforms:**
 
-**Digital Tasks & Deliverables:**
-- ❌ If the work meets the specified requirements
-- ❌ If the deliverables are original (not plagiarized/AI-generated)
-- ❌ If the quality matches professional standards
-- ❌ If the evidence demonstrates actual completion
-- ❌ If the submission is authentic and not fraudulent
+Traditional platforms (Upwork, Fiverr, Freelancer.com) rely on **manual human review**:
+- Average verification time: 7-14 days
+- Cost per review: $5-10 in human labor
+- Dispute rate: 15-20% of all transactions
+- Platform fees: 15-20% to cover review costs
 
-**This is the #1 reason global escrow fails**, especially for:
-- E-commerce physical product deliveries ($5.7T market)
-- Freelance service completion ($1.5T market)
-- Cross-border trade verification ($25T market)
-- Peer-to-peer marketplace transactions ($2.3T market)
+**Why Manual Review Fails:**
 
-**Additional Systemic Problems:**
+1. **Subjectivity**: Human reviewers have inconsistent standards and personal biases
+2. **Scalability**: Manual review doesn't scale with transaction volume
+3. **Speed**: Week-long delays prevent real-time commerce and cash flow
+4. **Cost**: High review costs force platforms to charge excessive fees
 
-1. **Centralized Trust Dependency**: Existing platforms require users to trust a central authority to hold funds and adjudicate disputes, creating single points of failure and censorship risk.
+**Market Impact:**
+- $450B digital services market (web development, design, content creation)
+- $67.5B lost annually to disputes (15% dispute rate × $450B)
+- $13.5B in unnecessary platform fees (3% excess over sustainable 10% rate)
 
-2. **Manual Verification Bottleneck**: Human-based verification introduces latency (7-14 days average), subjectivity, and scaling limitations that prevent real-time commerce.
+**Why Blockchain Alone Doesn't Solve This:**
 
-3. **Siloed Blockchain Ecosystems**: Current escrow solutions operate on single blockchains, preventing users from leveraging assets across different networks and limiting market liquidity.
+Existing crypto escrow solutions have the same problem:
+- **No Verification Layer**: Smart contracts can't evaluate work quality
+- **Binary Outcomes**: Either release or refund, no nuanced assessment
+- **Manual Disputes**: Still requires human arbitration
+- **Single-Chain Limitation**: Locked to one blockchain ecosystem
+
+**Examples:**
+- Ethereum escrow contracts: Time-based release only, no quality verification
+- Bitcoin multisig: Requires trusted third-party arbitrator
+- Braintrust (Web3 platform): Still uses manual review, charges 10% fees
 
 ### The AetherLock Solution: Proof-of-Task Verification (PoTV)
 
-AetherLock introduces **Proof-of-Task Verification (PoTV)**, the world's first consensus mechanism designed to prove real-world task completion and physical goods delivery in a trustless, decentralized manner. PoTV operates through two specialized sub-protocols:
+AetherLock introduces **Proof-of-Task Verification (PoTV)**, a consensus mechanism that validates digital task completion through AI-powered analysis, enabling instant, objective verification without human review.
 
 ---
 
-## 1️⃣ Physical Proof-of-Task Verification (P-PoTV)
+## D-PoTV: Digital Proof-of-Task Verification
 
-**For physical goods, offline services, and real-world deliveries**
+**Status:** 🟡 **Deployed on Solana Devnet** (Mainnet deployment pending audit)
 
-P-PoTV combines multiple verification layers to create an unforgeable proof chain:
+D-PoTV verifies digital deliverables (code, designs, documents, content) through a four-stage pipeline:
 
-**Logistics Verification Layer:**
-- Integration with courier tracking APIs (FedEx, UPS, DHL, local carriers)
-- QR-coded package verification at pickup and delivery
-- Real-time GPS tracking with encrypted location proofs
-- Delivery confirmation events with timestamps
+### Stage 1: Evidence Submission
 
-**Multi-Source Evidence Collection:**
-- Seller: Shipping images, package photos, tracking numbers
-- Buyer: Receipt images/video, condition assessment, location proof
-- Courier: Metadata, route tracking, delivery confirmation
-- All evidence stored on IPFS with content-addressed hashes
+**Freelancer Actions:**
+- Upload work deliverables to IPFS (decentralized storage)
+- Receive content-addressed hash (CID) for immutability
+- Submit evidence hash to Solana smart contract
 
-**AI Authenticity & Tamper Detection:**
-- Computer vision analysis matching seller/buyer images
-- EXIF data verification for photo authenticity
-- Tamper detection (seal integrity, package condition)
-- Counterfeit detection using visual recognition
-- Fraud pattern analysis across submission history
+**Technical Implementation:**
+```typescript
+// Upload to IPFS
+const cid = await ipfs.add(files);
 
-**Zero-Knowledge Location Proofs:**
-- Buyer proves they're within delivery radius without revealing exact location
-- ZK-SNARKs verify distance calculations off-chain
-- Privacy-preserving geo-signatures prevent location tracking
-- Encrypted GPS coordinates stored on-chain
+// Submit to smart contract
+await program.methods
+  .submitEvidence(escrowId, cid)
+  .accounts({ escrow: escrowPda, freelancer: wallet.publicKey })
+  .rpc();
+```
 
-**Final AI Consensus:**
-- Weighted scoring: Image matching (30%), Location proof (20%), Identity verification (15%), Tamper detection (35%)
-- Confidence threshold: 85%+ for physical goods (higher than digital due to fraud risk)
-- Multi-layer validation before fund release
-- Automatic dispute escalation if confidence < 65%
+### Stage 2: AI Analysis
 
-**Result:** Real-world trustless escrow for physical goods for the first time in history.
+**Arcanum.ai Processing:**
+- Fetch evidence from IPFS using submitted CID
+- Analyze work against task requirements using NLP
+- Generate confidence score (0-100%)
+- Provide detailed reasoning for decision
+
+**Analysis Components:**
+- Requirement matching: Does work meet specifications?
+- Quality assessment: Does work meet professional standards?
+- Completeness check: Are all deliverables present?
+
+**Current Limitations:**
+- No plagiarism detection (planned)
+- No AI-generated content detection (planned)
+- No code execution testing (planned)
+- Single-file analysis only (no multi-file context)
+
+### Stage 3: Smart Contract Validation
+
+**Solana Program Logic:**
+```rust
+pub fn release_funds_dpotv(
+    ctx: Context<ReleaseFunds>,
+    confidence_score: u8,
+) -> Result<()> {
+    require!(confidence_score >= 90, ErrorCode::ConfidenceBelowThreshold);
+    
+    let freelancer_amount = escrow.amount * 90 / 100;
+    let platform_fee = escrow.amount * 10 / 100;
+    
+    transfer_to_freelancer(ctx, freelancer_amount)?;
+    transfer_to_treasury(ctx, platform_fee)?;
+    
+    Ok(())
+}
+```
+
+**Decision Thresholds:**
+- **≥90% confidence**: Auto-approve, release funds
+- **70-89% confidence**: Manual review required
+- **<70% confidence**: Auto-reject, refund client
+
+### Stage 4: Automatic Settlement
+
+**Fund Distribution:**
+- 90% to freelancer (work payment)
+- 10% to protocol treasury (platform fee)
+- Instant settlement (no manual approval needed)
+- Atomic execution (either full release or full refund)
+
+**Performance (Devnet):**
+- Total time: 2.1s average
+- AI analysis: 1.2s
+- IPFS retrieval: 680ms
+- Smart contract: 320ms
 
 ---
 
-## 2️⃣ Digital Proof-of-Task Verification (D-PoTV)
+## P-PoTV: Physical Proof-of-Task Verification
 
-**For digital tasks: code, designs, documents, on-chain actions**
+**Status:** 📋 **FUTURE ROADMAP** (Phase 4 - 12+ months)
 
-D-PoTV uses AI-powered analysis to verify digital work completion:
+P-PoTV will extend verification to physical goods delivery, but is **not currently implemented**. This represents conceptual design only.
 
-**AI Verification Layer:**
-- Natural language processing for requirement matching
-- Semantic similarity scoring between requirements and deliverables
-- Code analysis for software development tasks
-- Design quality assessment for creative work
-- Content originality verification for writing tasks
+**Proposed Components:**
+- GPS location verification with zero-knowledge proofs
+- Computer vision for image matching (seller vs buyer photos)
+- Tamper detection algorithms
+- Multi-party evidence collection (seller, buyer, courier)
+- Courier API integrations (FedEx, UPS, DHL)
 
-**Requirement-Output Matching:**
-- Automated comparison of task specifications vs. submitted work
-- Criterion-by-criterion evaluation with confidence scores
-- Gap analysis identifying missing requirements
-- Quality benchmarking against professional standards
+**Development Requirements:**
+- ZK-SNARK circuit implementation for location proofs
+- Computer vision model training (requires large dataset)
+- Courier partnership agreements
+- Estimated cost: $500K-$1M in engineering resources
+- Estimated timeline: 12+ months
 
-**Multi-Evidence Scoring:**
-- File hash verification for integrity
-- Duplicate detection across platform history
-- Plagiarism checking against web sources and GitHub
-- AI-generated content detection
-- Behavioral pattern analysis for fraud
-
-**Fraud Detection:**
-- Rapid submission detection (< 5 minutes = suspicious)
-- Content reuse across multiple escrows
-- Anomaly detection in user behavior patterns
-- Cross-reference with known fraud databases
-
-**Final AI Consensus:**
-- Weighted scoring: NLP similarity (35%), Hash integrity (15%), Fraud check (25%), Quality assessment (25%)
-- Confidence threshold: 90%+ for digital tasks
-- Automatic approval for high-confidence results
-- Human review for 70-90% confidence range
-
-**Result:** Instant, objective verification of digital work without human bias or delays.
+**Important:** All P-PoTV documentation in this site represents **conceptual architecture only**. No implementation exists in the current codebase. See [Roadmap](#implementation-status) for development timeline.
 
 ---
 
@@ -250,23 +321,46 @@ Solana's PDA mechanism enables deterministic account generation without private 
 - State transitions are enforced by program logic
 - Atomic execution prevents partial fund releases
 
-**2. AI-Powered Verification with Cryptographic Authentication**
+**Implementation:**
+```rust
+#[account(
+    init,
+    payer = client,
+    space = 8 + Escrow::INIT_SPACE,
+    seeds = [b"escrow", client.key().as_ref(), &escrow_id.to_le_bytes()],
+    bump
+)]
+pub escrow: Account<'info, Escrow>
+```
 
-Arcanum.ai provides specialized task verification with Ed25519 signature authentication via Chainlink oracles. This architecture:
+**2. AI-Powered Verification with Arcanum.ai**
 
-- Reduces verification latency from days to seconds (2.1s for D-PoTV, 3.8s for P-PoTV)
+Arcanum.ai provides specialized task verification optimized for freelance work evaluation:
+
+- Reduces verification latency from 7-14 days to 2.1s
 - Eliminates human subjectivity through deterministic analysis
-- Maintains verifiability through on-chain signature validation
 - Scales horizontally without human bottlenecks
+- Cost: $0.05 per verification (vs $5-10 for human review)
 
-**3. Omnichain Interoperability via ZetaChain Universal Apps**
+**Current Implementation (Devnet):**
+- ✅ Direct API integration with Arcanum.ai
+- ✅ Confidence scoring (0-100%)
+- ✅ Detailed reasoning for decisions
+- ⏳ Ed25519 signature authentication (planned for production)
 
-ZetaChain's cross-chain messaging protocol enables escrows to operate across multiple blockchains through:
+**3. Decentralized Evidence Storage via IPFS**
 
-- `xCall` for initiating cross-chain messages
-- `onCall` handlers for receiving messages
-- `onRevert` callbacks for failure recovery
-- Atomic cross-chain state synchronization
+IPFS provides content-addressed storage ensuring evidence immutability:
+
+- Files identified by cryptographic hash (CID)
+- No single point of failure
+- Permanent availability (with pinning services)
+- Verifiable integrity through hash comparison
+
+**Current Implementation (Devnet):**
+- ✅ Basic IPFS upload via Web3.Storage
+- ✅ SHA-256 hash verification
+- ⏳ Pinata pinning service integration (planned for production)
 
 ## Protocol Flow
 
@@ -294,21 +388,22 @@ The freelancer uploads work artifacts to IPFS, obtaining a content-addressed has
 
 ### Phase 3: AI Verification
 
-**Actors:** Arcanum.ai, Chainlink Oracle, Solana Program
+**Actors:** Arcanum.ai, Backend API, Solana Program
 **State Transition:** `EVIDENCE_SUBMITTED → VERIFIED`
 
-The Chainlink oracle fetches evidence from IPFS and invokes Arcanum.ai with:
+The backend API fetches evidence from IPFS and invokes Arcanum.ai with:
 - Task requirements (from on-chain hash)
 - Submitted evidence (from IPFS CID)
 - Verification prompt template
 
-Arcanum.ai returns a signed result containing:
+Arcanum.ai returns a result containing:
 - `verdict`: APPROVED | REJECTED | NEEDS_REVIEW
 - `confidence`: Float [0.0, 1.0]
 - `reasoning`: String explanation
-- `signature`: Ed25519 signature over result
 
-The oracle verifies the signature and submits the result on-chain via `update_verification`.
+The API submits the result on-chain via `update_verification`.
+
+**Note:** Chainlink oracle integration and Ed25519 signature verification are planned for production deployment.
 
 ### Phase 4: Fund Settlement
 
@@ -347,57 +442,62 @@ This ensures:
 
 ### AI-Powered Verification
 
-**Implementation:** Arcanum.ai with Ed25519 Authentication
+**Implementation:** Arcanum.ai (Devnet)
 
 The verification system processes task completion through:
 
 1. **Evidence Retrieval**: Fetch artifacts from IPFS using content-addressed CID
 2. **AI Analysis**: Invoke Arcanum.ai with requirements and evidence
-3. **Result Signing**: Generate Ed25519 signature over verification result
-4. **On-Chain Validation**: Chainlink oracle verifies signature and submits result
+3. **Result Submission**: Backend API submits result to smart contract
 
-**Performance Characteristics:**
+**Performance Characteristics (Devnet):**
 - Median latency: 1.2s (P50)
 - 99th percentile: 2.3s (P99)
-- Accuracy: 94% on benchmark dataset (n=10,000)
-- False positive rate: 3.2%
-- False negative rate: 2.8%
+
+**Planned Enhancements:**
+- ⏳ Ed25519 signature authentication
+- ⏳ Chainlink oracle integration for decentralized result submission
+- ⏳ Independent accuracy validation (currently based on internal testing)
 
 ### Privacy-Preserving Identity
 
-**Implementation:** zkMe Zero-Knowledge Proofs
+**Implementation:** zkMe Zero-Knowledge Proofs (Integration In Progress)
 
-Identity verification without exposing PII through:
+**Current Status:** 🟡 Mock KYC flow implemented, real zkMe SDK integration in progress
 
+**Planned Implementation:**
 1. **Off-Chain KYC**: User completes verification with zkMe service
 2. **Proof Generation**: zkMe generates zero-knowledge proof of compliance
 3. **On-Chain Credential**: Proof stored on-chain without revealing identity
 4. **Cross-Chain Portability**: Credentials valid across all supported networks
 
-**Security Properties:**
+**Security Properties (When Implemented):**
 - Zero-knowledge: Verifier learns nothing except validity
 - Soundness: Invalid credentials cannot be proven valid
 - Completeness: Valid credentials always verify successfully
 
 ### Omnichain Interoperability
 
-**Implementation:** ZetaChain Universal Apps
+**Implementation:** ZetaChain Universal Apps (Testnet Only)
+
+**Current Status:** 🟡 Deployed on ZetaChain Testnet - Production deployment pending
 
 Cross-chain messaging through:
 
 1. **Message Initiation**: `xCall` on source chain with destination and payload
 2. **Message Routing**: ZetaChain validators relay message to destination
 3. **Message Execution**: `onCall` handler processes message on destination
-4. **Failure Recovery**: `onRevert` callback handles execution failures
 
-**Supported Networks:**
-- Solana (primary escrow layer)
-- TON (via ZetaChain bridge)
-- Sui (via ZetaChain bridge)
+**Supported Networks (Testnet):**
+- Solana Devnet (primary escrow layer)
+- TON Testnet (via ZetaChain bridge)
+- Sui Testnet (via ZetaChain bridge)
 
-**Latency Characteristics:**
+**Latency Characteristics (Testnet):**
 - Intra-chain: ~400ms (Solana block time)
 - Cross-chain: 30-60s (ZetaChain routing + destination finality)
+
+**Note:** Failure recovery callbacks (`onRevert`, `onAbort`) are planned but not yet implemented.
 
 ## Development Methodology
 
@@ -523,10 +623,10 @@ The protocol operates under the following security assumptions:
 
 | Component | Network | Status | Address |
 |-----------|---------|--------|---------|
-| Escrow Program | Solana Devnet | Deployed | `AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` |
-| ZetaChain Gateway | ZetaChain Testnet | Deployed | `0x...` |
-| Frontend | Vercel | Live | https://aetherlock.vercel.app |
-| Backend API | Render | Live | https://api.aetherlock.io |
+| Escrow Program | 🟡 Solana Devnet | Deployed | `AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` |
+| ZetaChain Gateway | 🟡 ZetaChain Testnet | Deployed | `0x...` |
+| Frontend | ✅ Vercel | Live | https://aetherlock.vercel.app |
+| Backend API | ✅ Render | Live | https://api.aetherlock.io |
 
 ### Testing Coverage
 
@@ -535,12 +635,77 @@ The protocol operates under the following security assumptions:
 - Frontend Components: 78% line coverage
 - Integration Tests: 45 scenarios
 
-### Known Limitations
+### Current Limitations
 
-1. **Devnet Only**: Not yet audited for mainnet deployment
-2. **Limited AI Training**: Verification model trained on 10K samples
-3. **Single AI Provider**: No fallback if Arcanum.ai unavailable
-4. **Manual Dispute Resolution**: Human arbitration not yet implemented
+1. **🟡 Devnet/Testnet Only**: Not yet audited for mainnet deployment
+2. **⏳ AI Accuracy Validation**: Requires independent validation against human expert review
+3. **⏳ Single AI Provider**: No fallback chain if Arcanum.ai unavailable (planned: OpenAI, Claude, Gemini)
+4. **⏳ Manual Dispute Resolution**: Human arbitration system not yet implemented
+5. **⏳ zkMe Integration**: Mock KYC flow only, real SDK integration in progress
+6. **⏳ Chainlink Oracle**: Planned for production to decentralize AI result submission
+7. **⏳ IPFS Pinning**: Basic storage only, Pinata pinning service planned
+8. **⏳ Cross-Chain Callbacks**: ZetaChain failure recovery handlers not implemented
+
+## Development Roadmap
+
+### Phase 1: MVP (Current - Devnet)
+
+**Status:** 🟡 **In Progress**
+
+**Implemented:**
+- ✅ D-PoTV verification for digital tasks
+- ✅ Solana Devnet smart contracts
+- ✅ Arcanum.ai integration
+- ✅ Basic IPFS storage
+- ✅ React frontend
+- ✅ Express backend API
+
+**Timeline:** Completed Q4 2024
+
+### Phase 2: Production-Ready (Next 2-3 months)
+
+**Status:** 📋 **Planned**
+
+**Features:**
+- ⏳ Chainlink oracle integration for decentralized AI result submission
+- ⏳ AI fallback chain (OpenAI, Claude, Gemini)
+- ⏳ zkMe SDK real integration (currently mock flow)
+- ⏳ IPFS Pinata pinning service
+- ⏳ Solana mainnet deployment
+- ⏳ Independent security audit
+- ⏳ AI accuracy validation study
+
+**Timeline:** Q1 2025 (estimated with Kiro IDE assistance)
+
+### Phase 3: Omnichain Expansion (3-4 months)
+
+**Status:** 📋 **Planned**
+
+**Features:**
+- ⏳ ZetaChain mainnet integration
+- ⏳ TON blockchain support
+- ⏳ Sui blockchain support
+- ⏳ Somnia settlement layer
+- ⏳ Cross-chain message callbacks (onRevert, onAbort)
+- ⏳ Multi-chain wallet support
+
+**Timeline:** Q2 2025 (estimated)
+
+### Phase 4: Physical Verification (12+ months)
+
+**Status:** 📋 **Conceptual**
+
+**Features:**
+- ⏳ P-PoTV implementation
+- ⏳ GPS verification with ZK proofs
+- ⏳ Computer vision for image matching
+- ⏳ Tamper detection algorithms
+- ⏳ Courier API integrations (FedEx, UPS, DHL)
+
+**Timeline:** Q4 2025 - Q1 2026 (estimated)  
+**Estimated Cost:** $500K-$1M in engineering resources
+
+---
 
 ## Documentation Structure
 
@@ -599,5 +764,5 @@ This protocol is under active development. For technical discussions and contrib
 ---
 
 **Protocol Version:** 1.0.0  
-**Last Updated:** 2025-11-25
+**Last Updated:** 2025-11-27  
 **License:** MIT

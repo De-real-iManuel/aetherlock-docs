@@ -1,11 +1,15 @@
 ---
-title: "Solana Program Deployment"
-description: "Complete guide for deploying AetherLock Anchor programs to Solana networks"
+title: "Solana Program Deployment (Devnet)"
+description: "Complete guide for deploying AetherLock Anchor programs to Solana Devnet"
 ---
 
-# Solana Program Deployment Guide
+# Solana Program Deployment Guide (Devnet)
 
-This guide covers the complete process of building, testing, and deploying the AetherLock Solana program using the Anchor framework. Follow these steps to deploy to devnet, testnet, or mainnet.
+<Warning>
+**Devnet Deployment Only**: This guide covers deployment to Solana Devnet. AetherLock is currently in development and not yet deployed to mainnet. Mainnet deployment will be available in a future release.
+</Warning>
+
+This guide covers the complete process of building, testing, and deploying the AetherLock Solana program using the Anchor framework to Solana Devnet.
 
 ## Prerequisites
 
@@ -42,7 +46,7 @@ solana-program/
 
 ### 1. Configure Anchor.toml
 
-Edit `solana-program/Anchor.toml` to set up your deployment configuration:
+Edit `solana-program/Anchor.toml` to set up your devnet deployment configuration:
 
 ```toml
 [features]
@@ -50,16 +54,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-aetherlock = "AEtherLockXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+aetherlock = "AEth1ockDevXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 [programs.devnet]
-aetherlock = "AEtherLockXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-[programs.testnet]
-aetherlock = "AEtherLockXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-[programs.mainnet]
-aetherlock = "AEtherLockXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+aetherlock = "AEth1ockDevXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 [registry]
 url = "https://api.apr.dev"
@@ -87,20 +85,21 @@ rpc_port = 8899
 bind_address = "0.0.0.0"
 ```
 
+<Note>
+**Devnet Program ID**: Replace `AEth1ockDevXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX` with your actual devnet program ID after deployment.
+</Note>
+
 ### 2. Configure Solana CLI
 
-Set up your Solana CLI for the target network:
+Set up your Solana CLI for devnet deployment:
 
 ```bash
-# For devnet deployment
+# Configure for devnet deployment
 solana config set --url devnet
 solana config set --keypair ~/.config/solana/id.json
 
-# For testnet deployment
-solana config set --url testnet
-
-# For mainnet deployment
-solana config set --url mainnet-beta
+# Verify configuration
+solana config get
 ```
 
 ### 3. Generate Program Keypair
@@ -195,7 +194,7 @@ anchor test --skip-local-validator tests/escrow.ts
 DEBUG=* anchor test --skip-local-validator
 ```
 
-## Deployment
+## Deployment to Devnet
 
 ### 1. Prepare for Deployment
 
@@ -205,9 +204,16 @@ DEBUG=* anchor test --skip-local-validator
 # Check SOL balance (need ~5-10 SOL for deployment)
 solana balance
 
-# Airdrop SOL on devnet/testnet if needed
+# Airdrop SOL on devnet if needed
 solana airdrop 10
+
+# If airdrop fails, try smaller amounts
+solana airdrop 2
 ```
+
+<Note>
+**Devnet Airdrops**: Devnet airdrops are rate-limited. If you encounter issues, try requesting smaller amounts or use a devnet faucet like https://solfaucet.com
+</Note>
 
 #### Verify Program Size
 
@@ -222,7 +228,7 @@ cargo build-bpf --release
 ### 2. Deploy to Devnet
 
 ```bash
-# Set cluster to devnet
+# Ensure cluster is set to devnet
 solana config set --url devnet
 
 # Deploy the program
@@ -232,49 +238,27 @@ anchor deploy --provider.cluster devnet
 solana program show <PROGRAM_ID>
 ```
 
-### 3. Deploy to Testnet
-
-```bash
-# Set cluster to testnet
-solana config set --url testnet
-
-# Deploy the program
-anchor deploy --provider.cluster testnet
-
-# Verify deployment
-solana program show <PROGRAM_ID>
-```
-
-### 4. Deploy to Mainnet
-
-```bash
-# Set cluster to mainnet
-solana config set --url mainnet-beta
-
-# Deploy the program (requires significant SOL)
-anchor deploy --provider.cluster mainnet-beta
-
-# Verify deployment
-solana program show <PROGRAM_ID>
-```
+<Info>
+**Deployment Time**: Initial deployment typically takes 2-5 minutes depending on program size and network conditions.
+</Info>
 
 ## Program ID Configuration
 
 ### 1. Update Program References
 
-After deployment, update the program ID in all relevant files:
+After devnet deployment, update the program ID in all relevant files:
 
 #### Update Anchor.toml
 ```toml
 [programs.devnet]
-aetherlock = "YourActualProgramIDHere"
+aetherlock = "YourActualDevnetProgramIDHere"
 ```
 
 #### Update lib.rs
 ```rust
 use anchor_lang::prelude::*;
 
-declare_id!("YourActualProgramIDHere");
+declare_id!("YourActualDevnetProgramIDHere");
 
 #[program]
 pub mod aetherlock {
@@ -286,10 +270,14 @@ pub mod aetherlock {
 #### Update Client Code
 ```typescript
 // In your frontend/backend code
-export const AETHERLOCK_PROGRAM_ID = new PublicKey(
-  "YourActualProgramIDHere"
+export const AETHERLOCK_PROGRAM_ID_DEVNET = new PublicKey(
+  "YourActualDevnetProgramIDHere"
 );
 ```
+
+<Warning>
+**Environment-Specific IDs**: Ensure your client code uses the correct program ID for devnet. Do not use devnet program IDs in production environments.
+</Warning>
 
 ### 2. Regenerate Client Code
 
@@ -336,7 +324,7 @@ anchor idl fetch <PROGRAM_ID>
 anchor idl init <PROGRAM_ID> --filepath target/idl/aetherlock.json
 ```
 
-## Upgrades and Maintenance
+## Upgrades and Maintenance on Devnet
 
 ### 1. Upgrade Program
 
@@ -344,12 +332,16 @@ anchor idl init <PROGRAM_ID> --filepath target/idl/aetherlock.json
 # Build new version
 anchor build
 
-# Upgrade deployed program
+# Upgrade deployed program on devnet
 anchor upgrade <PROGRAM_ID> --provider.cluster devnet
 
 # Verify upgrade
 solana program show <PROGRAM_ID>
 ```
+
+<Info>
+**Devnet Testing**: Use devnet to test program upgrades before considering mainnet deployment in the future.
+</Info>
 
 ### 2. Update IDL
 
@@ -364,6 +356,10 @@ anchor idl upgrade <PROGRAM_ID> --filepath target/idl/aetherlock.json
 # Close program and recover rent (IRREVERSIBLE)
 solana program close <PROGRAM_ID> --recipient <RECIPIENT_ADDRESS>
 ```
+
+<Warning>
+**Irreversible Action**: Closing a program is permanent. Only do this if you're certain you no longer need the program.
+</Warning>
 
 ## Common Build Errors and Fixes
 
@@ -389,10 +385,13 @@ solana-keygen pubkey target/deploy/aetherlock-keypair.json
 # Check balance
 solana balance
 
-# Airdrop more SOL (devnet/testnet only)
+# Airdrop more SOL on devnet
 solana airdrop 10
 
-# Or transfer SOL from another account
+# If airdrop fails, try smaller amounts
+solana airdrop 2
+
+# Or use a devnet faucet: https://solfaucet.com
 ```
 
 ### Error: "Program size too large"
@@ -467,9 +466,13 @@ file target/deploy/aetherlock.so
 # Set program upgrade authority
 solana program set-upgrade-authority <PROGRAM_ID> <NEW_AUTHORITY>
 
-# Make program immutable (IRREVERSIBLE)
-solana program set-upgrade-authority <PROGRAM_ID> --final
+# Check current upgrade authority
+solana program show <PROGRAM_ID> | grep "Upgrade Authority"
 ```
+
+<Warning>
+**Devnet Security**: While devnet is for testing, still follow security best practices to prepare for future mainnet deployment.
+</Warning>
 
 ### 2. Keypair Security
 
@@ -477,8 +480,8 @@ solana program set-upgrade-authority <PROGRAM_ID> --final
 # Secure program keypair
 chmod 600 target/deploy/aetherlock-keypair.json
 
-# Use hardware wallet for mainnet
-solana config set --keypair usb://ledger
+# Backup keypair securely
+cp target/deploy/aetherlock-keypair.json ~/secure-backups/
 ```
 
 ### 3. Deployment Verification
@@ -531,15 +534,29 @@ cp target/idl/aetherlock.json backups/
 
 ## Next Steps
 
-After successful deployment:
+After successful devnet deployment:
 
-1. **Update Frontend**: Configure frontend to use deployed program ID
-2. **Update Backend**: Update backend services with new program ID
-3. **Test Integration**: Run end-to-end tests with deployed program
-4. **Monitor Performance**: Set up monitoring and alerting
-5. **Document Changes**: Update deployment documentation
+1. **Update Frontend**: Configure frontend to use devnet program ID
+2. **Update Backend**: Update backend services with devnet program ID
+3. **Test Integration**: Run end-to-end tests with deployed devnet program
+4. **Monitor Performance**: Set up monitoring and alerting for devnet
+5. **Document Changes**: Update deployment documentation with actual program IDs
+
+<Info>
+**Devnet Environment**: Remember that devnet is a testing environment. Data may be reset periodically, and performance may differ from mainnet.
+</Info>
 
 For frontend and backend configuration, see:
 - [Frontend Setup Guide](/implementation/frontend-setup)
 - [Backend Setup Guide](/implementation/backend-setup)
 - [Environment Variables Reference](/implementation/environment-variables)
+
+## Future Mainnet Deployment
+
+AetherLock is currently in active development. Mainnet deployment is planned for a future release after:
+- Comprehensive security audits
+- Extended devnet testing period
+- Community feedback integration
+- Production-ready infrastructure setup
+
+Stay tuned for updates on mainnet deployment timeline.

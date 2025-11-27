@@ -1,0 +1,8195 @@
+{
+  "glossaryTerms": [
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "AWS Global Vibe 2025",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "amazon-q-usage.mdx",
+      "term": "Demo Video",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\chainlink-functions.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\rest-api.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\smart-contracts.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "api\\websocket-api.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Addressable Market",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Profit Margin",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "business-model.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "PoTV Innovation",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Key Management",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "CHANGELOG.md",
+      "term": "Code Block",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Addressable Market",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Moderator",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Mintlify",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "term": "Syntax Highlighting",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Evidence Analysis Pipeline",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Prompt Engineering",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Key Management",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\ai-agent.mdx",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "SPL Token",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\data-models.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\deployment-architecture.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\error-handling.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\frontend-design.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\overview.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "term": "Demo Video",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\security-considerations.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "SPL Token",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\somnia-integration.mdx",
+      "term": "Bounty",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\testing-strategy.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zetachain-integration.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "design\\zkme-integration.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\architecture-diagrams.md",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\sequence-diagrams.md",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "diagrams\\state-diagrams.md",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\creating-escrow.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "KYC (Know Your Customer)",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\kyc-verification.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "IPFS (InterPlanetary File System)",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\submitting-evidence.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\understanding-verification.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "guides\\wallet-connection.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "PoTV (Proof-of-Task Verification)",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Mintlify",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "AWS Global Vibe 2025",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Bounty",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Demo Video",
+      "status": "FOUND"
+    },
+    {
+      "file": "hackathon.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Profit Margin",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "how-it-works.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\backend-setup.mdx",
+      "term": "AWS Lambda",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\environment-variables.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\frontend-setup.mdx",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "PoTV (Proof-of-Task Verification)",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Evidence Analysis Pipeline",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\plan.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Foundry",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\quick-start.mdx",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\solana-deployment.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\somnia-deployment.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\somnia-deployment.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\somnia-deployment.mdx",
+      "term": "Bounty",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\troubleshooting.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Hardhat",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "implementation\\zetachain-deployment.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Hash Function",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Threat Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "index.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Addressable Market",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "introduction.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "PoTV (Proof-of-Task Verification)",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Prompt Engineering",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Addressable Market",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Profit Margin",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "market-analysis.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "PoTV Innovation",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "partners.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "PoTV Innovation",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-consensus.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Mainnet-Beta",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Threat Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Profit Margin",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "potv-technical-specification.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "AWS Bedrock",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Next.js",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "MDX",
+      "status": "FOUND"
+    },
+    {
+      "file": "README.md",
+      "term": "AWS Global Vibe 2025",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Evidence Analysis Pipeline",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Prompt Engineering",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Administrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\ai-powered-verification.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Administrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\dispute-resolution.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Program Derived Address (PDA)",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "SPL Token",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Wallet Adapter",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Administrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\escrow-creation-and-fund-management.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "IPFS (InterPlanetary File System)",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Administrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\evidence-storage.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Phantom",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\frontend-dashboard.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Key Management",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "requirements\\zero-knowledge-kyc.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Solflare",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Tonkeeper",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Disputed",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\access-controls.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Zero-Knowledge Proof",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Hash Function",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Multi-Signature",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Key Management",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\cryptographic-proofs.mdx",
+      "term": "Bounty",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Webhook",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Environment Variables",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Docker",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Key Management",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\key-management.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Nonce",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Replay Protection",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "security\\replay-protection.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Somnia",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Anchor",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "AI Fallback Chain",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Claude",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "OpenAI",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Gemini",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Pinata",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Web3.Storage",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Content Addressing",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "xCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "onCall",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "onRevert",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "onAbort",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Gateway",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Ed25519",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Signature Verification",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "REST API",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "WebSocket",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Rate Limiting",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Chainlink Functions",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Render",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "React",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Access Control",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Fee Distribution",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Pending",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "technical-architecture.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "AetherLock",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Escrow",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Omnichain",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Solana",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "ZetaChain",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Sui",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Arcanum.ai",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Confidence Score",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Prompt Engineering",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "zkMe",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Rent",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Devnet",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Universal App",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Vercel",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Revenue Model",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Transaction Volume",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Client",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Freelancer",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Arbitrator",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Active",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Submitted",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Approved",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Rejected",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Resolved",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Mermaid",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "AWS Global Vibe 2025",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Integration Partner",
+      "status": "FOUND"
+    },
+    {
+      "file": "traction.mdx",
+      "term": "Live Demo",
+      "status": "FOUND"
+    }
+  ],
+  "feeBreakdown": [
+    {
+      "file": "COMPREHENSIVE-AUDIT-REPORT.md",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% + 2% + 1%"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "found": "10% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "FAIL",
+      "context": "10% + 2% + 1%"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "found": "10% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "FAIL",
+      "context": "10% + 2% + 1%"
+    },
+    {
+      "file": "CONSISTENCY-VALIDATION-SUMMARY.md",
+      "found": "10% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "FAIL",
+      "context": "10% treasury fee (7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "design\\architecture.mdx",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "design\\potv-mechanism.mdx",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "design\\solana-escrow-contract.mdx",
+      "found": "10% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "FAIL",
+      "context": "10% treasury fee (7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "index.mdx",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% treasury + 2% AI + 1% network"
+    },
+    {
+      "file": "ROADMAP.mdx",
+      "found": "7% + 2% + 1%",
+      "expected": "7% + 2% + 1%",
+      "status": "PASS",
+      "context": "7% treasury + 2% AI + 1% network"
+    }
+  ],
+  "deploymentStatus": [
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "amazon-q-usage.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "amazon-q-usage.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "api\\chainlink-functions.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 3,
+      "files": [
+        "api\\chainlink-functions.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 5,
+      "files": [
+        "api\\rest-api.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 13,
+      "files": [
+        "api\\rest-api.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 2,
+      "files": [
+        "api\\rest-api.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 6,
+      "files": [
+        "api\\rest-api.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 4,
+      "files": [
+        "api\\smart-contracts.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 11,
+      "files": [
+        "api\\smart-contracts.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 5,
+      "files": [
+        "api\\smart-contracts.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 3,
+      "files": [
+        "api\\smart-contracts.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 4,
+      "files": [
+        "api\\websocket-api.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "api\\websocket-api.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "business-model.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 3,
+      "files": [
+        "COMPREHENSIVE-AUDIT-REPORT.md"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 9,
+      "files": [
+        "COMPREHENSIVE-AUDIT-REPORT.md"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 9,
+      "files": [
+        "COMPREHENSIVE-AUDIT-REPORT.md"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 2,
+      "files": [
+        "COMPREHENSIVE-AUDIT-REPORT.md"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "CONSISTENCY-VALIDATION-SUMMARY.md"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 2,
+      "files": [
+        "CONSISTENCY-VALIDATION-SUMMARY.md"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 13,
+      "files": [
+        "design\\architecture.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 22,
+      "files": [
+        "design\\architecture.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 10,
+      "files": [
+        "design\\architecture.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 11,
+      "files": [
+        "design\\architecture.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "design\\deployment-architecture.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "design\\deployment-architecture.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 2,
+      "files": [
+        "design\\deployment-architecture.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "design\\deployment-architecture.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 10,
+      "files": [
+        "design\\potv-mechanism.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 7,
+      "files": [
+        "design\\potv-mechanism.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 8,
+      "files": [
+        "design\\potv-mechanism.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 6,
+      "files": [
+        "design\\potv-mechanism.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 3,
+      "files": [
+        "design\\solana-escrow-contract.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 6,
+      "files": [
+        "design\\solana-escrow-contract.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 2,
+      "files": [
+        "design\\solana-escrow-contract.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 28,
+      "files": [
+        "design\\somnia-integration.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 4,
+      "files": [
+        "design\\somnia-integration.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 26,
+      "files": [
+        "design\\zetachain-integration.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 12,
+      "files": [
+        "design\\zetachain-integration.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 13,
+      "files": [
+        "design\\zetachain-integration.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 9,
+      "files": [
+        "design\\zkme-integration.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 23,
+      "files": [
+        "design\\zkme-integration.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 7,
+      "files": [
+        "design\\zkme-integration.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 10,
+      "files": [
+        "design\\zkme-integration.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 14,
+      "files": [
+        "diagrams\\architecture-diagrams.md"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 2,
+      "files": [
+        "diagrams\\architecture-diagrams.md"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 9,
+      "files": [
+        "diagrams\\architecture-diagrams.md"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 3,
+      "files": [
+        "diagrams\\architecture-diagrams.md"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 5,
+      "files": [
+        "diagrams\\sequence-diagrams.md"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 14,
+      "files": [
+        "diagrams\\sequence-diagrams.md"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 5,
+      "files": [
+        "diagrams\\sequence-diagrams.md"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "diagrams\\sequence-diagrams.md"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 2,
+      "files": [
+        "guides\\kyc-verification.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "guides\\submitting-evidence.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 3,
+      "files": [
+        "guides\\wallet-connection.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 2,
+      "files": [
+        "guides\\wallet-connection.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 3,
+      "files": [
+        "guides\\wallet-connection.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "guides\\wallet-connection.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "hackathon.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 20,
+      "files": [
+        "hackathon.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "implementation\\backend-setup.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "implementation\\backend-setup.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 2,
+      "files": [
+        "implementation\\backend-setup.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 7,
+      "files": [
+        "implementation\\backend-setup.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 10,
+      "files": [
+        "implementation\\environment-variables.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 13,
+      "files": [
+        "implementation\\environment-variables.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 16,
+      "files": [
+        "implementation\\environment-variables.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 5,
+      "files": [
+        "implementation\\environment-variables.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 7,
+      "files": [
+        "implementation\\frontend-setup.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 5,
+      "files": [
+        "implementation\\frontend-setup.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 14,
+      "files": [
+        "implementation\\frontend-setup.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 3,
+      "files": [
+        "implementation\\frontend-setup.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "implementation\\plan.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "implementation\\plan.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 2,
+      "files": [
+        "implementation\\plan.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 22,
+      "files": [
+        "implementation\\quick-start.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 26,
+      "files": [
+        "implementation\\quick-start.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 13,
+      "files": [
+        "implementation\\quick-start.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 4,
+      "files": [
+        "implementation\\quick-start.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 33,
+      "files": [
+        "implementation\\solana-deployment.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 7,
+      "files": [
+        "implementation\\solana-deployment.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "implementation\\solana-deployment.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 2,
+      "files": [
+        "implementation\\somnia-deployment.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "implementation\\troubleshooting.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 2,
+      "files": [
+        "implementation\\troubleshooting.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "implementation\\troubleshooting.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 16,
+      "files": [
+        "implementation\\zetachain-deployment.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 8,
+      "files": [
+        "implementation\\zetachain-deployment.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 7,
+      "files": [
+        "implementation\\zetachain-deployment.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 14,
+      "files": [
+        "index.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 9,
+      "files": [
+        "index.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 6,
+      "files": [
+        "index.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 8,
+      "files": [
+        "index.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 5,
+      "files": [
+        "introduction.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 14,
+      "files": [
+        "introduction.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 3,
+      "files": [
+        "introduction.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 7,
+      "files": [
+        "introduction.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 1,
+      "files": [
+        "partners.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 3,
+      "files": [
+        "partners.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 4,
+      "files": [
+        "potv-consensus.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 2,
+      "files": [
+        "potv-consensus.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "requirements\\ai-powered-verification.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\dispute-resolution.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\escrow-creation-and-fund-management.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\evidence-storage.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\frontend-dashboard.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\zero-knowledge-kyc.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 1,
+      "files": [
+        "requirements\\zero-knowledge-kyc.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "ROADMAP.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 6,
+      "files": [
+        "ROADMAP.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 10,
+      "files": [
+        "ROADMAP.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 9,
+      "files": [
+        "ROADMAP.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 2,
+      "files": [
+        "security\\key-management.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 1,
+      "files": [
+        "security\\key-management.mdx"
+      ]
+    },
+    {
+      "term": "devnet",
+      "occurrences": 16,
+      "files": [
+        "technical-architecture.mdx"
+      ]
+    },
+    {
+      "term": "testnet",
+      "occurrences": 7,
+      "files": [
+        "technical-architecture.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 7,
+      "files": [
+        "technical-architecture.mdx"
+      ]
+    },
+    {
+      "term": "production",
+      "occurrences": 4,
+      "files": [
+        "technical-architecture.mdx"
+      ]
+    },
+    {
+      "term": "mainnet",
+      "occurrences": 1,
+      "files": [
+        "traction.mdx"
+      ]
+    }
+  ],
+  "inconsistencies": [],
+  "errors": []
+}

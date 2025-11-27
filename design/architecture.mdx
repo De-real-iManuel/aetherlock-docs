@@ -1,79 +1,164 @@
 ---
 title: "System Architecture"
-description: "Detailed component descriptions and omnichain infrastructure design"
+description: "Detailed component descriptions and infrastructure design"
 ---
 
+# System Architecture
 
-## AetherLock Data Flow
+## Implementation Status Overview
+
+**Current Deployment**: Solana Devnet, ZetaChain Testnet  
+**Status**: MVP with core escrow functionality  
+**Last Updated**: November 2024
+
+This document describes AetherLock's system architecture, clearly distinguishing between implemented components (currently working on devnet/testnet) and planned features (future roadmap).
+
+---
+
+## AetherLock Data Flow (Current Implementation)
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant Wallet as Multi-Chain Wallet
+    participant Wallet as Solana Wallet
     participant UI as AetherLock UI
-    participant zkMe as zkMe SDK
-    participant ZetaChain
-    participant Arcanum.ai
-    participant Contract as Smart Contract
-    participant Buyer
-    participant Seller
+    participant Backend as Backend API
+    participant Arcanum as Arcanum.ai
+    participant IPFS
+    participant Contract as Solana Contract
 
-    Note over User,Seller: 1. Wallet Connection & Identity Verification
-    User->>Wallet: Connect (Solflare/Slush/Tonkeeper)
+    Note over User,Contract: 1. Wallet Connection (IMPLEMENTED)
+    User->>Wallet: Connect Solflare/Slush
     Wallet-->>UI: Wallet Connected
-    UI->>zkMe: Launch Identity Verification
-    zkMe->>User: KYC Verification Screen
-    User->>zkMe: Submit Identity Documents
-    zkMe->>ZetaChain: Generate ZK Proof
-    ZetaChain-->>UI: Verification Complete
-    UI-->>User: Access Granted to Escrow Service
+    UI-->>User: Access Granted
 
-    Note over User,Seller: 2. Escrow Creation & Fund Locking
-    User->>UI: Create Escrow Service
-    UI->>Contract: Initialize Escrow
-    Contract->>Wallet: Request Authorization for Amount
-    Wallet->>User: Confirm Transaction Amount
+    Note over User,Contract: 2. Escrow Creation & Fund Locking (IMPLEMENTED)
+    User->>UI: Create Escrow
+    UI->>Backend: Validate Escrow Parameters
+    Backend->>Contract: Initialize Escrow (Devnet)
+    Contract->>Wallet: Request Authorization
+    Wallet->>User: Confirm Transaction + 10% Fee
     User->>Wallet: Approve Transaction
-    Wallet->>Contract: Lock Funds + 2% Fee
-    Contract-->>UI: Funds Locked Successfully
+    Wallet->>Contract: Lock Funds
+    Contract-->>UI: Escrow Created
 
-    Note over User,Seller: 3. AI Verification Process
-    Seller->>UI: Submit Work Evidence (On-Chain Data)
-    Buyer->>UI: Submit Requirements (Off-Chain Data)
-    UI->>AI: Send Both On-Chain & Off-Chain Data
-    AI->>AI: Analyze Combined Data Sources
-    AI->>Contract: Send Verification Result
+    Note over User,Contract: 3. Evidence Submission (IMPLEMENTED)
+    User->>UI: Submit Work Evidence
+    UI->>IPFS: Upload Evidence Files
+    IPFS-->>UI: Return IPFS Hash
+    UI->>Contract: Submit Evidence Hash
+    Contract-->>UI: Evidence Recorded
+
+    Note over User,Contract: 4. AI Verification (IMPLEMENTED)
+    Backend->>IPFS: Retrieve Evidence
+    Backend->>Arcanum: Analyze Evidence
+    Arcanum-->>Backend: Verification Result + Signature
+    Backend->>Contract: Submit Signed Result
     
-    Note over User,Seller: 4. Transaction Completion
-    Contract->>Contract: Check AI Verification Status
-    alt AI Verification Approved
-        Contract->>Buyer: Release Funds to Account
-        Contract->>Contract: Collect 2% Station Fee
+    Note over User,Contract: 5. Settlement (IMPLEMENTED)
+    Contract->>Contract: Validate AI Signature
+    alt Verification Approved
+        Contract->>User: Release 90% to Payee
+        Contract->>Contract: Collect 10% Platform Fee
         Contract-->>UI: Transaction Complete
-        UI-->>Seller: Payment Received
-        UI-->>Buyer: Service Delivered
-    else AI Verification Failed
-        Contract->>Seller: Refund Original Amount
-        Contract-->>UI: Transaction Cancelled
+    else Verification Rejected
+        Contract-->>UI: Allow Resubmission
     end
 ```
 
 ## Component Overview
 
-AetherLock's architecture is built on a modular, omnichain-first design that enables seamless cross-chain escrow operations with AI-powered verification. Each component is designed for scalability, security, and interoperability.
+AetherLock's architecture is built on a modular design that enables escrow operations with AI-powered verification. The current implementation focuses on Solana devnet deployment with core escrow functionality.
 
-## 🏗️ Detailed Component Descriptions
+---
+
+# What's Actually Working (Current Implementation)
+
+## ✅ Implemented Components
+
+### Frontend Layer
+- **React Application**: User interface with Solana wallet integration (Solflare, Slush)
+- **State Management**: Zustand + React Query for escrow state
+- **Wallet Adapters**: Solana wallet adapter integration
+
+### Backend Layer
+- **Express API Server**: RESTful API for escrow management
+- **Event Processing**: Blockchain event monitoring for Solana devnet
+- **WebSocket Server**: Real-time escrow status updates
+
+### Verification Layer
+- **Arcanum.ai Integration**: Primary AI provider for evidence analysis
+- **IPFS Storage**: Basic IPFS integration for evidence storage (no Pinata pinning)
+
+### Blockchain Layer
+- **Solana Anchor Program**: Escrow smart contracts on Solana devnet
+- **PDA-based Accounts**: Program Derived Addresses for escrow custody
+- **Multi-token Support**: SOL and SPL token escrows
+
+### Storage Layer
+- **IPFS Network**: Decentralized evidence storage
+- **PostgreSQL Database**: Structured data persistence for off-chain metadata
+- **Redis Cache**: Performance optimization and session management
+
+---
+
+# What's Not Working / Not Implemented
+
+## ❌ Planned But Not Implemented
+
+### Identity Verification
+- **zkMe Integration**: Mock KYC flow only, real integration in progress
+- **Zero-Knowledge Proofs**: Not implemented
+- **Cross-chain Identity**: Not implemented
+
+### AI Verification
+- **Fallback Chain**: No OpenAI, Claude, or Gemini fallback (only Arcanum.ai)
+- **Ed25519 Signature Verification**: Mentioned but not fully implemented in contracts
+- **Multi-modal Analysis**: Limited to text and basic file analysis
+
+### Oracle Layer
+- **Chainlink Functions**: Not implemented (mentioned in docs but not integrated)
+- **Decentralized Validation**: No oracle network validation
+
+### Cross-Chain Features
+- **ZetaChain Production**: Testnet only, not production-ready
+- **Cross-chain Settlement**: Not implemented for mainnet
+- **Universal Apps**: Testnet deployment only
+- **onRevert/onAbort Handlers**: Not implemented
+
+### Storage Enhancements
+- **Pinata Pinning**: Not implemented (basic IPFS only)
+- **Web3.Storage**: Not implemented
+- **Encrypted Storage**: Not implemented
+
+### Advanced Features
+- **Dispute Resolution System**: Not implemented
+- **Reputation System**: Not implemented
+- **Analytics Dashboard**: Not implemented
+- **Rate Limiting**: Basic implementation only
+- **Webhook System**: Not implemented
+
+### Deployment Status
+- **Solana Mainnet**: Not deployed (devnet only)
+- **Production Monitoring**: Not implemented
+- **Load Balancing**: Not implemented
+- **Horizontal Scaling**: Not implemented
+
+---
+
+## 🏗️ Detailed Component Descriptions (Current Implementation)
 
 ### Frontend Layer Components
 
 #### React Application
-**Responsibility**: User interface and wallet integration
-**Technology**: React 18 + TypeScript + Tailwind CSS
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: User interface and wallet integration  
+**Technology**: React 18 + TypeScript + Tailwind CSS  
 **Key Features**:
-- Multi-chain wallet adapter integration (Solana, Sui, TON)
-- Real-time escrow status updates via WebSocket
-- Cyberpunk-themed responsive UI
-- Progressive Web App (PWA) capabilities
+- Solana wallet adapter integration (Solflare, Slush) - ✅ Working
+- Real-time escrow status updates via WebSocket - ✅ Working
+- Responsive UI - ✅ Working
+- Multi-chain support (Sui, TON) - ❌ Not implemented
 
 ```typescript
 // Wallet integration example
@@ -101,23 +186,26 @@ class AetherLockWalletManager implements WalletManager {
 ```
 
 #### State Management
-**Technology**: Zustand + React Query
-**Purpose**: Centralized state management with optimistic updates
+**Status**: ✅ IMPLEMENTED  
+**Technology**: Zustand + React Query  
+**Purpose**: Centralized state management with optimistic updates  
 **Features**:
-- Escrow state synchronization
-- Wallet connection persistence
-- Real-time notification handling
+- Escrow state synchronization - ✅ Working
+- Wallet connection persistence - ✅ Working
+- Real-time notification handling - ✅ Working
 
 ### Backend Layer Components
 
 #### Express API Server
-**Responsibility**: Business logic orchestration and API gateway
-**Technology**: Node.js + Express + TypeScript
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: Business logic orchestration and API gateway  
+**Technology**: Node.js + Express + TypeScript  
 **Key Features**:
-- RESTful API endpoints for escrow management
-- JWT-based authentication with wallet signature verification
-- Rate limiting and DDoS protection
-- Comprehensive logging and monitoring
+- RESTful API endpoints for escrow management - ✅ Working
+- JWT-based authentication with wallet signature verification - ✅ Working
+- Rate limiting - ⚠️ Basic implementation
+- DDoS protection - ❌ Not implemented
+- Comprehensive logging and monitoring - ⚠️ Basic implementation
 
 ```typescript
 // API endpoint example
@@ -153,30 +241,35 @@ export class EscrowController {
 ```
 
 #### WebSocket Server
-**Responsibility**: Real-time communication and event broadcasting
-**Technology**: Socket.io
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: Real-time communication and event broadcasting  
+**Technology**: Socket.io  
 **Features**:
-- Real-time escrow status updates
-- Cross-chain transaction notifications
-- AI verification progress tracking
+- Real-time escrow status updates - ✅ Working
+- Cross-chain transaction notifications - ❌ Not implemented
+- AI verification progress tracking - ✅ Working
 
 #### Event Processing Service
-**Responsibility**: Blockchain event monitoring and processing
-**Technology**: Node.js workers with Redis queues
+**Status**: ⚠️ PARTIALLY IMPLEMENTED  
+**Responsibility**: Blockchain event monitoring and processing  
+**Technology**: Node.js workers with Redis queues  
 **Features**:
-- Multi-chain event listening
-- Event deduplication and ordering
-- Automatic retry mechanisms
+- Solana devnet event listening - ✅ Working
+- Multi-chain event listening - ❌ Not implemented
+- Event deduplication and ordering - ✅ Working
+- Automatic retry mechanisms - ⚠️ Basic implementation
 
 ### Verification Layer Components
 
-#### AWS Bedrock AI Service
-**Responsibility**: Evidence analysis and task verification
-**Technology**: AWS Bedrock (Claude 3 Sonnet)
+#### Arcanum.ai Service
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: Evidence analysis and task verification  
+**Technology**: Arcanum.ai API  
 **Key Features**:
-- Multi-modal evidence analysis (text, images, documents)
-- Confidence scoring with explainable AI
-- Fallback provider chain for reliability
+- Text and basic file analysis - ✅ Working
+- Confidence scoring - ✅ Working
+- Multi-modal evidence analysis (images, documents) - ⚠️ Limited
+- Fallback provider chain (OpenAI, Claude, Gemini) - ❌ Not implemented
 
 ```typescript
 class AIVerificationService {
@@ -223,30 +316,37 @@ class AIVerificationService {
 ```
 
 #### zkMe Identity Verification
-**Responsibility**: Zero-knowledge KYC and identity verification
-**Technology**: zkMe SDK + ZetaChain storage
+**Status**: ❌ NOT IMPLEMENTED (Mock flow only)  
+**Responsibility**: Zero-knowledge KYC and identity verification  
+**Technology**: zkMe SDK (integration in progress)  
 **Features**:
-- Privacy-preserving identity verification
-- Credential management without PII storage
-- Cross-chain identity portability
+- Privacy-preserving identity verification - ❌ Not implemented
+- Credential management without PII storage - ❌ Not implemented
+- Cross-chain identity portability - ❌ Not implemented
+- **Current Status**: Mock KYC flow for testing only
 
 #### Chainlink Oracle Network
-**Responsibility**: AI result authentication and cross-chain data relay
-**Technology**: Chainlink Functions + Ed25519 signatures
+**Status**: ❌ NOT IMPLEMENTED  
+**Responsibility**: AI result authentication and cross-chain data relay  
+**Technology**: Chainlink Functions (planned)  
 **Features**:
-- Cryptographic proof of AI verification results
-- Cross-chain data transmission
-- Decentralized consensus on verification outcomes
+- Cryptographic proof of AI verification results - ❌ Not implemented
+- Cross-chain data transmission - ❌ Not implemented
+- Decentralized consensus on verification outcomes - ❌ Not implemented
+- **Current Status**: Mentioned in architecture but not integrated
 
 ### Blockchain Layer Components
 
 #### Solana Anchor Program
-**Responsibility**: Primary escrow fund management
-**Technology**: Rust + Anchor Framework
+**Status**: ✅ IMPLEMENTED (Devnet Only)  
+**Responsibility**: Primary escrow fund management  
+**Technology**: Rust + Anchor Framework  
+**Deployment**: Solana Devnet  
 **Key Features**:
-- PDA-based escrow accounts
-- Multi-token support (SOL, SPL tokens)
-- Automated fee collection (10% treasury fee)
+- PDA-based escrow accounts - ✅ Working
+- Multi-token support (SOL, SPL tokens) - ✅ Working
+- Automated fee collection (10% platform fee) - ✅ Working
+- **Mainnet Deployment**: ❌ Not deployed
 
 ```rust
 #[program]
@@ -290,52 +390,114 @@ pub mod aetherlock_escrow {
 ```
 
 #### ZetaChain Universal App
-**Responsibility**: Omnichain orchestration and message routing
-**Technology**: Solidity + ZetaChain Protocol
+**Status**: ⚠️ TESTNET ONLY  
+**Responsibility**: Omnichain orchestration and message routing  
+**Technology**: Solidity + ZetaChain Protocol  
+**Deployment**: ZetaChain Athens Testnet  
 **Features**:
-- Cross-chain message passing
-- Universal contract deployment
-- Atomic cross-chain transactions
+- Cross-chain message passing - ⚠️ Testnet only
+- Universal contract deployment - ⚠️ Testnet only
+- Atomic cross-chain transactions - ❌ Not production-ready
+- onRevert/onAbort handlers - ❌ Not implemented
+- **Mainnet Deployment**: ❌ Not deployed
 
 #### Somnia Settlement Contract
-**Responsibility**: High-throughput settlement execution
-**Technology**: Solidity + Somnia EVM
+**Status**: ⚠️ TESTNET ONLY  
+**Responsibility**: High-throughput settlement execution  
+**Technology**: Solidity + Somnia EVM  
+**Deployment**: Somnia Testnet  
 **Features**:
-- Fast finality (sub-second)
-- Low gas costs
-- High transaction throughput
+- Fast finality (sub-second) - ⚠️ Testnet only
+- Low gas costs - ⚠️ Testnet only
+- High transaction throughput - ⚠️ Testnet only
+- **Mainnet Deployment**: ❌ Not deployed
 
 ### Storage Layer Components
 
 #### IPFS Network
-**Responsibility**: Decentralized evidence and metadata storage
-**Technology**: IPFS + Pinata/Web3.Storage
+**Status**: ⚠️ BASIC IMPLEMENTATION  
+**Responsibility**: Decentralized evidence and metadata storage  
+**Technology**: IPFS (basic integration)  
 **Features**:
-- Content-addressed storage
-- Redundant pinning across multiple providers
-- Encrypted storage for sensitive data
+- Content-addressed storage - ✅ Working
+- Redundant pinning (Pinata/Web3.Storage) - ❌ Not implemented
+- Encrypted storage for sensitive data - ❌ Not implemented
+- **Current Status**: Basic IPFS upload/retrieval only
 
 #### PostgreSQL Database
-**Responsibility**: Structured data persistence
-**Technology**: PostgreSQL 15 + Prisma ORM
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: Structured data persistence  
+**Technology**: PostgreSQL 15 + Prisma ORM  
 **Features**:
-- ACID compliance for critical data
-- Full-text search capabilities
-- Automated backups and replication
+- ACID compliance for critical data - ✅ Working
+- Full-text search capabilities - ⚠️ Basic implementation
+- Automated backups and replication - ❌ Not implemented
 
 #### Redis Cache
-**Responsibility**: Performance optimization and session management
-**Technology**: Redis 7 + ioredis client
+**Status**: ✅ IMPLEMENTED  
+**Responsibility**: Performance optimization and session management  
+**Technology**: Redis 7 + ioredis client  
 **Features**:
-- Sub-millisecond data access
-- Pub/sub for real-time features
-- Distributed caching across regions
+- Sub-millisecond data access - ✅ Working
+- Pub/sub for real-time features - ✅ Working
+- Distributed caching across regions - ❌ Not implemented
 
-## 🌐 Omnichain Infrastructure via ZetaChain
+---
+
+## Component Responsibility Matrix
+
+### On-Chain vs Off-Chain Responsibilities
+
+| Component | Responsibility | On-Chain | Off-Chain | Status |
+|-----------|---------------|----------|-----------|--------|
+| **Escrow Creation** | Initialize escrow account | ✅ Solana | ❌ | ✅ Working |
+| **Fund Custody** | Hold escrowed funds | ✅ Solana PDA | ❌ | ✅ Working |
+| **Evidence Storage** | Store evidence files | ❌ | ✅ IPFS | ✅ Working |
+| **Evidence Hash** | Store evidence reference | ✅ Solana | ❌ | ✅ Working |
+| **AI Analysis** | Analyze evidence quality | ❌ | ✅ Arcanum.ai | ✅ Working |
+| **AI Signature** | Sign verification result | ❌ | ✅ Backend | ⚠️ Partial |
+| **Signature Verification** | Validate AI signature | ✅ Solana | ❌ | ❌ Not implemented |
+| **Fund Release** | Transfer funds to payee | ✅ Solana | ❌ | ✅ Working |
+| **Fee Collection** | Collect platform fee | ✅ Solana | ❌ | ✅ Working |
+| **KYC Verification** | Verify user identity | ❌ | ✅ zkMe (mock) | ❌ Not implemented |
+| **Reputation Tracking** | Track user reputation | ❌ | ✅ PostgreSQL | ❌ Not implemented |
+| **Dispute Resolution** | Handle disputes | ❌ | ✅ Manual | ❌ Not implemented |
+| **Cross-Chain Messaging** | Route messages | ✅ ZetaChain | ❌ | ⚠️ Testnet only |
+| **Event Monitoring** | Listen to blockchain events | ❌ | ✅ Backend | ✅ Working |
+| **WebSocket Updates** | Real-time notifications | ❌ | ✅ Backend | ✅ Working |
+
+### Key Insights
+
+**What's On-Chain (Solana Devnet)**:
+- Escrow account creation and management
+- Fund custody using Program Derived Addresses (PDAs)
+- Evidence hash storage (not the evidence itself)
+- Fund release and fee collection
+- State transitions (Created → Funded → Verified → Completed)
+
+**What's Off-Chain**:
+- Evidence file storage (IPFS)
+- AI analysis (Arcanum.ai)
+- User authentication and session management
+- Real-time notifications (WebSocket)
+- Database queries and caching
+- Event monitoring and processing
+
+**What Should Be On-Chain But Isn't**:
+- AI signature verification (mentioned but not implemented)
+- KYC credential storage (zkMe integration pending)
+- Reputation scores (planned for future)
+- Dispute resolution logic (planned for future)
+
+---
+
+## 🌐 Cross-Chain Infrastructure (Testnet Only)
 
 ### Universal App Architecture
 
-ZetaChain serves as the omnichain orchestration layer, enabling AetherLock to operate seamlessly across multiple blockchain networks without requiring separate deployments or bridge protocols.
+**Status**: ⚠️ TESTNET ONLY - NOT PRODUCTION READY
+
+ZetaChain is intended to serve as the omnichain orchestration layer for AetherLock. **Current deployment is on ZetaChain Athens Testnet only.** Production cross-chain functionality is not yet implemented.
 
 ```mermaid
 graph TB
@@ -449,7 +611,9 @@ contract AetherLockUniversal is UniversalContract {
 
 ## 🔒 Security Framework Documentation
 
-### Multi-Layer Security Architecture
+**Implementation Status**: ⚠️ BASIC SECURITY IMPLEMENTED
+
+### Multi-Layer Security Architecture (Planned)
 
 ```mermaid
 graph TB
@@ -515,27 +679,29 @@ graph TB
 
 ### Security Implementation Details
 
-#### Smart Contract Security
-- **PDA Validation**: All escrow accounts use Program Derived Addresses for deterministic security
-- **Access Control**: Role-based permissions with multi-signature requirements for admin functions
-- **Reentrancy Protection**: State changes before external calls, mutex locks where necessary
-- **Integer Safety**: Checked arithmetic operations to prevent overflow/underflow
+#### Smart Contract Security (Implemented)
+- **PDA Validation**: ✅ All escrow accounts use Program Derived Addresses
+- **Access Control**: ⚠️ Basic role-based permissions (multi-sig not implemented)
+- **Reentrancy Protection**: ✅ State changes before external calls
+- **Integer Safety**: ✅ Checked arithmetic operations
 
-#### Cryptographic Security
-- **Ed25519 Signatures**: AI verification results signed with Ed25519 for authenticity
-- **Zero-Knowledge Proofs**: zkMe integration for privacy-preserving identity verification
-- **Content Addressing**: IPFS hashes ensure evidence integrity and immutability
-- **Encryption**: AES-256 encryption for sensitive off-chain data
+#### Cryptographic Security (Partially Implemented)
+- **Ed25519 Signatures**: ⚠️ AI results signed, but on-chain verification not implemented
+- **Zero-Knowledge Proofs**: ❌ zkMe integration not implemented (mock only)
+- **Content Addressing**: ✅ IPFS hashes for evidence integrity
+- **Encryption**: ❌ AES-256 encryption not implemented
 
-#### Network Security
-- **TLS 1.3**: All API communications encrypted with modern TLS
-- **Rate Limiting**: Adaptive rate limiting based on user behavior and reputation
-- **DDoS Protection**: Cloudflare protection with custom rules for blockchain applications
-- **Network Segmentation**: Isolated environments for different service tiers
+#### Network Security (Basic Implementation)
+- **TLS 1.3**: ✅ API communications encrypted
+- **Rate Limiting**: ⚠️ Basic rate limiting implemented
+- **DDoS Protection**: ❌ Cloudflare protection not configured
+- **Network Segmentation**: ❌ Not implemented
 
 ## 📈 Scalability and Performance Considerations
 
-### Horizontal Scaling Architecture
+**Current Status**: ⚠️ SINGLE-INSTANCE DEPLOYMENT (No horizontal scaling)
+
+### Horizontal Scaling Architecture (Planned, Not Implemented)
 
 ```mermaid
 graph TB
@@ -605,28 +771,28 @@ graph TB
 ### Performance Optimization Strategies
 
 #### Database Optimization
-- **Read Replicas**: Distribute read queries across multiple database replicas
-- **Connection Pooling**: Efficient database connection management with pgBouncer
-- **Query Optimization**: Indexed queries and materialized views for complex analytics
-- **Partitioning**: Time-based partitioning for large transaction tables
+- **Read Replicas**: ❌ Not implemented (single database instance)
+- **Connection Pooling**: ✅ Basic connection pooling with Prisma
+- **Query Optimization**: ⚠️ Basic indexing only
+- **Partitioning**: ❌ Not implemented
 
 #### Caching Strategy
-- **Multi-Level Caching**: L1 (in-memory), L2 (Redis), L3 (CDN)
-- **Cache Invalidation**: Event-driven cache invalidation for real-time consistency
-- **Precomputation**: Background jobs for expensive calculations
-- **Edge Caching**: Cloudflare edge caching for static assets and API responses
+- **Multi-Level Caching**: ⚠️ Redis only (L2), no L1 or L3
+- **Cache Invalidation**: ⚠️ Basic event-driven invalidation
+- **Precomputation**: ❌ Not implemented
+- **Edge Caching**: ❌ Not implemented
 
 #### Blockchain Optimization
-- **RPC Load Balancing**: Multiple RPC providers with automatic failover
-- **Transaction Batching**: Batch multiple operations into single transactions
-- **Event Indexing**: Custom indexers for fast event querying
-- **State Caching**: Cache frequently accessed blockchain state
+- **RPC Load Balancing**: ❌ Single RPC provider
+- **Transaction Batching**: ❌ Not implemented
+- **Event Indexing**: ⚠️ Basic event listening only
+- **State Caching**: ⚠️ Basic Redis caching
 
 #### AI Service Optimization
-- **Model Selection**: Dynamic model selection based on complexity and latency requirements
-- **Prompt Caching**: Cache common prompts and responses
-- **Parallel Processing**: Concurrent analysis of multiple evidence files
-- **Result Caching**: Cache AI analysis results for similar evidence patterns
+- **Model Selection**: ❌ Single model (Arcanum.ai only)
+- **Prompt Caching**: ❌ Not implemented
+- **Parallel Processing**: ❌ Not implemented
+- **Result Caching**: ⚠️ Basic caching in Redis
 
 ### Monitoring and Observability
 
@@ -661,29 +827,91 @@ class PerformanceMonitor {
 }
 ```
 
-This comprehensive architecture ensures AetherLock can scale to handle millions of escrow transactions while maintaining security, performance, and cross-chain interoperability.
+---
+
+## Architecture Summary
+
+### Current Implementation (What's Working)
+
+**Deployment**: Solana Devnet, ZetaChain Athens Testnet
+
+**Core Functionality**:
+- ✅ Solana escrow smart contracts (devnet)
+- ✅ Arcanum.ai verification integration
+- ✅ IPFS evidence storage (basic)
+- ✅ PostgreSQL + Redis backend
+- ✅ WebSocket real-time updates
+- ✅ Solana wallet integration (Solflare, Slush)
+
+**Performance**:
+- ✅ 2.1-second average verification time (D-PoTV)
+- ✅ 10% platform fee collection
+- ✅ Multi-token support (SOL, SPL tokens)
+
+### Planned Features (Not Yet Implemented)
+
+**Identity & Security**:
+- ❌ zkMe KYC integration (mock only)
+- ❌ Ed25519 signature verification on-chain
+- ❌ Zero-knowledge proofs
+- ❌ DDoS protection
+
+**AI & Verification**:
+- ❌ AI fallback chain (OpenAI, Claude, Gemini)
+- ❌ Chainlink oracle integration
+- ❌ Multi-modal analysis enhancements
+
+**Cross-Chain**:
+- ❌ Production cross-chain settlement
+- ❌ ZetaChain mainnet deployment
+- ❌ onRevert/onAbort handlers
+
+**Infrastructure**:
+- ❌ Horizontal scaling
+- ❌ Load balancing
+- ❌ Database replication
+- ❌ Mainnet deployment
+
+### Next Steps
+
+1. **Complete Mainnet Deployment**: Deploy to Solana mainnet
+2. **Implement zkMe Integration**: Real KYC verification
+3. **Add AI Fallback**: Implement OpenAI/Claude fallback
+4. **Enhance Security**: Add on-chain signature verification
+5. **Scale Infrastructure**: Implement horizontal scaling
+
+This architecture provides a solid foundation for AetherLock's core escrow functionality on devnet, with a clear roadmap for production deployment and feature expansion.
 
 # Architecture
 
 
 
-## Multi-Chain Wallet Integration
+---
 
-### Supported Wallets & Chains
+## 🔮 Future Architecture (Planned Features)
+
+The following sections describe planned features that are not yet implemented. These represent the future vision for AetherLock.
+
+### Multi-Chain Wallet Integration (Planned)
+
+**Status**: ❌ NOT IMPLEMENTED (Solana only currently)
+
+#### Planned Supported Wallets & Chains
 ```typescript
+// FUTURE IMPLEMENTATION - NOT CURRENTLY WORKING
 interface WalletConfig {
-  solana: ['Solflare', 'Slush'];
-  ton: ['Tonkeeper'];
-  sui: ['Sui Wallet'];
-  ethereum: ['MetaMask', 'WalletConnect'];
+  solana: ['Solflare', 'Slush'];  // ✅ IMPLEMENTED
+  ton: ['Tonkeeper'];              // ❌ PLANNED
+  sui: ['Sui Wallet'];             // ❌ PLANNED
+  ethereum: ['MetaMask', 'WalletConnect'];  // ❌ PLANNED
 }
 
-// Wallet Connection Flow
+// Planned Wallet Connection Flow with zkMe
 async function connectWallet(chain: string, walletType: string) {
   const wallet = await initializeWallet(chain, walletType);
   const address = await wallet.connect();
   
-  // Trigger zkMe verification
+  // Trigger zkMe verification (NOT YET IMPLEMENTED)
   const kycResult = await launchZkMeVerification(address);
   
   if (kycResult.verified) {
@@ -692,10 +920,15 @@ async function connectWallet(chain: string, walletType: string) {
 }
 ```
 
-## ZetaChain Omnichain Architecture
+**Current Reality**: Only Solana wallets (Solflare, Slush) are supported. TON, Sui, and Ethereum integrations are planned for future phases.
 
-### Cross-Chain Message Flow
+### ZetaChain Omnichain Architecture (Testnet Only)
+
+**Status**: ⚠️ TESTNET ONLY - NOT PRODUCTION READY
+
+#### Planned Cross-Chain Message Flow
 ```solidity
+// TESTNET ONLY - NOT PRODUCTION READY
 // ZetaChain Universal Contract
 contract AetherLockOmnichain {
     struct CrossChainEscrow {
@@ -703,7 +936,7 @@ contract AetherLockOmnichain {
         address payer;
         address payee;
         uint256 amount;
-        bool kycVerified;
+        bool kycVerified;  // ❌ NOT IMPLEMENTED
         bool aiVerified;
     }
     
@@ -712,10 +945,10 @@ contract AetherLockOmnichain {
         address payee,
         uint256 amount
     ) external payable {
-        require(isKYCVerified(msg.sender), "KYC required");
+        require(isKYCVerified(msg.sender), "KYC required");  // ❌ NOT IMPLEMENTED
         
         // Lock funds on source chain
-        lockFunds(msg.sender, amount + (amount * 2 / 100));
+        lockFunds(msg.sender, amount + (amount * 10 / 100));  // Note: 10% fee, not 2%
         
         // Send cross-chain message
         sendMessage(destinationChain, abi.encode(
@@ -725,92 +958,89 @@ contract AetherLockOmnichain {
 }
 ```
 
-## AI Verification System
+**Current Reality**: ZetaChain integration exists on Athens Testnet only. Production cross-chain functionality is not available. KYC verification is not integrated.
 
-### On-Chain & Off-Chain Data Analysis
+### AI Verification System (Current Implementation)
+
+**Status**: ✅ IMPLEMENTED (Arcanum.ai only)
+
+#### Current On-Chain & Off-Chain Data Analysis
 ```typescript
+// CURRENT IMPLEMENTATION
 interface VerificationData {
-  onChainData: {
-    transactionHashes: string[];
-    contractStates: any[];
-    blockchainEvents: Event[];
-  };
   offChainData: {
-    evidenceFiles: File[];
-    communicationLogs: Message[];
-    externalAPIs: APIResponse[];
+    evidenceFiles: File[];  // ✅ IMPLEMENTED
+    ipfsHash: string;       // ✅ IMPLEMENTED
   };
+  // Note: On-chain data analysis is limited
 }
 
 class AetherLockAI {
-  async verifyTransaction(data: VerificationData): Promise<VerificationResult> {
-    // Analyze on-chain data
-    const onChainAnalysis = await this.analyzeOnChainData(data.onChainData);
+  async verifyEvidence(evidenceHash: string): Promise<VerificationResult> {
+    // Retrieve evidence from IPFS
+    const evidence = await this.ipfsService.retrieve(evidenceHash);
     
-    // Analyze off-chain data
-    const offChainAnalysis = await this.analyzeOffChainData(data.offChainData);
-    
-    // Combined AI decision
-    const combinedScore = this.calculateCombinedScore(
-      onChainAnalysis, 
-      offChainAnalysis
-    );
+    // Analyze with Arcanum.ai (single provider, no fallback)
+    const analysis = await this.arcanumService.analyze(evidence);
     
     return {
-      approved: combinedScore > 0.9,
-      confidence: combinedScore,
-      reasoning: this.generateReasoning(onChainAnalysis, offChainAnalysis)
+      approved: analysis.confidence > 0.9,
+      confidence: analysis.confidence,
+      reasoning: analysis.reasoning
     };
   }
 }
 ```
 
-## Smart Contract Fund Management
+**Current Reality**: AI verification uses Arcanum.ai only. No fallback chain (OpenAI, Claude, Gemini) is implemented. Analysis is primarily off-chain evidence-based.
 
-### Escrow & Fee Collection
+### Smart Contract Fund Management (Current Implementation)
+
+**Status**: ✅ IMPLEMENTED (Solana Devnet)
+
+#### Escrow & Fee Collection
 ```rust
-// Solana Anchor Program
+// CURRENT IMPLEMENTATION - SOLANA DEVNET
 #[program]
 pub mod aetherlock_escrow {
-    pub fn create_escrow_with_fee(
+    pub fn create_escrow(
         ctx: Context<CreateEscrow>,
         amount: u64,
         payee: Pubkey
     ) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow_account;
-        let fee = amount * 2 / 100; // 2% station fee
-        let total_required = amount + fee;
+        let fee = amount * 10 / 100; // 10% platform fee (7% treasury + 2% AI + 1% network)
         
         // Lock funds including fee
         escrow.locked_amount = amount;
-        escrow.station_fee = fee;
+        escrow.treasury_fee = fee;
         escrow.payer = ctx.accounts.payer.key();
         escrow.payee = payee;
-        escrow.status = EscrowStatus::FundsLocked;
+        escrow.status = EscrowStatus::Created;
         
         Ok(())
     }
     
-    pub fn release_funds_after_ai_verification(
+    pub fn release_funds(
         ctx: Context<ReleaseFunds>
     ) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow_account;
         
         require!(escrow.ai_verified, EscrowError::AIVerificationRequired);
         
-        // Transfer funds to buyer
-        **ctx.accounts.buyer.lamports.borrow_mut() += escrow.locked_amount;
+        // Transfer 90% to payee
+        **ctx.accounts.payee.lamports.borrow_mut() += escrow.locked_amount;
         
-        // Collect station fee
-        **ctx.accounts.treasury.lamports.borrow_mut() += escrow.station_fee;
+        // Collect 10% platform fee
+        **ctx.accounts.treasury.lamports.borrow_mut() += escrow.treasury_fee;
         
         escrow.status = EscrowStatus::Completed;
         
         emit!(FundsReleased {
             escrow_id: escrow.id,
-            buyer: escrow.payee,
+            payee: escrow.payee,
             amount: escrow.locked_amount,
-            fee_collected: escrow.station_fee
+            fee_collected: escrow.treasury_fee
         });
         
         Ok(())
@@ -818,49 +1048,84 @@ pub mod aetherlock_escrow {
 }
 ```
 
-## User Journey Flow
+**Current Reality**: Smart contract fund management is fully implemented on Solana Devnet with 10% platform fee structure.
 
-### Complete Transaction Process
+### User Journey Flow (Current vs Planned)
 
-1. **Multi-Chain Wallet Connection**
-   - User connects Solflare (Solana), Tonkeeper (TON), or Sui Wallet
-   - Wallet integration detects chain and initializes connection
+#### Current Transaction Process (What Actually Works)
 
-2. **zkMe Identity Verification**
-   - Verification screen pops up automatically
-   - User completes KYC using zkMe SDK
-   - Zero-knowledge proof generated and verified on ZetaChain
+1. **Solana Wallet Connection** ✅
+   - User connects Solflare or Slush wallet
+   - Wallet integration initializes Solana connection
 
-3. **Escrow Service Access**
-   - UI enables escrow functionality after successful verification
-   - User can create, manage, and participate in escrows
+2. **Escrow Creation** ✅
+   - User creates escrow with amount and payee address
+   - Smart contract locks funds on Solana Devnet
 
-4. **Transaction Authorization**
-   - AetherLock sends authorization request to wallet
-   - User confirms transaction amount + 2% fee
-   - Smart contract locks funds securely
+3. **Evidence Submission** ✅
+   - User submits work evidence
+   - Files uploaded to IPFS
+   - IPFS hash stored on-chain
 
-5. **AI Verification Process**
-   - AI analyzes both on-chain transaction data and off-chain evidence
-   - Combined analysis generates confidence score
-   - Automatic approval/rejection based on AI decision
+4. **AI Verification** ✅
+   - Backend retrieves evidence from IPFS
+   - Arcanum.ai analyzes evidence
+   - Verification result submitted to smart contract
 
-6. **Fund Release & Fee Collection**
-   - Smart contract releases funds to buyer's account
-   - 2% station fee automatically collected
-   - Transaction marked as complete
+5. **Fund Release** ✅
+   - Smart contract releases 90% to payee
+   - 10% platform fee collected automatically
 
-## Security & Compliance
+#### Planned Enhancements (Not Yet Implemented)
 
-### Multi-Layer Verification
-- **Identity Layer**: zkMe zero-knowledge KYC
-- **Transaction Layer**: Smart contract validation
-- **Evidence Layer**: AI analysis of on/off-chain data
-- **Cross-Chain Layer**: ZetaChain message verification
+1. **Multi-Chain Wallet Connection** ❌
+   - TON, Sui, Ethereum wallet support
+   - Automatic chain detection
+
+2. **zkMe Identity Verification** ❌
+   - Automatic KYC verification popup
+   - Zero-knowledge proof generation
+   - Cross-chain identity verification
+
+3. **Enhanced AI Verification** ❌
+   - Multi-provider fallback chain
+   - On-chain and off-chain data analysis
+   - Advanced fraud detection
+
+4. **Cross-Chain Settlement** ❌
+   - ZetaChain mainnet integration
+   - Atomic cross-chain transactions
+
+### Security & Compliance (Current vs Planned)
+
+#### Current Security Implementation ✅
+- **Smart Contract Security**: PDA-based custody, reentrancy protection
+- **API Security**: JWT authentication, basic rate limiting
+- **Data Security**: TLS encryption, IPFS content addressing
+
+#### Planned Security Enhancements ❌
+- **Identity Layer**: zkMe zero-knowledge KYC (mock only)
+- **Cross-Chain Layer**: ZetaChain message verification (testnet only)
+- **Advanced Verification**: Multi-source evidence validation (not implemented)
+- **DDoS Protection**: Cloudflare integration (not configured)
 
 ### Fee Structure
-- **Station Fee**: 2% collected on every completed transaction
-- **Gas Optimization**: Batched operations to minimize costs
-- **Treasury Management**: Automated fee collection and distribution
 
-This architecture ensures seamless multi-chain operation while maintaining security, privacy, and automated verification across all supported networks.
+**Current Implementation**: 10% platform fee
+- 7% Treasury
+- 2% AI Provider
+- 1% Network Operations
+
+**Note**: Earlier documentation incorrectly stated 2% "station fee". The correct fee structure is 10% total platform fee as implemented in the smart contracts.
+
+---
+
+## Summary
+
+This architecture document provides a comprehensive view of AetherLock's system design, clearly distinguishing between:
+
+- **✅ Implemented Features**: Working on Solana Devnet with core escrow functionality
+- **⚠️ Testnet Features**: Available on testnets but not production-ready
+- **❌ Planned Features**: Future roadmap items not yet implemented
+
+The current implementation provides a solid foundation for decentralized escrow with AI-powered verification, with a clear path toward multi-chain expansion and enhanced security features.

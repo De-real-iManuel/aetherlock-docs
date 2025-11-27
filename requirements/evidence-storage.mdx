@@ -4,6 +4,22 @@
 
 This document defines the requirements for AetherLock's decentralized evidence storage system. The system uses IPFS (InterPlanetary File System) for immutable, content-addressed storage of task completion evidence, ensuring data availability, integrity, and censorship resistance while maintaining efficient retrieval for AI verification.
 
+## Implementation Status
+
+### Current Features (Implemented - Devnet)
+- ✅ **IPFS Upload**: Upload evidence to IPFS and generate CIDs
+- ✅ **CID Storage**: Store content identifiers on-chain in escrow accounts
+- ✅ **Evidence Retrieval**: Retrieve evidence from IPFS for verification
+- ✅ **File Validation**: Validate file types and sizes before upload
+- ✅ **Metadata Storage**: Track filename, type, size, and upload timestamp
+
+### Planned Features (Future Roadmap)
+- 🔄 **Pinning Services**: Pinata and Web3.Storage integration for guaranteed availability
+- 🔄 **Multi-Gateway Retrieval**: Parallel retrieval from multiple IPFS gateways
+- 🔄 **Evidence Encryption**: AES-256 encryption for sensitive content
+- 🔄 **Garbage Collection**: Automated unpinning after retention period
+- 🔄 **Advanced Formats**: Video processing and URL scraping
+
 ## User Stories and Acceptance Criteria
 
 ### User Story 1: Freelancer Uploads Task Completion Evidence
@@ -22,17 +38,19 @@ This document defines the requirements for AetherLock's decentralized evidence s
 
 ### User Story 2: System Pins Evidence to IPFS Network
 
+**Implementation Status**: 🔄 **PLANNED** - Pinning services not yet integrated
+
 **As the** AetherLock protocol  
 **I want to** ensure uploaded evidence remains available on the IPFS network  
 **So that** verification can occur at any time without data availability issues
 
 #### Acceptance Criteria
 
-1. **WHEN** evidence is uploaded **THEN** the system SHALL pin the content to at least 2 IPFS pinning services (Pinata and Web3.Storage)
-2. **WHEN** pinning completes **THEN** the system SHALL verify the content is retrievable from both pinning services
-3. **WHEN** pinning fails on one service **THEN** the system SHALL attempt to pin to a backup service (Filebase or NFT.Storage)
-4. **WHEN** all pinning services fail **THEN** the system SHALL mark the evidence as "Pending Upload" and notify administrators
-5. **WHEN** evidence is pinned **THEN** the system SHALL emit an EvidencePinned event with CID and pinning service details
+1. 🔄 **WHEN** evidence is uploaded **THEN** the system SHALL pin the content to at least 2 IPFS pinning services (Pinata and Web3.Storage) *(PLANNED - Phase 2)*
+2. 🔄 **WHEN** pinning completes **THEN** the system SHALL verify the content is retrievable from both pinning services *(PLANNED)*
+3. 🔄 **WHEN** pinning fails on one service **THEN** the system SHALL attempt to pin to a backup service (Filebase or NFT.Storage) *(PLANNED)*
+4. 🔄 **WHEN** all pinning services fail **THEN** the system SHALL mark the evidence as "Pending Upload" and notify administrators *(PLANNED)*
+5. 🔄 **WHEN** evidence is pinned **THEN** the system SHALL emit an EvidencePinned event with CID and pinning service details *(PLANNED)*
 
 ### User Story 3: AI System Retrieves Evidence for Verification
 

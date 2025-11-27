@@ -6,6 +6,19 @@ The AetherLock WebSocket API provides real-time updates for escrow state changes
 
 **WebSocket Endpoint**: `wss://ws.aetherlock.io/v1`
 
+## Implementation Status
+
+> **Current Deployment**: PARTIALLY IMPLEMENTED - Core events available, some events planned for future releases
+
+| Event Category | Status | Notes |
+|----------------|--------|-------|
+| Escrow Events | ✅ IMPLEMENTED | Created, funded, status changes |
+| Verification Events | ✅ IMPLEMENTED | Started, progress, completed |
+| Cross-Chain Events | ⚠️ TESTNET ONLY | Available on testnet networks |
+| KYC Events | 🔄 IN PROGRESS | Mock flow available |
+| System Events | ✅ IMPLEMENTED | Maintenance, network status |
+| AI Provider Status | ✅ IMPLEMENTED | Arcanum.ai monitoring |
+
 ## Connection Establishment
 
 ### Authentication
@@ -205,7 +218,7 @@ Emitted when funds are released to freelancer.
 
 #### escrow.disputed
 
-Emitted when a dispute is initiated.
+Emitted when a dispute is initiated (NOT YET IMPLEMENTED - Planned for production).
 
 ```json
 {
@@ -315,6 +328,8 @@ Emitted when AI verification encounters an error.
 
 ### Cross-Chain Events
 
+> **Implementation Status**: TESTNET ONLY - Cross-chain events available on testnet networks
+
 #### crosschain.message_sent
 
 Emitted when a cross-chain message is sent.
@@ -399,6 +414,8 @@ Emitted when cross-chain bridging completes.
 
 ### KYC Events
 
+> **Implementation Status**: INTEGRATION IN PROGRESS - Mock KYC flow available, zkMe SDK integration pending
+
 #### kyc.verification_started
 
 Emitted when KYC verification begins.
@@ -460,6 +477,8 @@ Emitted for system maintenance notifications.
 
 Emitted for AI provider status updates.
 
+> **Note**: Currently only Arcanum.ai is monitored. Multi-provider fallback is planned for production.
+
 ```json
 {
   "type": "ai_provider.status",
@@ -485,9 +504,8 @@ Emitted for AI provider status updates.
     "latency": 8.5,
     "successRate": 0.85,
     "activeRequests": 120,
-    "fallbackActive": true,
-    "fallbackProvider": "openai",
-    "message": "High latency detected, fallback activated"
+    "fallbackActive": false,
+    "message": "High latency detected"
   }
 }
 ```

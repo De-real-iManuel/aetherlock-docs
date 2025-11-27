@@ -1,15 +1,62 @@
-# ZetaChain Deployment Guide
+# ZetaChain Deployment Guide (Testnet Only)
+
+> **⚠️ TESTNET ONLY**: ZetaChain integration is currently deployed on testnet only. Mainnet deployment is not yet available.
 
 > **Note**: This section is under development. Complete Hardhat deployment instructions will be added in subsequent tasks.
 
 ## Overview
 
-Deploy AetherLock's Universal App contract to ZetaChain testnet and mainnet.
+Deploy AetherLock's Universal App contract to ZetaChain testnet for cross-chain messaging functionality. This deployment enables omnichain escrow operations across supported blockchain networks in a testnet environment.
+
+## Current Status
+
+**Deployment Status**: Testnet Only
+
+AetherLock's ZetaChain integration is currently available on testnet networks for development and testing purposes. The following limitations apply:
+
+### Testnet Limitations
+
+- **No Mainnet Deployment**: Production deployment to ZetaChain mainnet is not yet available
+- **Testnet Tokens Only**: All transactions use testnet tokens with no real value
+- **Limited Cross-Chain Support**: Cross-chain messaging is available only between testnet networks
+- **No Production Guarantees**: Testnet deployments may be reset or experience downtime
+- **Callback Handlers Not Implemented**: `onRevert` and `onAbort` handlers are planned but not yet implemented
+- **Testing Environment**: Suitable for development and testing only, not for production use
+
+### What Works on Testnet
+
+- Basic Universal App contract deployment
+- Cross-chain message sending (testnet to testnet)
+- Gateway integration for omnichain messaging
+- Contract verification on testnet explorers
+
+### What's Not Available
+
+- Mainnet deployment
+- Production-grade cross-chain callbacks
+- Real-value transactions
+- Full error handling and revert mechanisms
 
 ## Coming Soon
 
-- Hardhat configuration
-- Deployment scripts
-- Network-specific instructions
-- Contract verification
-- Gateway configuration
+The following features are planned for future releases:
+
+- Complete Hardhat configuration
+- Automated deployment scripts
+- Network-specific deployment instructions
+- Contract verification procedures
+- Gateway configuration details
+- Mainnet deployment guide (when available)
+- Full callback handler implementation
+
+## Planned Production Deployment
+
+Production deployment to ZetaChain mainnet is planned for Phase 3 of the AetherLock roadmap. This will include:
+
+- Mainnet Universal App deployment
+- Complete callback handler implementation (`onRevert`, `onAbort`)
+- Production-grade cross-chain message flow
+- Full error handling and recovery mechanisms
+- Integration with mainnet networks (Solana, TON, Sui)
+
+**Estimated Timeline**: 3 weeks with Kiro IDE (see roadmap for details)

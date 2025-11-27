@@ -2,7 +2,24 @@
 
 ## Overview
 
-This document defines the functional requirements for AetherLock's core escrow creation and fund management system. The escrow mechanism enables secure, trustless transactions between clients and freelancers across multiple blockchain networks, with funds locked until task completion is verified through the Proof of Task Verification (PoTv) mechanism.
+This document defines the functional requirements for AetherLock's core escrow creation and fund management system. The escrow mechanism enables secure, trustless transactions between clients and freelancers across multiple blockchain networks, with funds locked until task completion is verified through the Proof of Task Verification (PoTV) mechanism.
+
+## Implementation Status
+
+### Current Features (Implemented - Devnet)
+- ✅ **Escrow Creation**: Create escrow contracts with task details and payment terms
+- ✅ **Fund Deposit**: Lock funds in Solana escrow PDAs
+- ✅ **State Management**: Enforce valid state transitions (Created → Funded → Verified → Completed)
+- ✅ **Automatic Fund Release**: Release funds after AI verification approval
+- ✅ **Platform Fee Collection**: 10% fee automatically collected on completion
+- ✅ **Escrow Querying**: View and filter escrows by status
+
+### Planned Features (Future Roadmap)
+- 🔄 **Deadline Enforcement**: Automatic refunds for missed deadlines
+- 🔄 **Escrow Cancellation**: Cancel unfunded escrows
+- 🔄 **Cross-Chain Support**: ZetaChain integration for Ethereum, TON, Sui
+- 🔄 **Somnia Settlement**: High-speed settlement layer integration
+- 🔄 **Advanced Filtering**: Export and analytics features
 
 ## User Stories and Acceptance Criteria
 
@@ -106,17 +123,19 @@ This document defines the functional requirements for AetherLock's core escrow c
 
 ### User Story 8: Multi-Chain Fund Management
 
+**Implementation Status**: 🔄 **PARTIALLY IMPLEMENTED** - Solana implemented, cross-chain planned
+
 **As a** user operating across multiple blockchains  
 **I want** to create escrows on different networks with seamless fund management  
 **So that** I can work with freelancers regardless of their preferred blockchain
 
 #### Acceptance Criteria
 
-1. **WHEN** I create an escrow on Solana **THEN** the system SHALL lock SOL or SPL tokens in the Solana escrow program
-2. **WHEN** I create an escrow on Ethereum **THEN** the system SHALL lock ETH or ERC-20 tokens in the Ethereum escrow contract via ZetaChain
-3. **WHEN** cross-chain settlement occurs **THEN** the system SHALL use ZetaChain's Universal App to route messages and coordinate fund releases
-4. **WHEN** I view my escrows **THEN** the system SHALL display escrows from all connected networks in a unified dashboard
-5. **WHEN** network-specific errors occur **THEN** the system SHALL provide clear error messages indicating which blockchain encountered the issue
+1. ✅ **WHEN** I create an escrow on Solana **THEN** the system SHALL lock SOL or SPL tokens in the Solana escrow program *(IMPLEMENTED - Devnet)*
+2. 🔄 **WHEN** I create an escrow on Ethereum **THEN** the system SHALL lock ETH or ERC-20 tokens in the Ethereum escrow contract via ZetaChain *(PLANNED - Phase 3)*
+3. 🔄 **WHEN** cross-chain settlement occurs **THEN** the system SHALL use ZetaChain's Universal App to route messages and coordinate fund releases *(PLANNED - Phase 3)*
+4. 🔄 **WHEN** I view my escrows **THEN** the system SHALL display escrows from all connected networks in a unified dashboard *(PLANNED)*
+5. ✅ **WHEN** network-specific errors occur **THEN** the system SHALL provide clear error messages indicating which blockchain encountered the issue *(IMPLEMENTED)*
 
 ### User Story 9: Escrow Fee Management
 

@@ -9,6 +9,20 @@ description: "System design and component specifications"
 
 AetherLock implements a layered architecture with clear separation of concerns across five distinct layers: user interface, application logic, verification services, blockchain settlement, and data storage. This design enables independent scaling of components, fault isolation, and modular upgrades.
 
+<div className="my-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+  <h3 className="text-lg font-bold text-blue-400 mb-2">📍 Current Implementation Status</h3>
+  <p className="text-gray-300">
+    This document describes both the <strong>Current Implementation (Devnet)</strong> and <strong>Planned Architecture</strong>. 
+    Sections are clearly labeled to distinguish between what's deployed and what's on the roadmap.
+  </p>
+</div>
+
+## 🏗️ Current Implementation (Devnet)
+
+The following architecture represents what is actually deployed and functional on Solana Devnet as of the current release.
+
+### Current System Architecture
+
 ```mermaid
 graph TB
     subgraph "User Interface Layer"
@@ -23,71 +37,106 @@ graph TB
         Auth[Auth Service]
     end
     
-    subgraph "Verification Layer"
+    subgraph "Verification Layer - CURRENT"
         AI[Arcanum.ai]
-        KYC[zkMe Verification]
-        Oracle[Chainlink Functions]
+        IPFS_BASIC[Basic IPFS Storage]
     end
     
-    subgraph "Blockchain Layer"
-        Solana[Solana Program]
-        Zeta[ZetaChain Gateway]
-        Somnia[Somnia Contract]
+    subgraph "Blockchain Layer - DEVNET"
+        Solana[Solana Program - Devnet]
     end
     
-    subgraph "Storage Layer"
-        IPFS[IPFS Network]
-        Pinata[Pinata Pinning]
+    subgraph "Data Layer"
         DB[(PostgreSQL)]
+        Redis[Redis Cache]
     end
     
     UI --> API
     UI --> Wallet
     Wallet --> Solana
-    Wallet --> Zeta
     
     API --> AI
-    API --> KYC
-    API --> Oracle
-    API --> IPFS
+    API --> IPFS_BASIC
     API --> DB
+    API --> Redis
     
-    Solana --> Zeta
-    Zeta --> Somnia
-    
-    AI --> Oracle
-    KYC --> Zeta
-    IPFS --> Pinata
+    WS --> UI
     
     style AI fill:#FF9900
-    style KYC fill:#A855F7
     style Solana fill:#14F195
-    style Zeta fill:#00D9FF
+    style DB fill:#336791
 ```
 
-## 🏢 Component Responsibility Matrix
+### Current Component Responsibilities
 
-| Component | Primary Responsibility | Secondary Functions | Dependencies |
-|-----------|----------------------|-------------------|--------------|
-| **React Frontend** | User interface and wallet integration | State management, real-time updates | Wallet adapters, WebSocket |
-| **Express Backend** | API orchestration and business logic | Authentication, event processing | PostgreSQL, Redis, IPFS |
-| **Arcanum.ai** | Evidence analysis and verification | Confidence scoring, decision making | IPFS, Chainlink Oracle |
-| **zkMe SDK** | Zero-knowledge identity verification | KYC compliance, privacy preservation | ZetaChain, Frontend |
-| **Solana Program** | Escrow fund management | PDA validation, state transitions | ZetaChain Gateway |
-| **ZetaChain Gateway** | Omnichain message routing | Cross-chain state synchronization | All blockchain networks |
-| **Somnia Contract** | High-speed settlement execution | Transaction finality, gas optimization | ZetaChain, Treasury |
-| **IPFS Network** | Decentralized evidence storage | Content addressing, availability | Pinata, Web3.Storage |
-| **PostgreSQL** | Persistent data storage | Transaction history, user profiles | Backend API |
-| **Redis Cache** | Performance optimization | Session management, rate limiting | Backend API |
-| **Chainlink Oracle** | AI result authentication | Ed25519 signature verification | Arcanum.ai, Smart Contracts |
+| Component | Status | Primary Responsibility | Implementation Notes |
+|-----------|--------|----------------------|---------------------|
+| **React Frontend** | ✅ Implemented | User interface and wallet integration | Deployed on Vercel |
+| **Express Backend** | ✅ Implemented | API orchestration and business logic | Running on Render/AWS |
+| **Arcanum.ai** | ✅ Implemented | Evidence analysis and verification | Primary AI provider |
+| **Solana Program** | ✅ Implemented | Escrow fund management on Devnet | Anchor framework |
+| **IPFS Network** | ✅ Implemented | Basic decentralized evidence storage | No pinning service yet |
+| **PostgreSQL** | ✅ Implemented | Persistent data storage | Transaction history, user profiles |
+| **Redis Cache** | ✅ Implemented | Performance optimization | Session management, rate limiting |
 
-## 🔗 On-Chain vs Off-Chain Responsibilities
+### Current Data Flow
 
-Understanding the clear separation between on-chain and off-chain operations is critical for security, scalability, and cost optimization in AetherLock's architecture.
+The actual data flow in the current implementation is simplified compared to the planned architecture:
 
-### On-Chain Responsibilities (Blockchain Layer)
+```mermaid
+flowchart TD
+    subgraph "User Layer"
+        U1[Client Browser]
+        U2[Freelancer Browser]
+        U3[Solana Wallet]
+    end
+    
+    subgraph "Application Layer"
+        A1[React Frontend]
+        A2[Express API Server]
+        A3[WebSocket Server]
+    end
+    
+    subgraph "Verification Layer"
+        V1[Arcanum.ai]
+        V2[Basic IPFS]
+    end
+    
+    subgraph "Blockchain Layer - DEVNET"
+        B1[Solana Program - Devnet]
+    end
+    
+    subgraph "Data Layer"
+        D1[(PostgreSQL)]
+        D2[Redis Cache]
+    end
+    
+    U1 --> A1
+    U2 --> A1
+    U3 --> B1
+    
+    A1 <--> A2
+    A1 <--> A3
+    
+    A2 --> V1
+    A2 --> V2
+    A2 <--> D1
+    A2 <--> D2
+    
+    A2 --> B1
+    
+    style V1 fill:#FF9900
+    style B1 fill:#14F195
+    style D1 fill:#336791
+```
 
-**Solana Program (Primary Escrow Layer)**
+## 🔗 Current On-Chain vs Off-Chain Responsibilities
+
+Understanding the clear separation between on-chain and off-chain operations in the current implementation.
+
+### On-Chain Responsibilities (Solana Devnet)
+
+**Solana Program (Devnet Deployment)**
 - **Fund Management**: Locking, holding, and releasing escrow funds with cryptographic security
 - **State Transitions**: Managing escrow lifecycle states (Created → Funded → InProgress → Verified → Released)
 - **PDA Validation**: Ensuring Program Derived Addresses are correctly computed and authorized
@@ -96,21 +145,10 @@ Understanding the clear separation between on-chain and off-chain operations is 
 - **Event Emission**: Publishing on-chain events for off-chain indexing and processing
 - **Atomic Operations**: Ensuring fund transfers are atomic and cannot be partially executed
 
-**ZetaChain Gateway (Cross-Chain Messaging)**
-- **Message Routing**: Relaying cross-chain messages between Solana, Somnia, and other chains
-- **State Synchronization**: Maintaining consistent escrow state across multiple blockchains
-- **Callback Handling**: Processing onCall, onRevert, and onAbort callbacks for cross-chain operations
-- **Finality Proofs**: Verifying transaction finality before executing cross-chain actions
-
-**Somnia Contract (Optional High-Speed Settlement)**
-- **Reputation Tracking**: Recording user reputation scores on-chain for transparency
-- **Task Rewards**: Distributing bonus rewards for high-quality task completion
-- **Fast Settlement**: Providing high-throughput settlement for time-sensitive escrows
-
-### Off-Chain Responsibilities (Application & AI Layer)
+### Off-Chain Responsibilities (Current Implementation)
 
 **Express Backend API**
-- **Business Logic**: Orchestrating complex workflows that don't require blockchain consensus
+- **Business Logic**: Orchestrating workflows that don't require blockchain consensus
 - **User Authentication**: Managing JWT tokens and wallet signature verification
 - **Database Operations**: Storing user profiles, transaction history, and metadata
 - **IPFS Coordination**: Uploading evidence files and managing content addressing
@@ -121,43 +159,31 @@ Understanding the clear separation between on-chain and off-chain operations is 
 - **Evidence Analysis**: Analyzing submitted work evidence using AI models
 - **Semantic Matching**: Comparing task requirements against submitted deliverables
 - **Quality Scoring**: Generating confidence scores (0-100%) for verification decisions
-- **Anomaly Detection**: Identifying potential fraud or low-quality submissions
-- **Result Signing**: Creating Ed25519 signatures for verification results
+- **Result Delivery**: Sending verification results to backend for smart contract updates
 
-**Chainlink Oracle Network**
-- **AI Result Authentication**: Verifying Ed25519 signatures from Arcanum.ai
-- **Off-Chain Computation**: Executing complex verification logic off-chain
-- **On-Chain Delivery**: Submitting verified results to smart contracts
+<div className="my-6 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+  <h3 className="text-lg font-bold text-yellow-400 mb-2">⚠️ Current Limitations</h3>
+  <ul className="text-gray-300 space-y-2 ml-4">
+    <li>• No Chainlink oracle integration - AI results submitted directly by backend</li>
+    <li>• No Ed25519 signature verification on-chain</li>
+    <li>• No AI fallback chain (only Arcanum.ai)</li>
+    <li>• No Pinata/Web3.Storage pinning service</li>
+    <li>• No cross-chain functionality (Solana only)</li>
+    <li>• No zkMe SDK integration (mock KYC flow)</li>
+  </ul>
+</div>
 
-**zkMe KYC Service**
-- **Identity Verification**: Processing KYC documents and generating zero-knowledge proofs
-- **Privacy Preservation**: Ensuring no PII is stored on-chain
-- **Credential Management**: Issuing and managing verifiable credentials
+## 💎 Solana Smart Contract Structure (Current Implementation)
 
-### Rationale for Separation
-
-| Operation Type | Location | Reason |
-|----------------|----------|--------|
-| Fund Transfers | On-Chain | Requires trustless execution and atomic guarantees |
-| AI Verification | Off-Chain | Computationally expensive, requires specialized models |
-| Evidence Storage | Off-Chain (IPFS) | Large file storage is cost-prohibitive on-chain |
-| User Profiles | Off-Chain (PostgreSQL) | Mutable data that changes frequently |
-| Real-Time Updates | Off-Chain (WebSocket) | Requires low-latency bidirectional communication |
-| State Transitions | On-Chain | Requires consensus and immutability |
-| KYC Processing | Off-Chain (zkMe) | Privacy-sensitive, only proofs go on-chain |
-| Event Logs | On-Chain | Provides immutable audit trail |
-
-## 💎 Solana Smart Contract Structure
-
-AetherLock's Solana program is built using the Anchor framework, providing type-safe instructions and automatic account validation. The program manages escrow accounts, fund locking/release, and cross-chain message coordination.
+AetherLock's Solana program is built using the Anchor framework, providing type-safe instructions and automatic account validation. The program manages escrow accounts, fund locking/release on Devnet.
 
 ### Program Architecture
 
 ```rust
-// Program ID (Devnet): AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+// Program ID (Devnet): AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 use anchor_lang::prelude::*;
 
-declare_id!("AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+declare_id!("AethXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 #[program]
 pub mod aetherlock_escrow {
@@ -249,7 +275,9 @@ pub mod aetherlock_escrow {
         Ok(())
     }
 
-    /// Update verification result from Chainlink oracle
+    /// Update verification result (called by backend, not oracle)
+    /// NOTE: In current implementation, backend calls this directly
+    /// Planned: Chainlink oracle will call this with signature verification
     pub fn update_verification(
         ctx: Context<UpdateVerification>,
         escrow_id: String,
@@ -258,7 +286,7 @@ pub mod aetherlock_escrow {
     ) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow;
         require!(escrow.status == EscrowStatus::EvidenceSubmitted, ErrorCode::InvalidEscrowStatus);
-        require!(ctx.accounts.oracle.key() == CHAINLINK_ORACLE_PUBKEY, ErrorCode::Unauthorized);
+        // NOTE: No oracle validation in current implementation
         
         escrow.verification_result = Some(verification_result);
         escrow.confidence_score = Some(confidence_score);
@@ -487,18 +515,265 @@ pub struct ReleaseFunds<'info> {
 **Security Features**
 - Signer validation on all state-changing operations
 - PDA bump seed stored to prevent account recreation attacks
-- Oracle pubkey validation for verification updates
 - Deadline enforcement for refund protection
 
-## 🌉 ZetaChain Cross-Chain Integration
 
-ZetaChain enables AetherLock to operate as a truly omnichain protocol, allowing escrows created on Solana to settle on Somnia, Sui, TON, or any connected blockchain.
+## 🔄 Current Escrow Lifecycle
 
-### ZetaChain Universal App Pattern
+This diagram shows the actual escrow flow in the current Devnet implementation:
+
+```mermaid
+stateDiagram-v2
+    [*] --> WalletConnection: User Connects
+    WalletConnection --> EscrowCreation: Wallet Connected
+    
+    EscrowCreation --> FundDeposit: Escrow Initialized
+    FundDeposit --> WorkInProgress: Funds Locked
+    
+    WorkInProgress --> EvidenceSubmission: Work Completed
+    EvidenceSubmission --> AIVerification: Evidence Uploaded to IPFS
+    
+    AIVerification --> HighConfidence: >90% Confidence
+    AIVerification --> MediumConfidence: 50-90% Confidence
+    AIVerification --> LowConfidence: <50% Confidence
+    
+    HighConfidence --> AutoRelease: Approved
+    MediumConfidence --> HumanReview: Needs Review
+    LowConfidence --> Rejected: Auto-Reject
+    
+    HumanReview --> ManualApproval: Arbitrator Approves
+    HumanReview --> ManualRejection: Arbitrator Rejects
+    
+    ManualApproval --> AutoRelease
+    AutoRelease --> FundsReleased: 90% to Freelancer
+    AutoRelease --> FeeCollection: 10% to Treasury
+    
+    ManualRejection --> Refund: Return to Client
+    Rejected --> Resubmission: Allow Retry
+    Resubmission --> EvidenceSubmission
+    
+    FundsReleased --> [*]
+    FeeCollection --> [*]
+    Refund --> [*]
+```
+
+## 🧠 Current AI Verification Pipeline
+
+The actual AI verification flow without oracle integration:
+
+```mermaid
+flowchart LR
+    subgraph "Evidence Collection"
+        A[User Uploads Files]
+        B[Frontend Validation]
+        C[IPFS Upload - Basic]
+    end
+    
+    subgraph "AI Processing"
+        D[Fetch from IPFS]
+        E[Arcanum.ai Only]
+        F[Semantic Analysis]
+        G[Quality Scoring]
+    end
+    
+    subgraph "Verification Logic"
+        H{Confidence Score}
+        I[>90%: Auto-Approve]
+        J[50-90%: Human Review]
+        K[<50%: Auto-Reject]
+    end
+    
+    subgraph "On-Chain Settlement - Devnet"
+        L[Backend Updates Escrow State]
+        M[Release Funds]
+        N[Collect 10% Fee]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    
+    H -->|High| I
+    H -->|Medium| J
+    H -->|Low| K
+    
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M
+    M --> N
+    
+    style E fill:#FF9900
+    style H fill:#A855F7
+    style M fill:#14F195
+```
+
+<div className="my-6 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+  <h3 className="text-lg font-bold text-yellow-400 mb-2">⚠️ Note on Current Implementation</h3>
+  <p className="text-gray-300">
+    In the current implementation, the backend directly calls the smart contract to update verification results. 
+    There is no Chainlink oracle or Ed25519 signature verification. This will be added in Phase 2 (Production-Ready).
+  </p>
+</div>
+
+## 📚 Current Technology Stack
+
+### Frontend Stack
+```json
+{
+  "framework": "React 18 with TypeScript",
+  "styling": "Tailwind CSS + Framer Motion",
+  "state": "Zustand + React Query",
+  "wallet": "@solana/wallet-adapter",
+  "ui": "Radix UI + Lucide Icons",
+  "build": "Vite + SWC",
+  "deployment": "Vercel"
+}
+```
+
+### Backend Stack
+```json
+{
+  "runtime": "Node.js 20 + Express.js",
+  "language": "TypeScript",
+  "database": "PostgreSQL 15 + Prisma ORM",
+  "cache": "Redis 7 + ioredis",
+  "storage": "IPFS (basic, no pinning service)",
+  "auth": "JWT + Wallet Signatures",
+  "websockets": "Socket.io",
+  "deployment": "Render"
+}
+```
+
+### Blockchain Stack
+```json
+{
+  "solana": {
+    "framework": "Anchor 0.29",
+    "language": "Rust",
+    "rpc": "Helius/QuickNode",
+    "deployment": "Devnet Only"
+  }
+}
+```
+
+### AI Stack
+```json
+{
+  "ai_service": "Arcanum.ai (Primary and Only)",
+  "ipfs": "Basic IPFS (no pinning service)",
+  "monitoring": "Basic logging"
+}
+```
+
+---
+
+## 🚀 Planned Architecture (Future Roadmap)
+
+The following sections describe features and integrations that are planned but not yet implemented. These are part of the product roadmap and will be developed in future phases.
+
+<div className="my-6 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+  <h3 className="text-lg font-bold text-purple-400 mb-2">🔮 Future Implementation</h3>
+  <p className="text-gray-300">
+    The architecture described below represents the planned full-featured system. 
+    Implementation timeline: Phase 2 (2-3 weeks), Phase 3 (3 weeks), Phase 4 (12 weeks).
+  </p>
+</div>
+
+### Planned Full System Architecture
+
+```mermaid
+graph TB
+    subgraph "User Interface Layer"
+        UI[React Frontend]
+        Wallet[Multi-Chain Wallet]
+        Dashboard[Cyberpunk Dashboard]
+    end
+    
+    subgraph "Application Layer"
+        API[Express Backend]
+        WS[WebSocket Server]
+        Auth[Auth Service]
+    end
+    
+    subgraph "Verification Layer - PLANNED"
+        AI[Arcanum.ai]
+        KYC[zkMe SDK - Planned]
+        Oracle[Chainlink Functions - Planned]
+        IPFS_FULL[IPFS + Pinata Pinning - Planned]
+    end
+    
+    subgraph "Blockchain Layer - PLANNED"
+        Solana[Solana Program - Mainnet]
+        Zeta[ZetaChain Gateway - Planned]
+        Somnia[Somnia Contract - Testnet]
+    end
+    
+    subgraph "Storage Layer"
+        IPFS[IPFS Network]
+        Pinata[Pinata Pinning - Planned]
+        DB[(PostgreSQL)]
+    end
+    
+    UI --> API
+    UI --> Wallet
+    Wallet --> Solana
+    Wallet --> Zeta
+    
+    API --> AI
+    API --> KYC
+    API --> Oracle
+    API --> IPFS_FULL
+    API --> DB
+    
+    Solana --> Zeta
+    Zeta --> Somnia
+    
+    AI --> Oracle
+    KYC --> Zeta
+    IPFS_FULL --> Pinata
+    
+    style AI fill:#FF9900
+    style KYC fill:#A855F7,stroke-dasharray: 5 5
+    style Solana fill:#14F195
+    style Zeta fill:#00D9FF,stroke-dasharray: 5 5
+    style Oracle fill:#375BD2,stroke-dasharray: 5 5
+```
+
+### Planned Component Responsibility Matrix
+
+| Component | Status | Primary Responsibility | Timeline |
+|-----------|--------|----------------------|----------|
+| **Chainlink Oracle** | 🔮 Planned | AI result authentication with Ed25519 signatures | Phase 2 (2-3 weeks) |
+| **zkMe SDK** | 🔮 Planned | Real zero-knowledge KYC integration | Phase 2 (2-3 weeks) |
+| **ZetaChain Gateway** | 🔮 Planned | Omnichain message routing | Phase 3 (3 weeks) |
+| **Somnia Contract** | 🧪 Testnet | High-speed settlement execution | Phase 3 (3 weeks) |
+| **Pinata/Web3.Storage** | 🔮 Planned | IPFS pinning service for reliability | Phase 2 (2-3 weeks) |
+| **AI Fallback Chain** | 🔮 Planned | OpenAI, Claude, Gemini as backups | Phase 2 (2-3 weeks) |
+
+## 🌉 ZetaChain Cross-Chain Integration (Planned)
+
+<div className="my-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+  <h3 className="text-lg font-bold text-red-400 mb-2">🚫 NOT YET IMPLEMENTED</h3>
+  <p className="text-gray-300">
+    ZetaChain integration is planned for Phase 3 (Omnichain Expansion). The code examples below are conceptual and not deployed.
+  </p>
+</div>
+
+ZetaChain will enable AetherLock to operate as a truly omnichain protocol, allowing escrows created on Solana to settle on Somnia, Sui, TON, or any connected blockchain.
+
+### Planned ZetaChain Universal App Pattern
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.20
+
+// NOTE: This is a PLANNED implementation, not currently deployed
 
 import "@zetachain/protocol-contracts/contracts/zevm/interfaces/UniversalContract.sol";
 import "@zetachain/protocol-contracts/contracts/zevm/interfaces/IGatewayZEVM.sol";
@@ -546,8 +821,7 @@ contract AetherLockZetaGateway is UniversalContract {
     }
 
     /// @notice Called when a cross-chain message is received
-    /// @param context Message context including source chain and sender
-    /// @param message Encoded message data
+    /// NOTE: onCall, onRevert, onAbort handlers are NOT implemented in current version
     function onCall(
         MessageContext calldata context,
         bytes calldata message
@@ -589,79 +863,7 @@ contract AetherLockZetaGateway is UniversalContract {
         return this.onCall.selector;
     }
 
-    /// @notice Called when a cross-chain call is reverted
-    /// @param context Revert context
-    /// @param message Original message that was reverted
-    function onRevert(
-        RevertContext calldata context,
-        bytes calldata message
-    ) external override {
-        require(msg.sender == address(gateway), "Unauthorized");
-        
-        // Decode escrow ID from message
-        (bytes32 escrowId, , , , ) = abi.decode(
-            message,
-            (bytes32, uint256, address, address, bytes32)
-        );
-        
-        // Update escrow status to reverted
-        CrossChainEscrow storage escrow = escrows[escrowId];
-        require(escrow.escrowId == escrowId, "Escrow not found");
-        
-        escrow.status = EscrowStatus.Reverted;
-        
-        // Notify source chain to refund
-        _notifySourceChainRefund(escrow.sourceChain, escrowId);
-        
-        emit CrossChainSettlement(escrowId, escrow.destinationChain, false);
-    }
-
-    /// @notice Called when a cross-chain call is aborted
-    /// @param escrowId The escrow that was aborted
-    function onAbort(bytes32 escrowId) external {
-        require(msg.sender == address(gateway), "Unauthorized");
-        
-        CrossChainEscrow storage escrow = escrows[escrowId];
-        require(escrow.escrowId == escrowId, "Escrow not found");
-        require(escrow.status == EscrowStatus.Pending, "Invalid status");
-        
-        escrow.status = EscrowStatus.Reverted;
-        
-        // Refund on source chain
-        _notifySourceChainRefund(escrow.sourceChain, escrowId);
-    }
-
-    /// @notice Settle escrow on destination chain after verification
-    /// @param escrowId The escrow to settle
-    /// @param verificationProof Proof from Chainlink oracle
-    function settleEscrow(
-        bytes32 escrowId,
-        bytes calldata verificationProof
-    ) external {
-        CrossChainEscrow storage escrow = escrows[escrowId];
-        require(escrow.status == EscrowStatus.Confirmed, "Invalid status");
-        
-        // Verify proof from Chainlink oracle
-        require(_verifyChainlinkProof(verificationProof), "Invalid proof");
-        
-        // Send settlement message to destination chain
-        bytes memory settlementMessage = abi.encode(
-            escrowId,
-            escrow.amount,
-            escrow.payee
-        );
-        
-        gateway.call(
-            escrow.destinationChain,
-            settlementMessage,
-            0 // No gas limit, use default
-        );
-        
-        escrow.status = EscrowStatus.Settled;
-        
-        emit CrossChainSettlement(escrowId, escrow.destinationChain, true);
-    }
-
+    // NOTE: onRevert and onAbort are planned but not implemented
     function _forwardToDestination(
         bytes32 escrowId,
         address destinationChain,
@@ -669,66 +871,36 @@ contract AetherLockZetaGateway is UniversalContract {
     ) internal {
         gateway.call(destinationChain, message, 0);
     }
-
-    function _notifySourceChainRefund(
-        address sourceChain,
-        bytes32 escrowId
-    ) internal {
-        bytes memory refundMessage = abi.encode(escrowId, true);
-        gateway.call(sourceChain, refundMessage, 0);
-    }
-
-    function _verifyChainlinkProof(
-        bytes calldata proof
-    ) internal view returns (bool) {
-        // Verify Ed25519 signature from Chainlink oracle
-        // Implementation depends on Chainlink Functions setup
-        return true; // Simplified for example
-    }
 }
 ```
 
-### Cross-Chain Message Flow
+<div className="my-4 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+  <h3 className="text-lg font-bold text-yellow-400 mb-2">⚠️ Implementation Note</h3>
+  <p className="text-gray-300">
+    The onRevert and onAbort callback handlers shown in earlier documentation are NOT implemented. 
+    These will be added in Phase 3 when ZetaChain integration is developed.
+  </p>
+</div>
 
-**onCall Flow (Successful Path)**
-1. Solana program emits cross-chain escrow creation event
-2. ZetaChain gateway receives message via `onCall`
-3. Gateway validates message format and sender
-4. Creates cross-chain escrow record on ZetaChain
-5. Forwards message to destination chain (e.g., Somnia)
-6. Destination chain confirms receipt
-7. Returns success callback to Solana
+## 🚀 Somnia Integration (Testnet Only)
 
-**onRevert Flow (Failure Path)**
-1. Destination chain rejects message (insufficient gas, invalid state, etc.)
-2. ZetaChain gateway receives revert notification
-3. Gateway calls `onRevert` with original message
-4. Updates escrow status to `Reverted`
-5. Sends refund notification to Solana
-6. Solana program refunds client
-
-**onAbort Flow (Timeout Path)**
-1. Cross-chain message times out (no response from destination)
-2. ZetaChain gateway calls `onAbort`
-3. Updates escrow status to `Reverted`
-4. Triggers automatic refund on source chain
-
-### Integration Benefits
-
-- **Omnichain Flexibility**: Escrows can settle on any connected blockchain
-- **Atomic Guarantees**: Either full settlement or full refund, no partial states
-- **Gas Optimization**: Pay gas only on source chain, ZetaChain handles routing
-- **Failure Recovery**: Automatic revert and refund on any failure
-
-## 🚀 Somnia Integration (Optional High-Speed Settlement)
+<div className="my-4 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+  <h3 className="text-lg font-bold text-blue-400 mb-2">🧪 TESTNET ONLY</h3>
+  <p className="text-gray-300">
+    Somnia integration is deployed on testnet for testing purposes. It is not connected to the production Solana Devnet deployment. 
+    Full integration planned for Phase 3.
+  </p>
+</div>
 
 Somnia provides high-throughput, low-latency settlement for AetherLock escrows, along with on-chain reputation tracking and task rewards.
 
-### Somnia Settlement Contract
+### Somnia Settlement Contract (Testnet)
 
 ```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity 0.8.20
+
+// NOTE: Deployed on Somnia TESTNET only, not integrated with production
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -771,10 +943,6 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
     );
 
     /// @notice Settle escrow and update reputation
-    /// @param escrowId Unique escrow identifier
-    /// @param freelancer Address receiving payment
-    /// @param amount Payment amount
-    /// @param confidenceScore AI verification confidence (0-100)
     function settleEscrow(
         bytes32 escrowId,
         address freelancer,
@@ -807,7 +975,6 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
         emit SettlementExecuted(escrowId, freelancer, totalPayout, block.timestamp);
     }
 
-    /// @notice Update user reputation based on task completion
     function _updateReputation(
         address user,
         uint8 confidenceScore,
@@ -815,18 +982,14 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
     ) internal {
         UserReputation storage rep = reputations[user];
         
-        // Update task counts
         rep.totalTasksCompleted += 1;
         rep.totalEarnings += earnings;
         
-        // Update average confidence score (weighted average)
         uint256 totalTasks = rep.totalTasksCompleted + rep.totalTasksRejected;
         rep.averageConfidenceScore = (
             (rep.averageConfidenceScore * (totalTasks - 1)) + confidenceScore
         ) / totalTasks;
         
-        // Calculate reputation score (0-1000)
-        // Formula: (completion_rate * 500) + (avg_confidence * 5)
         uint256 completionRate = (rep.totalTasksCompleted * 100) / totalTasks;
         rep.reputationScore = (completionRate * 5) + (rep.averageConfidenceScore * 5);
         
@@ -835,27 +998,10 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
         emit ReputationUpdated(user, rep.reputationScore, rep.totalTasksCompleted);
     }
 
-    /// @notice Record rejected task for reputation
-    function recordRejection(address user) external onlyOwner {
-        UserReputation storage rep = reputations[user];
-        rep.totalTasksRejected += 1;
-        
-        // Recalculate reputation score
-        uint256 totalTasks = rep.totalTasksCompleted + rep.totalTasksRejected;
-        uint256 completionRate = (rep.totalTasksCompleted * 100) / totalTasks;
-        rep.reputationScore = (completionRate * 5) + (rep.averageConfidenceScore * 5);
-        
-        rep.lastUpdated = block.timestamp;
-        
-        emit ReputationUpdated(user, rep.reputationScore, rep.totalTasksCompleted);
-    }
-
-    /// @notice Fund the reward pool
     function fundRewardPool() external payable {
         rewardPool += msg.value;
     }
 
-    /// @notice Get user reputation details
     function getReputation(address user) external view returns (
         uint256 tasksCompleted,
         uint256 tasksRejected,
@@ -875,7 +1021,7 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
 }
 ```
 
-### Somnia Integration Benefits
+### Somnia Integration Benefits (When Fully Integrated)
 
 **High-Speed Settlement**
 - Sub-second transaction finality
@@ -892,15 +1038,9 @@ contract AetherLockSomniaSettlement is Ownable, ReentrancyGuard {
 - Funded by platform reward pool
 - Incentivizes quality work
 
-**Why Somnia?**
-- **Speed**: 400,000+ TPS for instant settlements
-- **Cost**: Minimal gas fees compared to Ethereum L1
-- **Compatibility**: EVM-compatible, easy integration
-- **Scalability**: Handles high escrow volume without congestion
-
 ## 🔗 Integration Point Documentation
 
-### Frontend ↔ Backend Integration
+### Frontend ↔ Backend Integration (Current)
 ```typescript
 // WebSocket connection for real-time updates
 const wsConnection = new WebSocket('wss://api.aetherlock.xyz/ws');
@@ -922,7 +1062,7 @@ class AetherLockAPI {
 }
 ```
 
-### Backend ↔ Blockchain Integration
+### Backend ↔ Blockchain Integration (Current)
 ```typescript
 // Solana program interaction
 class SolanaEscrowClient {
@@ -944,37 +1084,11 @@ class SolanaEscrowClient {
     return tx;
   }
 }
-
-// ZetaChain cross-chain messaging
-class ZetaChainClient {
-  async sendCrossChainMessage(
-    destinationChain: string,
-    message: CrossChainMessage
-  ): Promise<string> {
-    const contract = new ethers.Contract(
-      ZETACHAIN_GATEWAY_ADDRESS,
-      GATEWAY_ABI,
-      this.signer
-    );
-    
-    const tx = await contract.sendMessage(
-      destinationChain,
-      ethers.utils.defaultAbiCoder.encode(
-        ['address', 'uint256', 'bytes32'],
-        [message.recipient, message.amount, message.dataHash]
-      )
-    );
-    
-    return tx.hash;
-  }
-}
 ```
 
-### AI ↔ Oracle Integration
+### AI Verification Service (Current)
 ```typescript
-// Arcanum.ai AI verification (production implementation)
-// Note: AWS Bedrock was initially explored but Arcanum.ai was chosen for
-// specialized task verification with better performance and simpler integration
+// Arcanum.ai AI verification (current implementation)
 class AIVerificationService {
   async verifyEvidence(evidenceHash: string): Promise<VerificationResult> {
     const arcanum = new ArcanumClient({
@@ -985,7 +1099,7 @@ class AIVerificationService {
     // Fetch evidence from IPFS
     const evidence = await this.ipfs.get(evidenceHash);
     
-    // Analyze with Arcanum.ai specialized task verification
+    // Analyze with Arcanum.ai
     const response = await arcanum.verify({
       evidenceHash,
       evidence,
@@ -997,575 +1111,40 @@ class AIVerificationService {
     
     const result = response.analysis;
     
-    // Sign result with Ed25519
-    const signature = await this.signResult(result);
-    
-    // Submit to Chainlink Oracle
-    await this.chainlinkOracle.submitVerification(evidenceHash, result, signature);
+    // NOTE: In current implementation, backend directly updates smart contract
+    // No Chainlink oracle or Ed25519 signature verification
+    await this.updateSmartContract(evidenceHash, result);
     
     return result;
   }
 }
 ```
 
-## 📚 Technology Stack Breakdown
+<div className="my-6 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+  <h3 className="text-lg font-bold text-yellow-400 mb-2">⚠️ Planned AI Integration (Phase 2)</h3>
+  <p className="text-gray-300 mb-2">
+    The following features are planned for Phase 2 (Production-Ready):
+  </p>
+  <ul className="text-gray-300 space-y-1 ml-4">
+    <li>• Ed25519 signature generation for AI results</li>
+    <li>• Chainlink oracle integration for on-chain verification</li>
+    <li>• AI fallback chain (OpenAI GPT-4, Anthropic Claude, Google Gemini)</li>
+    <li>• IPFS pinning service (Pinata or Web3.Storage)</li>
+  </ul>
+</div>
 
-### Frontend Stack
-```json
-{
-  "framework": "React 18 with TypeScript",
-  "styling": "Tailwind CSS + Framer Motion",
-  "state": "Zustand + React Query",
-  "wallet": "@solana/wallet-adapter, @mysten/wallet-adapter",
-  "ui": "Radix UI + Lucide Icons",
-  "build": "Vite + SWC",
-  "deployment": "Vercel Edge Functions"
-}
-```
 
-### Backend Stack
-```json
-{
-  "runtime": "Node.js 20 + Express.js",
-  "language": "TypeScript",
-  "database": "PostgreSQL 15 + Prisma ORM",
-  "cache": "Redis 7 + ioredis",
-  "storage": "IPFS + Pinata/Web3.Storage",
-  "auth": "JWT + Wallet Signatures",
-  "websockets": "Socket.io",
-  "deployment": "Docker + AWS ECS/Render"
-}
-```
+## 📋 Current vs Planned Sequence Diagrams
 
-### Blockchain Stack
-```json
-{
-  "solana": {
-    "framework": "Anchor 0.29",
-    "language": "Rust",
-    "rpc": "Helius/QuickNode",
-    "deployment": "Devnet/Mainnet-beta"
-  },
-  "zetachain": {
-    "framework": "Hardhat + Ethers.js",
-    "language": "Solidity 0.8.20",
-    "network": "ZetaChain Testnet/Mainnet",
-    "gateway": "Universal App Pattern"
-  },
-  "somnia": {
-    "framework": "Hardhat + Ethers.js",
-    "language": "Solidity 0.8.20",
-    "network": "Somnia Testnet/Mainnet",
-    "features": "High-throughput settlement"
-  }
-}
-```
-
-### AI & Oracle Stack
-```json
-{
-  "ai_service": "Arcanum.ai (Primary)",
-  "fallback_ai": "OpenAI GPT-4, Anthropic Claude, Google Gemini",
-  "oracle": "Chainlink Functions",
-  "signatures": "Ed25519 cryptographic proofs",
-  "ipfs": "Pinata, Web3.Storage, Lighthouse",
-  "monitoring": "AWS CloudWatch, Grafana"
-}
-```
-
-### DevOps & Infrastructure
-```json
-{
-  "ci_cd": "GitHub Actions",
-  "containers": "Docker + Docker Compose",
-  "orchestration": "AWS ECS/Kubernetes",
-  "monitoring": "Grafana + Prometheus",
-  "logging": "Winston + AWS CloudWatch",
-  "security": "AWS Secrets Manager, Vault",
-  "cdn": "Cloudflare",
-  "domains": "Cloudflare DNS"
-}
-```
-
-## 🔄 Complete Escrow Lifecycle
-
-```mermaid
-stateDiagram-v2
-    [*] --> WalletConnection: User Connects
-    WalletConnection --> KYCVerification: Wallet Connected
-    KYCVerification --> EscrowCreation: KYC Approved
-    
-    EscrowCreation --> FundDeposit: Escrow Initialized
-    FundDeposit --> WorkInProgress: Funds Locked
-    
-    WorkInProgress --> EvidenceSubmission: Work Completed
-    EvidenceSubmission --> AIVerification: Evidence Uploaded
-    
-    AIVerification --> HighConfidence: >90% Confidence
-    AIVerification --> MediumConfidence: 50-90% Confidence
-    AIVerification --> LowConfidence: <50% Confidence
-    
-    HighConfidence --> AutoRelease: Approved
-    MediumConfidence --> HumanReview: Needs Review
-    LowConfidence --> Rejected: Auto-Reject
-    
-    HumanReview --> ManualApproval: Arbitrator Approves
-    HumanReview --> ManualRejection: Arbitrator Rejects
-    
-    ManualApproval --> AutoRelease
-    AutoRelease --> FundsReleased: 90% to Freelancer
-    AutoRelease --> FeeCollection: 10% to Treasury
-    
-    ManualRejection --> Refund: Return to Client
-    Rejected --> Resubmission: Allow Retry
-    Resubmission --> EvidenceSubmission
-    
-    FundsReleased --> [*]
-    FeeCollection --> [*]
-    Refund --> [*]
-```
-
-## 🧠 AI Verification Pipeline
-
-```mermaid
-flowchart LR
-    subgraph "Evidence Collection"
-        A[User Uploads Files]
-        B[Frontend Validation]
-        C[IPFS Upload]
-    end
-    
-    subgraph "AI Processing"
-        D[Fetch from IPFS]
-        E[Arcanum.ai]
-        F[Semantic Analysis]
-        G[Quality Scoring]
-    end
-    
-    subgraph "Verification Logic"
-        H{Confidence Score}
-        I[>90%: Auto-Approve]
-        J[50-90%: Human Review]
-        K[<50%: Auto-Reject]
-    end
-    
-    subgraph "On-Chain Settlement"
-        L[Update Escrow State]
-        M[Release Funds]
-        N[Collect 10% Fee]
-    end
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-    
-    H -->|High| I
-    H -->|Medium| J
-    H -->|Low| K
-    
-    I --> L
-    J --> L
-    K --> L
-    
-    L --> M
-    M --> N
-    
-    style E fill:#FF9900
-    style H fill:#A855F7
-    style M fill:#14F195
-```
-
-## 🔐 Zero-Knowledge KYC Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Frontend
-    participant zkMe
-    participant ZetaChain
-    participant Solana
-    
-    User->>Frontend: Request KYC
-    Frontend->>zkMe: Initialize Session
-    zkMe-->>Frontend: Widget URL
-    
-    Frontend->>User: Display zkMe Widget
-    User->>zkMe: Submit Documents
-    zkMe->>zkMe: Generate ZK Proof
-    
-    zkMe-->>Frontend: Proof + Credential Hash
-    Frontend->>ZetaChain: Store Credential
-    ZetaChain-->>Frontend: Credential ID
-    
-    Frontend->>Solana: Link Credential to Wallet
-    Solana-->>Frontend: Verification Complete
-    
-    Note over User,Solana: No PII stored on-chain
-    Note over zkMe,ZetaChain: Only cryptographic proofs
-```
-
-## 🌐 Omnichain Settlement Architecture
-
-```mermaid
-graph TB
-    subgraph "Source Chain: Solana"
-        S1[User Creates Escrow]
-        S2[Lock Funds + 10% Fee]
-        S3[Emit xCall Event]
-    end
-    
-    subgraph "Orchestration: ZetaChain"
-        Z1[Receive xCall]
-        Z2[Route to Target Chain]
-        Z3[Handle Callbacks]
-        Z4[Finality Proof]
-    end
-    
-    subgraph "Target Chains"
-        T1[Somnia Settlement]
-        T2[Sui Settlement]
-        T3[TON Settlement]
-    end
-    
-    subgraph "Settlement Execution"
-        E1[Verify Conditions]
-        E2[Execute Transfer]
-        E3[Emit Confirmation]
-    end
-    
-    S1 --> S2
-    S2 --> S3
-    S3 --> Z1
-    
-    Z1 --> Z2
-    Z2 --> T1
-    Z2 --> T2
-    Z2 --> T3
-    
-    T1 --> E1
-    T2 --> E1
-    T3 --> E1
-    
-    E1 --> E2
-    E2 --> E3
-    E3 --> Z3
-    Z3 --> Z4
-    Z4 --> S1
-    
-    style Z2 fill:#00D9FF
-    style E2 fill:#14F195
-```
-
-## 🌊 Comprehensive Data Flow Diagrams
-
-### Primary Escrow Data Flow
-```mermaid
-flowchart TD
-    subgraph "User Layer"
-        U1[Client Browser]
-        U2[Freelancer Browser]
-        U3[Multi-Chain Wallets]
-    end
-    
-    subgraph "Application Layer"
-        A1[React Frontend]
-        A2[Express API Server]
-        A3[WebSocket Server]
-        A4[Event Processor]
-    end
-    
-    subgraph "Verification Layer"
-        V1[zkMe KYC Service]
-        V2[Arcanum.ai]
-        V3[Chainlink Oracle]
-        V4[IPFS Storage]
-    end
-    
-    subgraph "Blockchain Layer"
-        B1[Solana Program]
-        B2[ZetaChain Gateway]
-        B3[Somnia Settlement]
-        B4[Event Logs]
-    end
-    
-    subgraph "Data Layer"
-        D1[(PostgreSQL)]
-        D2[Redis Cache]
-        D3[IPFS Network]
-        D4[Monitoring DB]
-    end
-    
-    U1 --> A1
-    U2 --> A1
-    U3 --> B1
-    
-    A1 <--> A2
-    A1 <--> A3
-    A2 --> A4
-    
-    A2 <--> V1
-    A2 <--> V2
-    A2 <--> V4
-    V2 --> V3
-    
-    A2 --> B1
-    B1 <--> B2
-    B2 <--> B3
-    B1 --> B4
-    
-    A2 <--> D1
-    A2 <--> D2
-    V4 <--> D3
-    A4 --> D4
-    
-    B4 --> A4
-    A4 --> A3
-    A3 --> A1
-    
-    style V2 fill:#FF9900
-    style B2 fill:#00D9FF
-    style D1 fill:#336791
-```
-
-### Cross-Chain Message Flow
-```mermaid
-sequenceDiagram
-    participant Solana as Solana Program
-    participant ZetaGW as ZetaChain Gateway
-    participant Somnia as Somnia Contract
-    participant Oracle as Chainlink Oracle
-    participant AI as Arcanum.ai
-    
-    Note over Solana,AI: Cross-Chain Escrow Creation
-    Solana->>ZetaGW: xCall(createEscrow, destinationChain, data)
-    ZetaGW->>ZetaGW: Validate message format
-    ZetaGW->>Somnia: onCall(sourceChain, message)
-    Somnia->>Somnia: Initialize escrow state
-    Somnia-->>ZetaGW: Confirmation event
-    ZetaGW-->>Solana: onCallback(success)
-    
-    Note over Solana,AI: AI Verification Process
-    Solana->>Oracle: Request verification(evidenceHash)
-    Oracle->>AI: Analyze evidence
-    AI-->>Oracle: Verification result + signature
-    Oracle->>ZetaGW: xCall(updateVerification, result)
-    ZetaGW->>Somnia: onCall(verificationUpdate)
-    Somnia->>Somnia: Update escrow status
-    
-    Note over Solana,AI: Fund Settlement
-    Somnia->>ZetaGW: xCall(releaseFunds, amount, recipient)
-    ZetaGW->>Solana: onCall(fundRelease)
-    Solana->>Solana: Transfer funds + collect fee
-    Solana-->>ZetaGW: Settlement confirmation
-    ZetaGW-->>Somnia: onCallback(completed)
-```
-
-## 💾 Data Flow Architecture
-
-```mermaid
-flowchart TD
-    subgraph "Frontend State"
-        A[React Context]
-        B[Wallet State]
-        C[Escrow State]
-    end
-    
-    subgraph "Backend Services"
-        D[REST API]
-        E[WebSocket Server]
-        F[Event Listeners]
-    end
-    
-    subgraph "Data Storage"
-        G[(PostgreSQL)]
-        H[Redis Cache]
-        I[IPFS]
-    end
-    
-    subgraph "Blockchain State"
-        J[Solana Accounts]
-        K[ZetaChain State]
-        L[Event Logs]
-    end
-    
-    A <--> D
-    B <--> J
-    C <--> D
-    
-    D <--> G
-    D <--> H
-    D <--> I
-    
-    E <--> F
-    F <--> L
-    L <--> J
-    L <--> K
-    
-    style G fill:#336791
-    style I fill:#65C2CB
-    style J fill:#14F195
-```
-
-## 🔒 Security Architecture
-
-```mermaid
-graph TB
-    subgraph "Authentication Layer"
-        A1[Wallet Signature]
-        A2[JWT Tokens]
-        A3[Rate Limiting]
-    end
-    
-    subgraph "Verification Layer"
-        V1[zkMe KYC]
-        V2[Ed25519 Signatures]
-        V3[Chainlink Proofs]
-    end
-    
-    subgraph "Smart Contract Security"
-        SC1[PDA Validation]
-        SC2[Signer Checks]
-        SC3[Reentrancy Guards]
-        SC4[Access Control]
-    end
-    
-    subgraph "Data Security"
-        D1[Encrypted Storage]
-        D2[IPFS Content Addressing]
-        D3[Zero-Knowledge Proofs]
-    end
-    
-    A1 --> V1
-    A2 --> V2
-    A3 --> V3
-    
-    V1 --> SC1
-    V2 --> SC2
-    V3 --> SC3
-    
-    SC1 --> D1
-    SC2 --> D2
-    SC3 --> D3
-    SC4 --> D1
-    
-    style V1 fill:#A855F7
-    style SC2 fill:#14F195
-    style D3 fill:#A855F7
-```
-
-## 📊 Performance Optimization
-
-```mermaid
-graph LR
-    subgraph "Frontend Optimization"
-        F1[Code Splitting]
-        F2[Lazy Loading]
-        F3[CDN Caching]
-    end
-    
-    subgraph "Backend Optimization"
-        B1[Redis Caching]
-        B2[Connection Pooling]
-        B3[Query Optimization]
-    end
-    
-    subgraph "Blockchain Optimization"
-        BC1[Batch Transactions]
-        BC2[PDA Caching]
-        BC3[Event Indexing]
-    end
-    
-    subgraph "AI Optimization"
-        AI1[Prompt Caching]
-        AI2[Model Selection]
-        AI3[Parallel Processing]
-    end
-    
-    F1 --> B1
-    F2 --> B2
-    F3 --> B3
-    
-    B1 --> BC1
-    B2 --> BC2
-    B3 --> BC3
-    
-    BC1 --> AI1
-    BC2 --> AI2
-    BC3 --> AI3
-    
-    style B1 fill:#DC382D
-    style BC2 fill:#14F195
-    style AI2 fill:#FF9900
-```
-
-## 🎯 Proof of Task Verification (PoTv) Engine
-
-```mermaid
-flowchart TB
-    subgraph "Input Layer"
-        I1[Task Requirements]
-        I2[Submitted Evidence]
-        I3[Historical Data]
-    end
-    
-    subgraph "AI Analysis"
-        A1[Semantic Matching]
-        A2[Quality Assessment]
-        A3[Anomaly Detection]
-        A4[Confidence Scoring]
-    end
-    
-    subgraph "Consensus Engine"
-        C1{AI Score}
-        C2{zkMe Status}
-        C3{Reputation}
-        C4[Final Verdict]
-    end
-    
-    subgraph "Output Layer"
-        O1[Approved: Release Funds]
-        O2[Review: Human Arbitrator]
-        O3[Rejected: Refund Client]
-    end
-    
-    I1 --> A1
-    I2 --> A2
-    I3 --> A3
-    
-    A1 --> A4
-    A2 --> A4
-    A3 --> A4
-    
-    A4 --> C1
-    C1 --> C2
-    C2 --> C3
-    C3 --> C4
-    
-    C4 -->|>90%| O1
-    C4 -->|50-90%| O2
-    C4 -->|<50%| O3
-    
-    style A4 fill:#FF9900
-    style C4 fill:#A855F7
-    style O1 fill:#14F195
-```
-
-## 📋 Detailed Sequence Diagrams
-
-### Escrow Creation Flow
+### Current Escrow Creation Flow (Devnet)
 
 ```mermaid
 sequenceDiagram
     participant Client
     participant Frontend
     participant Wallet
-    participant Solana
+    participant Solana as Solana Devnet
     participant Backend
-    participant ZetaChain
     
     Client->>Frontend: Click "Create Escrow"
     Frontend->>Client: Show escrow form
@@ -1587,66 +1166,62 @@ sequenceDiagram
     Backend->>Backend: Store escrow metadata in PostgreSQL
     Backend-->>Frontend: Escrow record created
     
-    Solana->>Backend: Event: EscrowCreated
-    Backend->>ZetaChain: xCall(createEscrow, destinationChain, data)
-    ZetaChain->>ZetaChain: Route cross-chain message
-    ZetaChain-->>Backend: Message sent
-    
     Frontend->>Client: Show success + escrow ID
     Frontend->>Frontend: Navigate to escrow details
 ```
 
-### Task Submission Flow
-
-```mermaid
-sequenceDiagram
-    participant Freelancer
-    participant Frontend
-    participant IPFS
-    participant Wallet
-    participant Solana
-    participant Backend
-    
-    Freelancer->>Frontend: Navigate to escrow
-    Frontend->>Frontend: Verify freelancer is payee
-    Freelancer->>Frontend: Upload evidence files
-    
-    Frontend->>Frontend: Validate file types/sizes
-    Frontend->>IPFS: Upload files
-    IPFS->>IPFS: Generate content hash
-    IPFS-->>Frontend: Evidence hash (CID)
-    
-    Frontend->>Wallet: Request signature for submitEvidence
-    Wallet->>Freelancer: Approve transaction?
-    Freelancer->>Wallet: Approve
-    
-    Wallet->>Solana: submitEvidence(escrowId, evidenceHash)
-    Solana->>Solana: Verify submitter is payee
-    Solana->>Solana: Update escrow.evidence_hash
-    Solana->>Solana: Set status = EvidenceSubmitted
-    Solana->>Solana: Emit EvidenceSubmittedEvent
-    Solana-->>Wallet: Transaction signature
-    
-    Wallet-->>Frontend: Success
-    Frontend->>Backend: POST /evidence (metadata)
-    Backend->>Backend: Store evidence metadata
-    Backend-->>Frontend: Evidence recorded
-    
-    Solana->>Backend: Event: EvidenceSubmitted
-    Backend->>Backend: Queue AI verification job
-    
-    Frontend->>Freelancer: Show "Evidence submitted, verification in progress"
-```
-
-### AI Verification Flow
+### Current AI Verification Flow (Devnet)
 
 ```mermaid
 sequenceDiagram
     participant Backend
     participant IPFS
     participant Arcanum
-    participant Chainlink
-    participant Solana
+    participant Solana as Solana Devnet
+    participant Frontend
+    
+    Backend->>Backend: Dequeue verification job
+    Backend->>IPFS: Fetch evidence by hash
+    IPFS-->>Backend: Evidence files
+    
+    Backend->>IPFS: Fetch task requirements
+    IPFS-->>Backend: Requirements document
+    
+    Backend->>Arcanum: POST /verify (evidence, requirements)
+    Arcanum->>Arcanum: Semantic analysis
+    Arcanum->>Arcanum: Quality assessment
+    Arcanum->>Arcanum: Generate confidence score
+    Arcanum-->>Backend: VerificationResult
+    
+    Note over Backend,Solana: No Chainlink oracle in current implementation
+    Backend->>Solana: updateVerification(escrowId, result, confidence)
+    Solana->>Solana: Update escrow.verification_result
+    Solana->>Solana: Update escrow.confidence_score
+    Solana->>Solana: Set status = Verified
+    Solana->>Solana: Emit VerificationCompletedEvent
+    Solana-->>Backend: Success
+    
+    Backend->>Backend: Update database
+    Backend->>Frontend: WebSocket: Verification complete
+    Frontend->>Frontend: Show verification result to users
+```
+
+### Planned AI Verification Flow with Oracle (Phase 2)
+
+<div className="my-4 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+  <h3 className="text-lg font-bold text-purple-400 mb-2">🔮 Planned for Phase 2</h3>
+  <p className="text-gray-300">
+    This flow shows how verification will work with Chainlink oracle integration and Ed25519 signatures.
+  </p>
+</div>
+
+```mermaid
+sequenceDiagram
+    participant Backend
+    participant IPFS
+    participant Arcanum
+    participant Chainlink as Chainlink Oracle (Planned)
+    participant Solana as Solana Mainnet (Planned)
     participant Frontend
     
     Backend->>Backend: Dequeue verification job
@@ -1684,176 +1259,137 @@ sequenceDiagram
     Frontend->>Frontend: Show verification result to users
 ```
 
-### Cross-Chain Release Flow
+## 🌐 Planned Omnichain Architecture
 
-```mermaid
-sequenceDiagram
-    participant Solana
-    participant ZetaChain
-    participant Somnia
-    participant Freelancer
-    participant Treasury
-    
-    Note over Solana: Verification approved (>90% confidence)
-    
-    Solana->>Solana: releaseFunds(escrowId)
-    Solana->>Solana: Verify status = Verified
-    Solana->>Solana: Verify result = Approved
-    Solana->>Solana: Calculate: 90% to freelancer, 10% to treasury
-    
-    Solana->>ZetaChain: xCall(releaseFunds, destinationChain, data)
-    ZetaChain->>ZetaChain: Validate message
-    ZetaChain->>ZetaChain: Route to destination
-    
-    ZetaChain->>Somnia: onCall(sourceChain, releaseMessage)
-    Somnia->>Somnia: Validate escrow exists
-    Somnia->>Somnia: Update reputation score
-    Somnia->>Somnia: Calculate bonus (if confidence >95%)
-    
-    Somnia->>Freelancer: Transfer payment + bonus
-    Freelancer->>Freelancer: Receive funds
-    
-    Somnia->>Somnia: Emit SettlementExecuted
-    Somnia-->>ZetaChain: Settlement confirmed
-    
-    ZetaChain-->>Solana: onCallback(success)
-    Solana->>Solana: Set status = Released
-    Solana->>Solana: Emit FundsReleasedEvent
-    
-    Solana->>Treasury: Transfer 10% platform fee
-    Treasury->>Treasury: Receive fee
-    
-    Note over Solana,Treasury: Cross-chain settlement complete
-```
+<div className="my-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+  <h3 className="text-lg font-bold text-red-400 mb-2">🚫 NOT YET IMPLEMENTED</h3>
+  <p className="text-gray-300">
+    Cross-chain functionality via ZetaChain is planned for Phase 3. The diagrams below are conceptual.
+  </p>
+</div>
 
-## 🔄 Event-Driven Architecture
-
-```mermaid
-sequenceDiagram
-    participant Solana
-    participant EventListener
-    participant Backend
-    participant AI
-    participant Frontend
-    
-    Solana->>EventListener: EscrowCreated Event
-    EventListener->>Backend: Process Event
-    Backend->>Frontend: WebSocket Update
-    
-    Solana->>EventListener: EvidenceSubmitted Event
-    EventListener->>Backend: Trigger Verification
-    Backend->>AI: Analyze Evidence
-    AI-->>Backend: Verification Result
-    Backend->>Solana: Update Escrow State
-    Solana->>EventListener: EscrowVerified Event
-    EventListener->>Frontend: WebSocket Update
-    
-    Solana->>EventListener: FundsReleased Event
-    EventListener->>Backend: Record Transaction
-    Backend->>Frontend: WebSocket Update
-    Frontend->>Frontend: Show Success UI
-```
-
-## 📈 Scalability Architecture
+### Planned Omnichain Settlement Architecture
 
 ```mermaid
 graph TB
-    subgraph "Load Balancing"
-        LB[Nginx Load Balancer]
-        API1[API Server 1]
-        API2[API Server 2]
-        API3[API Server 3]
+    subgraph "Source Chain: Solana"
+        S1[User Creates Escrow]
+        S2[Lock Funds + 10% Fee]
+        S3[Emit xCall Event]
     end
     
-    subgraph "Horizontal Scaling"
-        W1[Worker 1: AI Processing]
-        W2[Worker 2: Event Listening]
-        W3[Worker 3: Notifications]
+    subgraph "Orchestration: ZetaChain - PLANNED"
+        Z1[Receive xCall]
+        Z2[Route to Target Chain]
+        Z3[Handle Callbacks]
+        Z4[Finality Proof]
     end
     
-    subgraph "Database Scaling"
-        Master[(Primary DB)]
-        Replica1[(Read Replica 1)]
-        Replica2[(Read Replica 2)]
+    subgraph "Target Chains - PLANNED"
+        T1[Somnia Settlement]
+        T2[Sui Settlement]
+        T3[TON Settlement]
     end
     
-    subgraph "Caching Layer"
-        Redis1[Redis Master]
-        Redis2[Redis Replica]
+    subgraph "Settlement Execution"
+        E1[Verify Conditions]
+        E2[Execute Transfer]
+        E3[Emit Confirmation]
     end
-    
-    LB --> API1
-    LB --> API2
-    LB --> API3
-    
-    API1 --> W1
-    API2 --> W2
-    API3 --> W3
-    
-    API1 --> Master
-    API2 --> Replica1
-    API3 --> Replica2
-    
-    Master --> Replica1
-    Master --> Replica2
-    
-    API1 --> Redis1
-    Redis1 --> Redis2
-    
-    style LB fill:#269539
-    style Master fill:#336791
-    style Redis1 fill:#DC382D
-```
-
-## 🛠️ Development & Deployment Pipeline
-
-```mermaid
-flowchart LR
-    subgraph "Development"
-        D1[Local Development]
-        D2[Unit Tests]
-        D3[Integration Tests]
-    end
-    
-    subgraph "CI/CD"
-        C1[GitHub Actions]
-        C2[Build & Test]
-        C3[Security Scan]
-    end
-    
-    subgraph "Staging"
-        S1[Devnet Deployment]
-        S2[E2E Testing]
-        S3[Performance Testing]
-    end
-    
-    subgraph "Production"
-        P1[Mainnet Deployment]
-        P2[Monitoring]
-        P3[Analytics]
-    end
-    
-    D1 --> D2
-    D2 --> D3
-    D3 --> C1
-    
-    C1 --> C2
-    C2 --> C3
-    C3 --> S1
     
     S1 --> S2
     S2 --> S3
-    S3 --> P1
+    S3 -.->|Planned| Z1
     
-    P1 --> P2
-    P2 --> P3
+    Z1 -.-> Z2
+    Z2 -.-> T1
+    Z2 -.-> T2
+    Z2 -.-> T3
     
-    style C2 fill:#2088FF
-    style S2 fill:#FFA500
-    style P1 fill:#14F195
+    T1 -.-> E1
+    T2 -.-> E1
+    T3 -.-> E1
+    
+    E1 -.-> E2
+    E2 -.-> E3
+    E3 -.-> Z3
+    Z3 -.-> Z4
+    Z4 -.-> S1
+    
+    style Z2 fill:#00D9FF,stroke-dasharray: 5 5
+    style E2 fill:#14F195,stroke-dasharray: 5 5
 ```
 
-## 💰 Fee Distribution Architecture
+## 🔒 Security Architecture
+
+### Current Security Implementation
+
+```mermaid
+graph TB
+    subgraph "Authentication Layer - Current"
+        A1[Wallet Signature]
+        A2[JWT Tokens]
+        A3[Rate Limiting]
+    end
+    
+    subgraph "Smart Contract Security - Current"
+        SC1[PDA Validation]
+        SC2[Signer Checks]
+        SC3[Reentrancy Guards]
+        SC4[Access Control]
+    end
+    
+    subgraph "Data Security - Current"
+        D1[Encrypted Storage]
+        D2[IPFS Content Addressing]
+    end
+    
+    A1 --> SC1
+    A2 --> SC2
+    A3 --> SC4
+    
+    SC1 --> D1
+    SC2 --> D2
+    SC4 --> D1
+    
+    style SC2 fill:#14F195
+    style D2 fill:#65C2CB
+```
+
+### Planned Security Enhancements (Phase 2)
+
+<div className="my-4 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+  <h3 className="text-lg font-bold text-purple-400 mb-2">🔮 Planned Security Features</h3>
+  <ul className="text-gray-300 space-y-1 ml-4">
+    <li>• zkMe zero-knowledge KYC integration</li>
+    <li>• Ed25519 signature verification on-chain</li>
+    <li>• Chainlink oracle authentication</li>
+    <li>• Enhanced IPFS pinning for data availability</li>
+  </ul>
+</div>
+
+## 📊 Performance Metrics
+
+### Current Performance (Devnet)
+
+| Metric | Current Value | Notes |
+|--------|--------------|-------|
+| **D-PoTV Verification Time** | 2.1s average | Arcanum.ai only |
+| **Solana Transaction Finality** | ~400ms | Devnet performance |
+| **IPFS Upload Time** | 1-3s | No pinning service |
+| **API Response Time** | <200ms | 95th percentile |
+| **WebSocket Latency** | <100ms | Real-time updates |
+
+### Planned Performance Targets (Production)
+
+| Metric | Target Value | Timeline |
+|--------|-------------|----------|
+| **D-PoTV with Oracle** | <3s | Phase 2 |
+| **Cross-Chain Settlement** | <10s | Phase 3 |
+| **IPFS with Pinning** | <2s | Phase 2 |
+| **Mainnet Transaction Finality** | ~400ms | Phase 2 |
+
+## 💰 Fee Distribution Architecture (Current)
 
 ```mermaid
 graph TD
@@ -1895,7 +1431,93 @@ graph TD
     style D2 fill:#A855F7
 ```
 
+## 🛠️ Development & Deployment Pipeline
+
+### Current Deployment (Devnet)
+
+```mermaid
+flowchart LR
+    subgraph "Development"
+        D1[Local Development]
+        D2[Unit Tests]
+        D3[Integration Tests]
+    end
+    
+    subgraph "CI/CD"
+        C1[GitHub Actions]
+        C2[Build & Test]
+        C3[Security Scan]
+    end
+    
+    subgraph "Current Deployment"
+        S1[Devnet Deployment]
+        S2[Basic Testing]
+    end
+    
+    D1 --> D2
+    D2 --> D3
+    D3 --> C1
+    
+    C1 --> C2
+    C2 --> C3
+    C3 --> S1
+    S1 --> S2
+    
+    style C2 fill:#2088FF
+    style S1 fill:#FFA500
+```
+
+### Planned Production Pipeline (Phase 2)
+
+```mermaid
+flowchart LR
+    subgraph "Development"
+        D1[Local Development]
+        D2[Unit Tests]
+        D3[Integration Tests]
+    end
+    
+    subgraph "CI/CD"
+        C1[GitHub Actions]
+        C2[Build & Test]
+        C3[Security Scan]
+    end
+    
+    subgraph "Staging"
+        S1[Devnet Deployment]
+        S2[E2E Testing]
+        S3[Performance Testing]
+    end
+    
+    subgraph "Production - PLANNED"
+        P1[Mainnet Deployment]
+        P2[Monitoring]
+        P3[Analytics]
+    end
+    
+    D1 --> D2
+    D2 --> D3
+    D3 --> C1
+    
+    C1 --> C2
+    C2 --> C3
+    C3 --> S1
+    
+    S1 --> S2
+    S2 --> S3
+    S3 -.->|Planned| P1
+    
+    P1 -.-> P2
+    P2 -.-> P3
+    
+    style C2 fill:#2088FF
+    style S2 fill:#FFA500
+    style P1 fill:#14F195,stroke-dasharray: 5 5
+```
+
 ## 🔍 Monitoring & Observability
+
+### Current Monitoring
 
 ```mermaid
 graph TB
@@ -1911,19 +1533,7 @@ graph TB
         B3[Escrow Volume]
     end
     
-    subgraph "AI Metrics"
-        A1[Verification Speed]
-        A2[Confidence Distribution]
-        A3[Accuracy Rate]
-    end
-    
-    subgraph "Business Metrics"
-        BM1[Revenue]
-        BM2[User Growth]
-        BM3[Retention]
-    end
-    
-    M1 --> Dashboard[Grafana Dashboard]
+    M1 --> Dashboard[Basic Logging]
     M2 --> Dashboard
     M3 --> Dashboard
     
@@ -1931,27 +1541,27 @@ graph TB
     B2 --> Dashboard
     B3 --> Dashboard
     
-    A1 --> Dashboard
-    A2 --> Dashboard
-    A3 --> Dashboard
-    
-    BM1 --> Dashboard
-    BM2 --> Dashboard
-    BM3 --> Dashboard
-    
-    Dashboard --> Alerts[Alert System]
-    Alerts --> Team[Development Team]
-    
     style Dashboard fill:#F46800
-    style Alerts fill:#DC382D
 ```
 
-## 📸 Architecture Screenshots & Media
+### Planned Monitoring (Phase 2)
+
+<div className="my-4 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+  <h3 className="text-lg font-bold text-purple-400 mb-2">🔮 Planned Monitoring Stack</h3>
+  <ul className="text-gray-300 space-y-1 ml-4">
+    <li>• Grafana dashboards for real-time metrics</li>
+    <li>• Prometheus for metrics collection</li>
+    <li>• AWS CloudWatch for infrastructure monitoring</li>
+    <li>• Alert system for critical issues</li>
+  </ul>
+</div>
+
+## 📸 Architecture Documentation
 
 <div className="my-8 p-6 rounded-xl bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/30">
-  <h3 className="text-xl font-bold text-white mb-4">🎬 System Architecture Overview Video</h3>
+  <h3 className="text-xl font-bold text-white mb-4">🎬 System Architecture Overview</h3>
   <p className="text-gray-300 mb-4">
-    Watch a comprehensive walkthrough of AetherLock's multi-layered architecture, from frontend to blockchain settlement.
+    Comprehensive walkthrough of AetherLock's architecture, clearly distinguishing between current implementation (Devnet) and planned features.
   </p>
   <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
     <p className="text-gray-400 text-center">
@@ -1963,21 +1573,21 @@ graph TB
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
   <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-    <h4 className="text-lg font-bold text-white mb-3">🏗️ System Layer Diagram</h4>
+    <h4 className="text-lg font-bold text-white mb-3">🏗️ Current System (Devnet)</h4>
     <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
       <p className="text-gray-400 text-center text-sm">
-        Screenshot: Interactive system layer visualization<br/>
-        (UI, Application, Verification, Blockchain, Storage)
+        Screenshot: Current implementation<br/>
+        (Solana Devnet, Arcanum.ai, Basic IPFS)
       </p>
     </div>
   </div>
   
   <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-    <h4 className="text-lg font-bold text-white mb-3">🔗 Cross-Chain Message Flow</h4>
+    <h4 className="text-lg font-bold text-white mb-3">🔮 Planned Architecture</h4>
     <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
       <p className="text-gray-400 text-center text-sm">
-        Screenshot: ZetaChain gateway routing visualization<br/>
-        (Solana → ZetaChain → Somnia)
+        Screenshot: Future vision<br/>
+        (Omnichain, Oracle, zkMe, Pinning)
       </p>
     </div>
   </div>
@@ -1986,33 +1596,74 @@ graph TB
     <h4 className="text-lg font-bold text-white mb-3">🧠 AI Verification Pipeline</h4>
     <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
       <p className="text-gray-400 text-center text-sm">
-        Screenshot: Arcanum.ai verification dashboard<br/>
-        (Evidence analysis, confidence scoring, decision logic)
+        Screenshot: Arcanum.ai verification<br/>
+        (Evidence analysis, confidence scoring)
       </p>
     </div>
   </div>
   
   <div className="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-    <h4 className="text-lg font-bold text-white mb-3">💎 Solana Program Explorer</h4>
+    <h4 className="text-lg font-bold text-white mb-3">💎 Solana Program (Devnet)</h4>
     <div className="aspect-video bg-gray-900 rounded flex items-center justify-center border border-gray-700">
       <p className="text-gray-400 text-center text-sm">
-        Screenshot: Solana Explorer showing escrow transactions<br/>
-        (Program instructions, account states, events)
+        Screenshot: Solana Explorer<br/>
+        (Devnet transactions, escrow accounts)
       </p>
     </div>
   </div>
 </div>
 
-<div className="my-8 p-6 rounded-xl bg-gradient-to-r from-cyan-500/10 to-green-500/10 border border-cyan-500/30">
-  <h3 className="text-xl font-bold text-white mb-4">📊 Performance Metrics Dashboard</h3>
-  <p className="text-gray-300 mb-4">
-    Real-time monitoring of system performance, transaction throughput, and verification accuracy.
-  </p>
-  <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-600">
-    <p className="text-gray-400 text-center">
-      📊 Screenshot Placeholder: Grafana Dashboard<br/>
-      <span className="text-sm">Metrics: TPS, latency, success rate, AI confidence distribution</span>
-    </p>
+## 🗺️ Implementation Roadmap
+
+<div className="my-8 p-6 rounded-xl bg-gradient-to-r from-blue-500/10 to-green-500/10 border border-blue-500/30">
+  <h3 className="text-2xl font-bold text-white mb-4">Development Phases</h3>
+  
+  <div className="space-y-6">
+    <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30">
+      <h4 className="text-lg font-bold text-green-400 mb-2">✅ Phase 1: MVP (Current - Devnet)</h4>
+      <ul className="text-gray-300 space-y-1 ml-4">
+        <li>• Solana Devnet deployment</li>
+        <li>• Arcanum.ai integration</li>
+        <li>• Basic IPFS storage</li>
+        <li>• React frontend + Express backend</li>
+        <li>• PostgreSQL + Redis</li>
+      </ul>
+    </div>
+    
+    <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+      <h4 className="text-lg font-bold text-blue-400 mb-2">🔄 Phase 2: Production-Ready (2-3 weeks)</h4>
+      <ul className="text-gray-300 space-y-1 ml-4">
+        <li>• Chainlink oracle integration</li>
+        <li>• Ed25519 signature verification</li>
+        <li>• AI fallback chain (OpenAI, Claude, Gemini)</li>
+        <li>• zkMe SDK real integration</li>
+        <li>• IPFS + Pinata pinning</li>
+        <li>• Solana mainnet deployment</li>
+      </ul>
+    </div>
+    
+    <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+      <h4 className="text-lg font-bold text-purple-400 mb-2">🌐 Phase 3: Omnichain Expansion (3 weeks)</h4>
+      <ul className="text-gray-300 space-y-1 ml-4">
+        <li>• ZetaChain mainnet integration</li>
+        <li>• TON and Sui support</li>
+        <li>• Somnia mainnet settlement</li>
+        <li>• Cross-chain message callbacks</li>
+        <li>• onRevert and onAbort handlers</li>
+      </ul>
+    </div>
+    
+    <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+      <h4 className="text-lg font-bold text-yellow-400 mb-2">🚀 Phase 4: Physical Verification (12 weeks)</h4>
+      <ul className="text-gray-300 space-y-1 ml-4">
+        <li>• P-PoTV implementation</li>
+        <li>• GPS verification with ZK proofs</li>
+        <li>• Computer vision for image matching</li>
+        <li>• Tamper detection algorithms</li>
+        <li>• Courier API integrations</li>
+      </ul>
+      <p className="text-gray-400 text-sm mt-2">Estimated cost: $500K-$1M</p>
+    </div>
   </div>
 </div>
 

@@ -2,9 +2,15 @@
 
 ## Overview
 
-The AetherLock Solana escrow contract is built using the Anchor framework, providing type-safe and secure escrow functionality with AI verification integration and cross-chain compatibility. This contract serves as the core settlement layer for the omnichain escrow protocol, managing fund custody, task verification, and automated release mechanisms.
+The AetherLock Solana escrow contract is built using the Anchor framework, providing type-safe and secure escrow functionality with AI verification integration. This contract serves as the core settlement layer for the escrow protocol, managing fund custody, task verification, and automated release mechanisms.
 
-## Complete Anchor Program
+**Deployment Status**: ✅ Solana Devnet | ❌ Mainnet (not deployed)
+
+**Current Implementation**: Basic escrow functionality with AI verification integration. Ed25519 signature verification mentioned but not fully implemented on-chain.
+
+---
+
+## Complete Anchor Program (Current Implementation)
 
 ### Program Declaration
 
@@ -143,12 +149,13 @@ pub mod aetherlock_escrow {
     }
 
     /// Process AI verification result (called by authorized oracle)
+    /// NOTE: Ed25519 signature verification is NOT fully implemented
     pub fn process_verification(
         ctx: Context<ProcessVerification>,
         confidence_score: u8,
         decision: VerificationDecision,
         analysis_hash: String,
-        signature: [u8; 64], // Ed25519 signature from AI service
+        signature: [u8; 64], // Ed25519 signature from AI service (stored but not verified)
     ) -> Result<()> {
         let escrow = &mut ctx.accounts.escrow_account;
         
@@ -157,8 +164,9 @@ pub mod aetherlock_escrow {
         require!(confidence_score <= 100, EscrowError::InvalidConfidenceScore);
         require!(analysis_hash.len() <= 64, EscrowError::AnalysisHashTooLong);
         
-        // Verify AI service signature (simplified - in production, verify Ed25519 signature)
-        // TODO: Implement proper signature verification against known AI service public key
+        // TODO: Implement proper Ed25519 signature verification
+        // Currently, signature is stored but not cryptographically verified on-chain
+        // This is a known limitation that should be addressed before mainnet deployment
         
         let verification_result = VerificationResult {
             confidence_score,
@@ -214,7 +222,7 @@ pub mod aetherlock_escrow {
                 **ctx.accounts.escrow_vault.to_account_info().try_borrow_mut_lamports()? -= escrow.amount;
                 **ctx.accounts.payee.to_account_info().try_borrow_mut_lamports()? += escrow.amount;
                 
-                // Transfer treasury fee
+                // Transfer treasury fee (10% total)
                 **ctx.accounts.escrow_vault.to_account_info().try_borrow_mut_lamports()? -= escrow.treasury_fee;
                 **ctx.accounts.treasury.to_account_info().try_borrow_mut_lamports()? += escrow.treasury_fee;
             },
@@ -313,6 +321,7 @@ pub mod aetherlock_escrow {
     }
 
     /// Update KYC verification status (called by authorized KYC oracle)
+    /// NOTE: zkMe integration is NOT implemented - this is a placeholder
     pub fn update_kyc_status(
         ctx: Context<UpdateKycStatus>,
         is_verified: bool,
@@ -337,11 +346,13 @@ pub mod aetherlock_escrow {
     }
 }
 
-/// Calculate 2% treasury fee
+/// Calculate 10% treasury fee (7% treasury + 2% AI + 1% network)
 fn calculate_treasury_fee(amount: u64) -> u64 {
-    amount * 2 / 100
+    amount * 10 / 100
 }
 ```
+
+---
 
 ## Account Structures and PDAs
 
@@ -371,9 +382,9 @@ pub struct EscrowAccount {
     pub evidence_hash: Option<String>,
     /// AI verification result with signature
     pub verification_result: Option<VerificationResult>,
-    /// zkMe KYC verification status for payee
+    /// zkMe KYC verification status for payee (NOT IMPLEMENTED)
     pub kyc_verified: bool,
-    /// Treasury fee amount (2% of escrow amount)
+    /// Treasury fee amount (10% of escrow amount)
     pub treasury_fee: u64,
     /// Timestamp when escrow was created
     pub created_at: i64,
@@ -420,6 +431,7 @@ pub enum EscrowStatus {
 }
 
 /// AI verification result with cryptographic proof
+/// NOTE: Signature is stored but NOT verified on-chain
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
 pub struct VerificationResult {
     /// AI confidence score (0-100)
@@ -430,7 +442,7 @@ pub struct VerificationResult {
     pub analysis_hash: String,
     /// Timestamp of verification
     pub verified_at: i64,
-    /// Ed25519 signature from AI service for authenticity
+    /// Ed25519 signature from AI service (stored but not verified on-chain)
     pub signature: [u8; 64],
 }
 
@@ -469,7 +481,11 @@ impl EscrowVault {
 }
 ```
 
-### PDA Derivations
+---
+
+## PDA Derivations (Actual Implementation)
+
+Program Derived Addresses (PDAs) are used for deterministic account generation and secure fund custody.
 
 ```rust
 /// PDA seeds for escrow account
@@ -504,1210 +520,102 @@ pub fn get_token_vault_pda(
 }
 ```
 
-## Instruction Account Contexts
+**Security Note**: PDAs ensure that only the program can sign transactions from these accounts, providing secure custody of escrowed funds.
 
-### Initialize Escrow Context
-
-```rust
-#[derive(Accounts)]
-#[instruction(escrow_id: u64)]
-pub struct InitializeEscrow<'info> {
-    /// Escrow account to be created
-    #[account(
-        init,
-        payer = payer,
-        space = EscrowAccount::LEN,
-        seeds = [b"escrow", escrow_id.to_le_bytes().as_ref()],
-        bump
-    )]
-    pub escrow_account: Account<'info, EscrowAccount>,
-    
-    /// Payer creating the escrow
-    #[account(mut)]
-    pub payer: Signer<'info>,
-    
-    /// Payee who will receive funds upon completion
-    /// CHECK: Address validation handled in instruction logic
-    pub payee: AccountInfo<'info>,
-    
-    /// System program for account creation
-    pub system_program: Program<'info, System>,
-}
-```
-
-### Deposit Funds Context
-
-```rust
-#[derive(Accounts)]
-pub struct DepositFunds<'info> {
-    /// Escrow account being funded
-    #[account(
-        mut,
-        seeds = [b"escrow", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump = escrow_account.bump,
-        constraint = escrow_account.status == EscrowStatus::Created @ EscrowError::InvalidStatus
-    )]
-    pub escrow_account: Account<'info, EscrowAccount>,
-    
-    /// Payer depositing funds
-    #[account(
-        mut,
-        constraint = payer.key() == escrow_account.payer @ EscrowError::Unauthorized
-    )]
-    pub payer: Signer<'info>,
-    
-    /// Vault to hold SOL (created if doesn't exist)
-    #[account(
-        init_if_needed,
-        payer = payer,
-        space = EscrowVault::LEN,
-        seeds = [b"escrow_vault", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump
-    )]
-    pub escrow_vault: Account<'info, EscrowVault>,
-    
-    /// Payer's token account (for SPL tokens)
-    #[account(
-        mut,
-        constraint = payer_token_account.mint == escrow_account.token_mint.unwrap() @ EscrowError::InvalidTokenMint
-    )]
-    pub payer_token_account: Option<Account<'info, TokenAccount>>,
-    
-    /// Escrow token vault (for SPL tokens)
-    #[account(
-        init_if_needed,
-        payer = payer,
-        token::mint = escrow_account.token_mint.unwrap(),
-        token::authority = escrow_vault,
-        seeds = [b"token_vault", escrow_account.escrow_id.to_le_bytes().as_ref(), escrow_account.token_mint.unwrap().as_ref()],
-        bump
-    )]
-    pub escrow_token_vault: Option<Account<'info, TokenAccount>>,
-    
-    /// Token program (for SPL tokens)
-    pub token_program: Option<Program<'info, Token>>,
-    
-    /// System program
-    pub system_program: Program<'info, System>,
-}
-```
-
-### Submit Evidence Context
-
-```rust
-#[derive(Accounts)]
-pub struct SubmitEvidence<'info> {
-    /// Escrow account receiving evidence
-    #[account(
-        mut,
-        seeds = [b"escrow", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump = escrow_account.bump,
-        constraint = escrow_account.status == EscrowStatus::Funded @ EscrowError::InvalidStatus
-    )]
-    pub escrow_account: Account<'info, EscrowAccount>,
-    
-    /// Payee submitting evidence
-    #[account(
-        constraint = payee.key() == escrow_account.payee @ EscrowError::Unauthorized
-    )]
-    pub payee: Signer<'info>,
-}
-```
-
-### Process Verification Context
-
-```rust
-#[derive(Accounts)]
-pub struct ProcessVerification<'info> {
-    /// Escrow account being verified
-    #[account(
-        mut,
-        seeds = [b"escrow", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump = escrow_account.bump,
-        constraint = escrow_account.status == EscrowStatus::PendingVerification @ EscrowError::InvalidStatus
-    )]
-    pub escrow_account: Account<'info, EscrowAccount>,
-    
-    /// AI oracle authority (authorized to submit verification results)
-    #[account(
-        constraint = ai_oracle.key() == AI_ORACLE_AUTHORITY @ EscrowError::Unauthorized
-    )]
-    pub ai_oracle: Signer<'info>,
-}
-
-/// Authorized AI oracle public key (would be configured during deployment)
-pub const AI_ORACLE_AUTHORITY: Pubkey = solana_program::pubkey!("AiOracleAuth1111111111111111111111111111111");
-```
-
-### Release Funds Context
-
-```rust
-#[derive(Accounts)]
-pub struct ReleaseFunds<'info> {
-    /// Escrow account with verified completion
-    #[account(
-        mut,
-        seeds = [b"escrow", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump = escrow_account.bump,
-        constraint = escrow_account.status == EscrowStatus::Verified @ EscrowError::InvalidStatus
-    )]
-    pub escrow_account: Account<'info, EscrowAccount>,
-    
-    /// Escrow vault holding funds
-    #[account(
-        mut,
-        seeds = [b"escrow_vault", escrow_account.escrow_id.to_le_bytes().as_ref()],
-        bump = escrow_vault.bump
-    )]
-    pub escrow_vault: Account<'info, EscrowVault>,
-    
-    /// Payee receiving funds
-    #[account(
-        mut,
-        constraint = payee.key() == escrow_account.payee @ EscrowError::Unauthorized
-    )]
-    pub payee: SystemAccount<'info>,
-    
-    /// Treasury account receiving fees
-    #[account(
-        mut,
-        constraint = treasury.key() == TREASURY_AUTHORITY @ EscrowError::InvalidTreasury
-    )]
-    pub treasury: SystemAccount<'info>,
-    
-    /// Token accounts for SPL token transfers
-    #[account(mut)]
-    pub escrow_token_vault: Option<Account<'info, TokenAccount>>,
-    
-    #[account(mut)]
-    pub payee_token_account: Option<Account<'info, TokenAccount>>,
-    
-    #[account(mut)]
-    pub treasury_token_account: Option<Account<'info, TokenAccount>>,
-    
-    /// coverage.d testing ling, anrror handment, eate manageve strehensiompy with citunctionalcrow fpowered esLock's AI-ether An forundatio, secure foa robustvides act prorow contrlana esc Sos
-
-Thisattackreplay nt s preve escrow IDs and uniqueTimestampn**: tioy protec **Replats
--ation resulerificit vsubme can  AI oraclauthorized Only pre- oracles**:**Authorizedity
-- ticr authen foturesd25519 signae Es includation resultrificAI ven**: catioerifiignature vurity
-- **Se Sec
-
-### Oraclinationcontamross-o prevent c tcountsd vault acteow has isolaEach escr*: n*io isolatVaultdates
-- **ial state up partrevento p atomic tnsfers are: Fund tratransfers**mic **Ato
-- wvent overfloo presafely t calculated *: 2% feeion*fee calculatry asuTre
-- **c Securityomi
-
-### Econransitionsd tliinvaent  prevtraints toaccount consed through  enforcinemach: State onstraints**- **Status cracle)
- payee, AI ors (payer,signete re appropriaons requiatiitical operdation**: Cr valigner
-- **Siccessd aauthorize prevent un) toesses (PDAsed Addrivam Der Progrcounts userow ac**: All esccuritybased se
-- **PDA-lContro### Access rations
-
-Considety # Securi}
-```
-
-#SOL
-    }
-instead of  SPL tokens  withworkflowlete  Test comp//       
- () {_workflowoken_escrowst_spl_tn te    async f:test]
-okio:  #[t
-      }
-    sReview
-eturns Needng when AI rndlie hautt disp    // Tesw() {
-    on_workflote_resolutidispuest_ fn t   async:test]
- o:
-    #[toki
-       }t stages
- at differention  cancella// Test     ) {
-   flow(n_workellatiocrow_canctest_esync fn    ast]
- [tokio::tes   
-    #nd
-    }
- ow end-to-ee fl completesting the but t
-        // aboveit testsilar to unsimed mentimplee ep would b/ Each st
-        /e
-        nal stat. Verify fi    // 6  unds
-  se f Relea5.  //       proved)
-(aption s verificacesPro // 4.       evidence
- mit ub/ 3. S
-        /unds  eposit f// 2. Dow
-        e escrtializIni // 1. 
-       
-         SOL; // 1000 1_000_000_mount = let a;
-       64_id = 1uet escrow 
-        l    ();
-   air::newury = Keyp let treas     ();
-  Keypair::new_oracle =      let aiew();
-   ir::npa payee = Key      let;
-  waitt.start().arogram_tes= psh) cent_blockharent, payer, s_cliet (mut bank     le         
-     );
- 
-    w::entry),croetherlock_essor!(aces      proid,
-      ram_        prog",
-    ck_escrowherlo     "aet  new(
-     :: ProgramTestm_test =ograt pr  let mu;
-      ique():new_uny: = Pubkeogram_id     let pron
-    to completim creationkflow froplete worom Test the c
-        //{flow() escrow_workplete_ test_com    async fnt]
-kio::tes   #[to    
- ;
-r::*use supe  
-  ts {teson_integratitest)]
-mod g(cf```rust
-#[n Tests
-
- Integratio
-```
-
-###    }
-}emented!()
-nimpl      ulease
-  y for readescrow red up verifie setting entation for/ Implem  /y) {
-      y, Pubkeypair, Pubke, Keairypnt, KeksClie(Ban>  -scrow()rified_e setup_ve  async fn
-      
-    }
-ted!()emenunimple
-        d evidencubmitterow with sp escng un for settitiontampleme I    //{
-    y) ir, Pubke Keypant,anksClie -> (Brow()tion_escng_verificaup_pendi fn set  async 
-  
-   !()
-    }edunimplement        
-scrowed eng up fundtition for setlementa   // Imp     , u64) {
-r, Pubkeyr, Keypaient, KeypaisCli-> (Bankcrow() unded_esn setup_f   async f  }
-    
- 
-  ted!()emenunimpl    
-    owic escrting up basor setementation f  // Impl
-      64) {r, Pubkey, uaiypsClient, Ke() -> (Bankscrowp_esync fn setup
-    atest setunctions for  Helper fu   //
-
- s)
-    }angence chbala to check uld needed fee (woeceivry rfy treasu // Veri      s)
- angece chalanck bo cheuld need td funds (woceivefy payee re  // Veri   
-      d);
-     s::Completetatuus, EscrowSw_data.stat_eq!(escrossert   a       
-      .unwrap();
-s_slice()).data.antrow_accou&mut esclize(seriaunt::try_descrowAcco  E         ount = 
- crowAccow_data: Esescr  let ();
-      ().unwrapnwrapit.u_pda).awaunt(escrownt.get_accoie= banks_clt ccounow_acr      let esd
-   transferreed and fundsetscrow complrify e // Ve 
-       ();
-       .unwrapaiton).awction(transactiansaprocess_trks_client.       ban 
-         );
-     ash,
-  nt_blockh rece   
-         &[&payer],         
-  ,key())r.pubye Some(&pa           uction],
-instr    &[        er(
-ed_with_payew_signction::n = Transaction let transa      
-        
- };       ta(),
- unds {}.daaseFRelenstruction::w::icrock_esaetherlo   data:        (true)),
-  ometas(St_meccoun.to_accounts aaccounts:          id,
-      program_{
-        n = Instructiouction et instr
-        l
-                };m: None,
-raken_prog     to,
-       : Nonecounten_actreasury_tok          t: None,
-  coun_ac_tokenyee    pa   
-     one,ault: Noken_vow_t       escry(),
-     bkey.puury: treasur  treas       bkey(),
-   puayee: payee.         plt_pda,
-   w_vault: vau escro        a,
-   t: escrow_pdscrow_accoun           e
- eFunds {easccounts::Rel_escrow::a aetherlock accounts =et    l     
-   new();
-    ypair::ury = Kelet treas 
-              ).await;
- ed_escrow(p_verifi= setuvault_pda) ,  escrow_pdaayer, payee,ks_client, pan(mut b   let    ds() {
-  funelease_ test_r fn
-    asynct]:tes#[tokio:   }
-
-  ved);
-   ApproDecision::onicatiVerifision, tion.decca(verifi  assert_eq!);
-      dence_score, conficorefidence_sn.conerificatiosert_eq!(v
-        asnwrap();result.un_ificatioerrow_data.vtion = escica  let verif
-             );
- lt.is_some()ion_resuificata.veratscrow_dssert!(e;
-        aified)Status::Verrowatus, Escata.stcrow_d_eq!(es assert         
-   ();
-   ).unwrapslice()data.as_ccount.mut escrow_aialize(&t::try_deserunowAcco    Escr
-        ount = ccEscrowArow_data:  esc   let     .unwrap();
-wrap()t.unw_pda).awaiunt(escrot_accot.ge banks_clienount =row_accsc       let e
- updatetatus and s result ificationerify ver// V           
-   ;
-  nwrap().await.uransaction)tion(tcess_transacent.pro   banks_cli
-     
-         );   
-    h,khasent_bloc        rec
-    ai_oracle],      &[&   ey()),
-   acle.pubke(&ai_or         Somon],
-   tructi &[ins         yer(
-  d_with_pa_signenewction::on = Transaactitranslet   
-        };
-      
-        ,data()      }.e,
-      urgnat       si
-         ash, analysis_h      
-         n,    decisio          ore,
-  dence_scnfi   co          {
-    rificationn::ProcessVectionstruw::ilock_escrodata: aether        )),
-    s(Some(truet_metas.to_accounntunts: accoucco a     
-      ,m_id   progra      on {
-   Instructin = ioctnstru       let i    
- };
-          ,
-  ()e.pubkeyle: ai_oracl_orac         aiw_pda,
-    escront:ow_accou   escr{
-         ion Verificatcesss::Prow::accountscroherlock_ents = aet accouet
-        le
-        k signatur]; // Moce = [0u8; 64et signatur      l
-  _string();9".toash78"QmAnalysisHs_hash =  let analysi    ed;
-   rovcision::ApptionDe = Verificaet decision   l
-     = 95u8;dence_score confi    let 
-            
-ait;escrow().awication_ng_verifpendisetup_ = ow_pda)oracle, escrent, ai_ut banks_cli   let (m    d() {
- tion_approvess_verificaest_proceasync fn t    :test]
-kio:    #[to
-
-;
-    }_hash))me(evidenceash, Soevidence_hata.row_dert_eq!(esc        asscation);
-erifingVtatus::Pendi, EscrowSatusdata.st_eq!(escrow_      assert          
-;
-wrap()e()).unslic.data.as_w_account escrorialize(&mutnt::try_deseowAccoucr   Es
-         unt = wAcco: Escro escrow_data    let   unwrap();
- ().it.unwrapawacrow_pda)._account(esgetlient._c banksccount =row_at esc        les updated
- and statutedsubmitce was ify evidenVer       //         
- nwrap();
-.u).await(transactiontionacansocess_trent.prbanks_cli      
-      
-       );h,
-     aslockh   recent_b
-         yee],  &[&pa         ubkey()),
- ome(&payee.p   S         n],
-&[instructio          payer(
-  th__wi::new_signedaction = Transaction let trans   
-       ;
-     ,
-        }()  }.data       ne(),
-   hash.cloence_: eviddence_hashevi          {
-       Evidenceubmitn::Sctioruscrow::instck_e aetherlodata:  
-          ome(true)),tas(Saccount_mets.to_uncounts: acco         ac
-   gram_id,      pro {
-      ionctruon = Instet instructi   l 
-     
-       
-        };bkey(),.pu: payeeayee       p    ,
- _pdascrow: entccouscrow_a        e
-     {Evidenceunts::Submitcoescrow::ac aetherlock_ts =accoun        let  
-);
-       g(_strin".toeHash456 "QmEvidencce_hash =et eviden      l 
-    
-     await;d_escrow().desetup_fun) = crow_idcrow_pda, esr, payee, eslient, payenks_c let (mut ba       {
- ()it_evidencefn test_subm    async ::test]
-
-    #[tokio);
-    }
-us::Funded EscrowStats,statua.scrow_datsert_eq!(e    as
-      ();
-      e()).unwrap_slicnt.data.asccoumut escrow_alize(&_deseriatry::scrowAccount           Eunt = 
- Acco: Escrowta escrow_da
-        letap();wrap().unwr.await.unscrow_pda)unt(ent.get_acco_clie= banks_account escrowet         lFunded
-updated to tus ow stascrrify e // Ve    
-   
-        wrap();ait.unsaction).awon(transs_transactilient.proceks_can
-        b
-                );h,
-ockhasblnt_     rece       ayer],
-       &[&p   
-  .pubkey()), Some(&payer         ction],
-   &[instru           yer(
-ed_with_pa_signn::newctio Transaansaction = let tr  
-          
-         };a(),
-  unds {}.dat:DepositFruction:nstcrow::ierlock_esaethata:  d    
-       ome(true)),metas(Saccount_o_ts.taccounnts: accou            m_id,
-gra         pro
-   struction {tion = In let instruc             
-    };
-    m::ID,
-  tem_prograogram: syspr    system_e,
-        ram: Nontoken_prog            t: None,
-_token_vaul escrow         None,
-   unt:token_acco     payer_  _pda,
-     ult: vaultw_va escro          ey(),
- : payer.pubk      payer
-      ow_pda,t: escrouncrow_acc         esunds {
-   ositF:Depccounts::acrow:rlock_ess = aetheccount       let a 
-      
-  program_id);id, &pda(escrow_ault_t_escrow_vda, _) = get (vault_p    le            
-w().await;
-up_escroow_id) = setda, escr, escrow_pyerlient, pabanks_c (mut         letow first
-scrp e  // Setu
-      () {unds_deposit_ffn testnc     asyst]
-okio::te   #[t}
-
- ;
-    Created)tus::tarowSEsctus, data.sta!(escrow__eq     assert;
-    amount)t,w_data.amounscro!(et_eqer   ass());
-     eypayee.pubk.payee, ataow_d!(escr assert_eq);
-       yer.pubkey()r, paa.paye!(escrow_datert_eqss      arow_id);
-  w_id, escscrocrow_data.e(esassert_eq!            
-rap();
-    unw)).e(s_slicunt.data.aacco escrow_ialize(&muty_deser::trccount EscrowA     t = 
-      ounAcca: Escrowrow_dat  let esc   
-         );
-  ap( .unwr       wrap()
-    .un          t
-  awai  .          )
-(escrow_pdaaccount      .get_t
-      banks_clienw_account =  let escro      
-  correctlycreatednt was ow accouVerify escr//       
-      rap();
-    t.unwwaiion).aransacttion(ttransac.process_anks_client  b
-          
-    );      sh,
-  nt_blockha  rece         ayer],
- &[&p        
-    key()),e(&payer.pub      Som
-      truction],ins       &[er(
-     ayd_with_pew_signensaction::n Traion =ansact    let tr  
-    };
-             data(),
-     }.
-         None,token_mint:           ,
-     ata_hashsk_metad    ta          adline,
-      de        
-    nt,  amou       
-       d,escrow_i       
-          {crownitializeEson::Iw::instructiscrolock_eaether      data:      true)),
- ome(etas(Sunt_mto_acco accounts.  accounts:          id,
- program_         
-  on {tructiInsstruction = t in       le
- ;
-            }   gram::ID,
- tem_pro sysgram:tem_pro sys    ,
-       key()e: payee.pubpaye    ),
-        yer.pubkey(ayer: pa   p        _pda,
- crowunt: esescrow_acco            scrow {
-InitializeE::accounts::escrowrlock_heunts = aet    let acco     
-    _id);
-   ogram&prscrow_id, ow_pda(e= get_escra, _) ow_pdcr(es        let 
-);
-        _string(ash123".toataHkMetadQmTas"h = data_hasmeta let task_
-       e timestamp00; // Futur = 17000000et deadlineL
-        l // 1 SO0_000; 1_000_00amount = let        1u64;
-  =et escrow_id  l
-      ;ew()eypair::n payee = K   let      
-      await;
- .start().gram_testrokhash) = pcent_blocrent, payer, ks_clie (mut ban      let   
-;
-       
-        )row::entry),k_escoc!(aetherlssor    proce     ram_id,
-         progw",
-      rorlock_esc     "aethe      t::new(
- = ProgramTesst ogram_telet mut pr;
-        w_unique():nePubkey:rogram_id =   let p
-      () {alize_escrowiniti test_fnasync test]
-    [tokio:: };
-
-    #on,
-   ransactinsaction::T tra      ner},
- Keypair, Siggnature::{       sidk::{
- solana_s   use test::*;
- a_program_ solan
-    use::*;relude::panchor_lang*;
-    use se super::{
-    uests st)]
-mod t(te#[cfgrust
-
-``` Tests
-
-
-### Unitlesing Examp`
-
-## Testow,
-}
-``MathOverfl)]
-    red"rflow occural ovehematicg("Matms   #[
-    
- tFunds,sufficien]
-    In in vault")ndscient fu"Insuffi  #[msg( 
-  asury,
-   revalidT  Int")]
-  accounsury id treasg("Inval
-    #[m
-    int,validTokenM")]
-    Inhis escrow for token mintvalid t"In#[msg(
-    g,
-    onsisHashTooL]
-    Analyrs")racteha4 clong - max 6ash too alysis h"An #[msg(       
-shTooLong,
- EvidenceHa
-   ers")]charactax 64 oo long - m tashce hmsg("Eviden  
-    #[Long,
-  TootadataHash]
-    Meers") 64 charact- max long ata hash tooTask metadmsg("#[      
- nceScore,
- fidelidCon)]
-    Inva100" must be 0- -nce scoredevalid confi[msg("In
-    # 
-   ation,ificnvalidVer
-    I")]ult resficationvalid veri("In#[msg
-    
-    d,Require   Kyction")]
- r this operaquired fo reificationC versg("KY
-    #[m    zed,
-oriauth
-    Un")] signer- wrongeration thorized op"Unausg(
-    #[m
-    line,adInvalidDe
-    ure")]e futt be in thine - musdlalid deag("Invms    
-    #[mount,
-lidA]
-    Invaer than 0")reat gnt - must beamou"Invalid 
-    #[msg(   d,
- ineExceede]
-    Deadld")eedebeen excas ne hmsg("Deadli    #[    
-,
-Statuslid  Inva]
-  operation")r this atus foescrow stInvalid [msg("   #
- or {wErrroEscb enum 
-pur_code]rorogram
-#[erw pthe escror codes for errotom usust
-/// C```res
-
-m Error Cod
-### Custo,
-}
-```
-rified: bool pub is_veubkey,
-   ee: Ppub pay u64,
-    row_id:
-    pub escdated {usUpattruct KycStpub sent]
-
-}
-
-#[ev_by: Pubkey,ub cancelled  p: u64,
-  w_id escro {
-    publledEscrowCance struct nt]
-pub
-
-#[eve
-}: u64,sury_feeeaub tr
-    p: u64,ountamub key,
-    pee: Pubaypub pu64,
-    row_id:     pub esced {
-assRelect Fund
-pub struevent]
-}
-
-#[ng,riash: Stis_hpub analyse: u8,
-    dence_scor   pub confi
- nDecision,tioica: Verifonsi pub deci
-   d: u64,pub escrow_ised {
-    ationProcesct Verific]
-pub stru
-#[event
-}
-ed_at: i64,ubmitt pub s  bkey,
- itted_by: Puub subm   pring,
- nce_hash: St  pub evide4,
-  id: u6 escrow_ {
-    pubSubmittedvidenceub struct E[event]
-p
-}
-
-#,: u64ury_feeas tre    pubu64,
- amount: 
-    pub_id: u64, pub escrow
-   osited {epuct FundsD
-pub strnt]eve
-}
-
-#[String,a_hash: _metadatskta
-    pub : i64,adline
-    pub demount: u64,
-    pub a: Pubkey,ayee,
-    pub pPubkey:  payer,
-    pubd: u64pub escrow_i    Created {
- Escrow
-pub struct#[event]
-
-oringain monitoff-chor program f by the ts emitted/// Even
-
-
-```rustonsinitit Def## Even
-#ing
- Handland Errors 
-## Event``
- end note
-`needed
-   ration it  Human arbw
-      nual revieres ma      RequiDisputed
-  t of  note righ 
-    note
-   se
-    endr fund releay fo     Read
-    completionskproved ta     AI ap
-   erifiedof Vte right  
-    no
-      end note progress
- cation in   AI verifi
-     itteddence subm        Evication
-ndingVerifiof Pe note right 
-    
-   te
-    end noom payeeubmission fr sng evidenceaiti      Awin vault
-  s locked       Fund
-   Fundede right of not 
-      end note
-   m payer
-  froposit fund dewaiting    Ants
-    quiremeask relized with trow initia   Esceated
-     Crte right of     no]
-    
- --> [*ellednc]
-    Ca [*mpleted -->    Co   
-jected)
- esolution(Rel_rlled : manuaance --> Cisputed
-    Doved)Approlution(l_resnuad : ma --> Verifiesputed    
-    Diunds()
-release_fed : --> Completied rif   Ve    
- dsReview)
-ation(Neeificerocess_ved : pr --> DisputcationdingVerifiened)
-    Pectn(Rejficatiorirocess_ve : pnded --> FuiongVerificat Pendined)
-   ion(Approvatss_verificfied : proceVeri--> n cationgVerifi   Pendi   
- 
- ow()scrancel_eancelled : cd --> C
-    Funde()nceevideit_ion : submatificerngVPendi>   Funded -- 
-     w()
-ancel_escroncelled : c--> Ca    Created _funds()
-ed : depositnd Futed -->  Crea  
-row()
-    ize_esced : initial-> Creat
-    [*] -iagram-v2aid
-stateDrm``meam
-
-`gr Diachine## State Ma
-``
-11111");
-`11111111111111111h11111111ryAut"Treasubkey!(ram::pu_proglanaPubkey = soUTHORITY: _At TREASURY cons
-pubc keybli putyauthoriry reasu// T,
-}
-
-/o, Token>><'infProgramion<am: Optogroken_pr  pub togram
-  Token pr   
- /// Token program
-    pub token_program: Option<Program<'info, Token>>,
-}
-
-/// Treasury authority public key
-pub const TREASURY_AUTHORITY: Pubkey = solana_program::pubkey!("TreasuryAuth111111111111111111111111111111");
-```
+---
 
 ## State Machine Diagram
 
+The escrow follows a strict state machine to ensure proper fund management:
+
 ```mermaid
 stateDiagram-v2
-    [*] --> Created : initialize_escrow()
+    [*] --> Created: initialize_escrow()
+    Created --> Funded: deposit_funds()
+    Created --> Cancelled: cancel_escrow()
     
-    Created --> Funded : deposit_funds()
-    Created --> Cancelled : cancel_escrow()
+    Funded --> PendingVerification: submit_evidence()
+    Funded --> Cancelled: cancel_escrow()
     
-    Funded --> PendingVerification : submit_evidence()
-    Funded --> Cancelled : cancel_escrow()
+    PendingVerification --> Verified: process_verification(Approved)
+    PendingVerification --> Funded: process_verification(Rejected)
+    PendingVerification --> Disputed: process_verification(NeedsReview)
     
-    PendingVerification --> Verified : process_verification(Approved)
-    PendingVerification --> Funded : process_verification(Rejected)
-    PendingVerification --> Disputed : process_verification(NeedsReview)
-    
-    Verified --> Completed : release_funds()
-    
-    Disputed --> Verified : manual_resolution(Approved)
-    Disputed --> Cancelled : manual_resolution(Rejected)
+    Verified --> Completed: release_funds()
     
     Completed --> [*]
     Cancelled --> [*]
-    
-    note right of Created
-        Escrow initialized with task requirements
-        Awaiting fund deposit from payer
-    end note
-    
-    note right of Funded
-        Funds locked in vault
-        Awaiting evidence submission from payee
-    end note
-    
-    note right of PendingVerification
-        Evidence submitted
-        AI verification in progress
-    end note
-    
-    note right of Verified
-        AI approved task completion
-        Ready for fund release
-    end note
-    
-    note right of Disputed
-        Requires manual review
-        Human arbitration needed
-    end note
+    Disputed --> [*]: Manual resolution required
 ```
 
-## Events and Error Handling
+**State Transition Rules**:
+- **Created → Funded**: Payer deposits funds + 10% fee
+- **Funded → PendingVerification**: Payee submits evidence
+- **PendingVerification → Verified**: AI approves (confidence ≥ threshold)
+- **PendingVerification → Funded**: AI rejects (allows resubmission)
+- **PendingVerification → Disputed**: AI uncertain (manual review)
+- **Verified → Completed**: Funds released to payee, fee to treasury
+- **Funded/Created → Cancelled**: Payer cancels before evidence submission
 
-### Event Definitions
-
-```rust
-/// Events emitted by the program for off-chain monitoring
-
-#[event]
-pub struct EscrowCreated {
-    pub escrow_id: u64,
-    pub payer: Pubkey,
-    pub payee: Pubkey,
-    pub amount: u64,
-    pub deadline: i64,
-    pub task_metadata_hash: String,
-}
-
-#[event]
-pub struct FundsDeposited {
-    pub escrow_id: u64,
-    pub amount: u64,
-    pub treasury_fee: u64,
-}
-
-#[event]
-pub struct EvidenceSubmitted {
-    pub escrow_id: u64,
-    pub evidence_hash: String,
-    pub submitted_by: Pubkey,
-    pub submitted_at: i64,
-}
-
-#[event]
-pub struct VerificationProcessed {
-    pub escrow_id: u64,
-    pub decision: VerificationDecision,
-    pub confidence_score: u8,
-    pub analysis_hash: String,
-}
-
-#[event]
-pub struct FundsReleased {
-    pub escrow_id: u64,
-    pub payee: Pubkey,
-    pub amount: u64,
-    pub treasury_fee: u64,
-}
-
-#[event]
-pub struct EscrowCancelled {
-    pub escrow_id: u64,
-    pub cancelled_by: Pubkey,
-}
-
-#[event]
-pub struct KycStatusUpdated {
-    pub escrow_id: u64,
-    pub payee: Pubkey,
-    pub is_verified: bool,
-}
-```
-
-### Custom Error Codes
-
-```rust
-/// Custom error codes for the escrow program
-#[error_code]
-pub enum EscrowError {
-    #[msg("Invalid escrow status for this operation")]
-    InvalidStatus,
-    
-    #[msg("Deadline has been exceeded")]
-    DeadlineExceeded,
-    
-    #[msg("Invalid amount - must be greater than 0")]
-    InvalidAmount,
-    
-    #[msg("Invalid deadline - must be in the future")]
-    InvalidDeadline,
-    
-    #[msg("Unauthorized operation - wrong signer")]
-    Unauthorized,
-    
-    #[msg("KYC verification required for this operation")]
-    KycRequired,
-    
-    #[msg("Invalid verification result")]
-    InvalidVerification,
-    
-    #[msg("Invalid confidence score - must be 0-100")]
-    InvalidConfidenceScore,
-    
-    #[msg("Task metadata hash too long - max 64 characters")]
-    MetadataHashTooLong,
-    
-    #[msg("Evidence hash too long - max 64 characters")]
-    EvidenceHashTooLong,
-    
-    #[msg("Analysis hash too long - max 64 characters")]
-    AnalysisHashTooLong,
-    
-    #[msg("Invalid token mint for this escrow")]
-    InvalidTokenMint,
-    
-    #[msg("Invalid treasury account")]
-    InvalidTreasury,
-    
-    #[msg("Insufficient funds in vault")]
-    InsufficientFunds,
-    
-    #[msg("Mathematical overflow occurred")]
-    MathOverflow,
-}
-```
-
-## Testing Examples
-
-### Unit Tests
-
-```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use anchor_lang::prelude::*;
-    use solana_program_test::*;
-    use solana_sdk::{
-        signature::{Keypair, Signer},
-        transaction::Transaction,
-    };
-
-    #[tokio::test]
-    async fn test_initialize_escrow() {
-        let program_id = Pubkey::new_unique();
-        let mut program_test = ProgramTest::new(
-            "aetherlock_escrow",
-            program_id,
-            processor!(aetherlock_escrow::entry),
-        );
-        
-        let (mut banks_client, payer, recent_blockhash) = program_test.start().await;
-        
-        let payee = Keypair::new();
-        let escrow_id = 1u64;
-        let amount = 1_000_000_000; // 1 SOL
-        let deadline = 1700000000; // Future timestamp
-        let task_metadata_hash = "QmTaskMetadataHash123".to_string();
-        
-        let (escrow_pda, _) = get_escrow_pda(escrow_id, &program_id);
-        
-        let accounts = aetherlock_escrow::accounts::InitializeEscrow {
-            escrow_account: escrow_pda,
-            payer: payer.pubkey(),
-            payee: payee.pubkey(),
-            system_program: system_program::ID,
-        };
-        
-        let instruction = Instruction {
-            program_id,
-            accounts: accounts.to_account_metas(Some(true)),
-            data: aetherlock_escrow::instruction::InitializeEscrow {
-                escrow_id,
-                amount,
-                deadline,
-                task_metadata_hash,
-                token_mint: None,
-            }.data(),
-        };
-        
-        let transaction = Transaction::new_signed_with_payer(
-            &[instruction],
-            Some(&payer.pubkey()),
-            &[&payer],
-            recent_blockhash,
-        );
-        
-        banks_client.process_transaction(transaction).await.unwrap();
-        
-        // Verify escrow account was created correctly
-        let escrow_account = banks_client
-            .get_account(escrow_pda)
-            .await
-            .unwrap()
-            .unwrap();
-        
-        let escrow_data: EscrowAccount = 
-            EscrowAccount::try_deserialize(&mut escrow_account.data.as_slice()).unwrap();
-        
-        assert_eq!(escrow_data.escrow_id, escrow_id);
-        assert_eq!(escrow_data.payer, payer.pubkey());
-        assert_eq!(escrow_data.payee, payee.pubkey());
-        assert_eq!(escrow_data.amount, amount);
-        assert_eq!(escrow_data.status, EscrowStatus::Created);
-    }
-
-    #[tokio::test]
-    async fn test_deposit_funds() {
-        // Setup escrow first
-        let (mut banks_client, payer, escrow_pda, escrow_id) = setup_escrow().await;
-        
-        let (vault_pda, _) = get_escrow_vault_pda(escrow_id, &program_id);
-        
-        let accounts = aetherlock_escrow::accounts::DepositFunds {
-            escrow_account: escrow_pda,
-            payer: payer.pubkey(),
-            escrow_vault: vault_pda,
-            payer_token_account: None,
-            escrow_token_vault: None,
-            token_program: None,
-            system_program: system_program::ID,
-        };
-        
-        let instruction = Instruction {
-            program_id,
-            accounts: accounts.to_account_metas(Some(true)),
-            data: aetherlock_escrow::instruction::DepositFunds {}.data(),
-        };
-        
-        let transaction = Transaction::new_signed_with_payer(
-            &[instruction],
-            Some(&payer.pubkey()),
-            &[&payer],
-            recent_blockhash,
-        );
-        
-        banks_client.process_transaction(transaction).await.unwrap();
-        
-        // Verify escrow status updated to Funded
-        let escrow_account = banks_client.get_account(escrow_pda).await.unwrap().unwrap();
-        let escrow_data: EscrowAccount = 
-            EscrowAccount::try_deserialize(&mut escrow_account.data.as_slice()).unwrap();
-        
-        assert_eq!(escrow_data.status, EscrowStatus::Funded);
-    }
-
-    #[tokio::test]
-    async fn test_submit_evidence() {
-        let (mut banks_client, payer, payee, escrow_pda, escrow_id) = setup_funded_escrow().await;
-        
-        let evidence_hash = "QmEvidenceHash456".to_string();
-        
-        let accounts = aetherlock_escrow::accounts::SubmitEvidence {
-            escrow_account: escrow_pda,
-            payee: payee.pubkey(),
-        };
-        
-        let instruction = Instruction {
-            program_id,
-            accounts: accounts.to_account_metas(Some(true)),
-            data: aetherlock_escrow::instruction::SubmitEvidence {
-                evidence_hash: evidence_hash.clone(),
-            }.data(),
-        };
-        
-        let transaction = Transaction::new_signed_with_payer(
-            &[instruction],
-            Some(&payee.pubkey()),
-            &[&payee],
-            recent_blockhash,
-        );
-        
-        banks_client.process_transaction(transaction).await.unwrap();
-        
-        // Verify evidence was submitted and status updated
-        let escrow_account = banks_client.get_account(escrow_pda).await.unwrap().unwrap();
-        let escrow_data: EscrowAccount = 
-            EscrowAccount::try_deserialize(&mut escrow_account.data.as_slice()).unwrap();
-        
-        assert_eq!(escrow_data.status, EscrowStatus::PendingVerification);
-        assert_eq!(escrow_data.evidence_hash, Some(evidence_hash));
-    }
-
-    #[tokio::test]
-    async fn test_process_verification_approved() {
-        let (mut banks_client, ai_oracle, escrow_pda) = setup_pending_verification_escrow().await;
-        
-        let confidence_score = 95u8;
-        let decision = VerificationDecision::Approved;
-        let analysis_hash = "QmAnalysisHash789".to_string();
-        let signature = [0u8; 64]; // Mock signature
-        
-        let accounts = aetherlock_escrow::accounts::ProcessVerification {
-            escrow_account: escrow_pda,
-            ai_oracle: ai_oracle.pubkey(),
-        };
-        
-        let instruction = Instruction {
-            program_id,
-            accounts: accounts.to_account_metas(Some(true)),
-            data: aetherlock_escrow::instruction::ProcessVerification {
-                confidence_score,
-                decision,
-                analysis_hash,
-                signature,
-            }.data(),
-        };
-        
-        let transaction = Transaction::new_signed_with_payer(
-            &[instruction],
-            Some(&ai_oracle.pubkey()),
-            &[&ai_oracle],
-            recent_blockhash,
-        );
-        
-        banks_client.process_transaction(transaction).await.unwrap();
-        
-        // Verify verification result and status update
-        let escrow_account = banks_client.get_account(escrow_pda).await.unwrap().unwrap();
-        let escrow_data: EscrowAccount = 
-            EscrowAccount::try_deserialize(&mut escrow_account.data.as_slice()).unwrap();
-        
-        assert_eq!(escrow_data.status, EscrowStatus::Verified);
-        assert!(escrow_data.verification_result.is_some());
-        
-        let verification = escrow_data.verification_result.unwrap();
-        assert_eq!(verification.confidence_score, confidence_score);
-        assert_eq!(verification.decision, VerificationDecision::Approved);
-    }
-
-    #[tokio::test]
-    async fn test_release_funds() {
-        let (mut banks_client, payer, payee, escrow_pda, vault_pda) = setup_verified_escrow().await;
-        
-        let treasury = Keypair::new();
-        
-        let accounts = aetherlock_escrow::accounts::ReleaseFunds {
-            escrow_account: escrow_pda,
-            escrow_vault: vault_pda,
-            payee: payee.pubkey(),
-            treasury: treasury.pubkey(),
-            escrow_token_vault: None,
-            payee_token_account: None,
-            treasury_token_account: None,
-            token_program: None,
-        };
-        
-        let instruction = Instruction {
-            program_id,
-            accounts: accounts.to_account_metas(Some(true)),
-            data: aetherlock_escrow::instruction::ReleaseFunds {}.data(),
-        };
-        
-        let transaction = Transaction::new_signed_with_payer(
-            &[instruction],
-            Some(&payer.pubkey()),
-            &[&payer],
-            recent_blockhash,
-        );
-        
-        banks_client.process_transaction(transaction).await.unwrap();
-        
-        // Verify escrow completed and funds transferred
-        let escrow_account = banks_client.get_account(escrow_pda).await.unwrap().unwrap();
-        let escrow_data: EscrowAccount = 
-            EscrowAccount::try_deserialize(&mut escrow_account.data.as_slice()).unwrap();
-        
-        assert_eq!(escrow_data.status, EscrowStatus::Completed);
-        
-        // Verify payee received funds (would need to check balance changes)
-        // Verify treasury received fee (would need to check balance changes)
-    }
-
-    // Helper functions for test setup
-    async fn setup_escrow() -> (BanksClient, Keypair, Pubkey, u64) {
-        // Implementation for setting up basic escrow
-        unimplemented!()
-    }
-    
-    async fn setup_funded_escrow() -> (BanksClient, Keypair, Keypair, Pubkey, u64) {
-        // Implementation for setting up funded escrow
-        unimplemented!()
-    }
-    
-    async fn setup_pending_verification_escrow() -> (BanksClient, Keypair, Pubkey) {
-        // Implementation for setting up escrow with submitted evidence
-        unimplemented!()
-    }
-    
-    async fn setup_verified_escrow() -> (BanksClient, Keypair, Keypair, Pubkey, Pubkey) {
-        // Implementation for setting up verified escrow ready for release
-        unimplemented!()
-    }
-}
-```
-
-### Integration Tests
-
-```rust
-#[cfg(test)]
-mod integration_tests {
-    use super::*;
-    
-    #[tokio::test]
-    async fn test_complete_escrow_workflow() {
-        // Test the complete workflow from creation to completion
-        let program_id = Pubkey::new_unique();
-        let mut program_test = ProgramTest::new(
-            "aetherlock_escrow",
-            program_id,
-            processor!(aetherlock_escrow::entry),
-        );
-        
-        let (mut banks_client, payer, recent_blockhash) = program_test.start().await;
-        let payee = Keypair::new();
-        let ai_oracle = Keypair::new();
-        let treasury = Keypair::new();
-        
-        let escrow_id = 1u64;
-        let amount = 1_000_000_000; // 1 SOL
-        
-        // 1. Initialize escrow
-        // 2. Deposit funds  
-        // 3. Submit evidence
-        // 4. Process verification (approved)
-        // 5. Release funds
-        // 6. Verify final state
-        
-        // Each step would be implemented similar to unit tests above
-        // but testing the complete flow end-to-end
-    }
-    
-    #[tokio::test]
-    async fn test_escrow_cancellation_workflow() {
-        // Test cancellation at different stages
-    }
-    
-    #[tokio::test]
-    async fn test_dispute_resolution_workflow() {
-        // Test dispute handling when AI returns NeedsReview
-    }
-    
-    #[tokio::test]
-    async fn test_spl_token_escrow_workflow() {
-        // Test complete workflow with SPL tokens instead of SOL
-    }
-}
-```
+---
 
 ## Security Considerations
 
-### Access Control
-- **PDA-based security**: All escrow accounts use Program Derived Addresses (PDAs) to prevent unauthorized access
-- **Signer validation**: Critical operations require appropriate signers (payer, payee, AI oracle)
-- **Status constraints**: State machine enforced through account constraints to prevent invalid transitions
+### Access Control (Implemented)
 
-### Economic Security
-- **Treasury fee calculation**: 2% fee calculated safely to prevent overflow
-- **Atomic transfers**: Fund transfers are atomic to prevent partial state updates
-- **Vault isolation**: Each escrow has isolated vault accounts to prevent cross-contamination
+- **PDA-based Security**: All escrow accounts use Program Derived Addresses
+- **Signer Validation**: Critical operations require appropriate signers (payer, payee, AI oracle)
+- **Status Constraints**: State transitions enforced through account constraints
 
-### Oracle Security
-- **Signature verification**: AI verification results include Ed25519 signatures for authenticity
-- **Authorized oracles**: Only pre-authorized AI oracle can submit verification results
-- **Replay protection**: Timestamps and unique escrow IDs prevent replay attacks
+### Cryptographic Security (Partially Implemented)
 
-This Solana escrow contract provides a robust, secure foundation for AetherLock's AI-powered escrow functionality with comprehensive state management, error handling, and testing coverage.
+- **Ed25519 Signatures**: AI results include Ed25519 signatures
+- **⚠️ Signature Verification**: Signatures are stored but NOT verified on-chain (TODO)
+- **Content Addressing**: IPFS hashes ensure evidence integrity
+
+### Economic Security (Implemented)
+
+- **Atomic Transfers**: Fund transfers are atomic operations
+- **Fee Calculation**: 10% treasury fee calculated safely to prevent overflow
+- **Reentrancy Protection**: State changes before external calls
+
+### Known Limitations
+
+1. **No On-Chain Signature Verification**: Ed25519 signatures from AI are stored but not cryptographically verified on-chain. This should be implemented before mainnet deployment.
+
+2. **No zkMe Integration**: KYC verification field exists but zkMe integration is not implemented.
+
+3. **No Dispute Resolution Logic**: Disputed escrows require manual intervention.
+
+4. **No Reputation System**: No on-chain reputation tracking.
+
+5. **Devnet Only**: Not deployed to mainnet.
+
+---
+
+## Summary
+
+**What's Working**:
+- ✅ Escrow creation and fund custody
+- ✅ PDA-based security
+- ✅ Multi-token support (SOL, SPL tokens)
+- ✅ AI verification integration (signature stored)
+- ✅ Automated fund release and fee collection
+- ✅ State machine enforcement
+- ✅ Event emission for off-chain indexing
+
+**What's Not Working / Not Implemented**:
+- ❌ Ed25519 signature verification on-chain
+- ❌ zkMe KYC integration (placeholder only)
+- ❌ Dispute resolution logic
+- ❌ Reputation system
+- ❌ Mainnet deployment
+
+**Next Steps for Production**:
+1. Implement on-chain Ed25519 signature verification
+2. Integrate real zkMe KYC verification
+3. Add dispute resolution mechanism
+4. Comprehensive security audit
+5. Mainnet deployment
+
+This contract provides a solid foundation for AetherLock's escrow functionality on Solana devnet, with clear areas for enhancement before production deployment.

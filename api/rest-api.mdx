@@ -6,6 +6,26 @@ The AetherLock REST API provides programmatic access to escrow creation, evidenc
 
 **Base URL**: `https://api.aetherlock.io/v1`
 
+## Implementation Status
+
+> **Current Deployment**: DEVNET/TESTNET ONLY
+
+The REST API is currently deployed on devnet and testnet environments. Below is the implementation status of major features:
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Authentication | ✅ IMPLEMENTED | JWT-based wallet authentication |
+| Escrow Management | ✅ IMPLEMENTED | Create, fund, query escrows |
+| Evidence Submission | ✅ IMPLEMENTED | IPFS-based evidence storage |
+| AI Verification | ✅ IMPLEMENTED | Arcanum.ai integration (single provider) |
+| Cross-Chain Operations | ⚠️ TESTNET ONLY | ZetaChain testnet integration |
+| KYC Integration | 🔄 IN PROGRESS | Mock flow available, zkMe SDK integration pending |
+| Rate Limiting | ❌ NOT IMPLEMENTED | Planned for production |
+| Webhooks | ❌ NOT IMPLEMENTED | Planned for production |
+| Analytics Dashboard | ❌ NOT IMPLEMENTED | Planned for future release |
+| Dispute Resolution | ❌ NOT IMPLEMENTED | Planned for production |
+| AI Fallback Chain | ❌ NOT IMPLEMENTED | Currently Arcanum.ai only |
+
 ## Authentication
 
 All API requests require authentication using JWT tokens obtained through wallet signature verification.
@@ -50,9 +70,11 @@ const headers = {
 
 ## Rate Limiting
 
-- **Rate Limit**: 100 requests per minute per API key
-- **Burst Limit**: 20 requests per second
-- **Headers**: Rate limit information is returned in response headers:
+> **Implementation Status**: NOT YET IMPLEMENTED - Rate limiting is planned for production deployment
+
+- **Planned Rate Limit**: 100 requests per minute per API key
+- **Planned Burst Limit**: 20 requests per second
+- **Planned Headers**: Rate limit information will be returned in response headers:
   - `X-RateLimit-Limit`: Request limit per window
   - `X-RateLimit-Remaining`: Requests remaining in current window
   - `X-RateLimit-Reset`: Unix timestamp when window resets
@@ -442,7 +464,7 @@ Get AI verification status and results.
 
 #### POST /escrows/{escrowId}/verification/dispute
 
-Initiate a dispute for AI verification results.
+Initiate a dispute for AI verification results (NOT YET IMPLEMENTED - Planned for production).
 
 **Request Body:**
 ```json
@@ -453,7 +475,7 @@ Initiate a dispute for AI verification results.
 }
 ```
 
-**Response:**
+**Planned Response:**
 ```json
 {
   "disputeId": "dispute_ghi789",
@@ -463,32 +485,22 @@ Initiate a dispute for AI verification results.
 }
 ```
 
-### AI Provider Fallback Chain
+### AI Provider
 
-AetherLock uses a robust AI provider fallback chain to ensure high availability:
+> **Implementation Status**: PARTIALLY IMPLEMENTED - Currently using Arcanum.ai only. Fallback chain planned for production.
 
-**Primary Provider**: Arcanum.ai (specialized task verification)
-**Fallback Chain**: Arcanum.ai → OpenAI → Claude → Gemini
+**Current Provider**: Arcanum.ai (specialized task verification)
+**Planned Fallback Chain**: Arcanum.ai → OpenAI → Claude → Gemini (NOT YET IMPLEMENTED)
 
-If the primary provider (Arcanum.ai) is unavailable or returns an error, the system automatically falls back to the next provider in the chain. The verification response includes information about which provider was used:
-
-```json
-{
-  "verificationId": "verification_def456",
-  "status": "completed",
-  "aiProvider": "openai",
-  "fallbackChain": ["arcanum-ai", "openai"],
-  "fallbackReason": "ARCANUM_TIMEOUT",
-  "result": "approved",
-  "confidence": 0.91
-}
-```
+The current implementation uses Arcanum.ai as the sole AI provider. Multi-provider fallback is planned for production deployment to ensure high availability.
 
 ### Cross-Chain Operations
 
+> **Implementation Status**: TESTNET ONLY - Cross-chain bridging is available on testnet networks only. Mainnet deployment pending.
+
 #### POST /cross-chain/bridge
 
-Initiate cross-chain asset transfer.
+Initiate cross-chain asset transfer (TESTNET ONLY).
 
 **Request Body:**
 ```json
@@ -518,7 +530,7 @@ Initiate cross-chain asset transfer.
 
 #### GET /cross-chain/bridge/{bridgeId}
 
-Get cross-chain transfer status.
+Get cross-chain transfer status (TESTNET ONLY).
 
 **Response:**
 ```json
@@ -536,9 +548,11 @@ Get cross-chain transfer status.
 
 ### KYC Integration
 
+> **Implementation Status**: INTEGRATION IN PROGRESS - zkMe SDK integration is currently in development. Mock KYC flow available for testing.
+
 #### GET /kyc/status
 
-Get user's KYC verification status.
+Get user's KYC verification status (MOCK FLOW - Real integration in progress).
 
 **Response:**
 ```json
@@ -548,13 +562,14 @@ Get user's KYC verification status.
   "verifiedAt": "2024-01-01T10:00:00Z",
   "credentialHash": "ZERO_KNOWLEDGE_CREDENTIAL_HASH",
   "expiresAt": "2025-01-01T10:00:00Z",
-  "verificationLevel": "basic" | "enhanced"
+  "verificationLevel": "basic" | "enhanced",
+  "note": "Mock KYC flow - Real zkMe integration in progress"
 }
 ```
 
 #### POST /kyc/webhook
 
-Webhook endpoint for zkMe KYC status updates (internal use).
+Webhook endpoint for zkMe KYC status updates (NOT YET IMPLEMENTED - Planned for production).
 
 **Request Body:**
 ```json
@@ -569,11 +584,19 @@ Webhook endpoint for zkMe KYC status updates (internal use).
 
 ### Analytics
 
+> **Implementation Status**: NOT YET IMPLEMENTED - Analytics dashboard API is planned for future release.
+
 #### GET /analytics/dashboard
 
-Get user dashboard analytics.
+Get user dashboard analytics (PLANNED - Not yet implemented).
 
-**Response:**
+This endpoint is planned for a future release and will provide comprehensive analytics including:
+- Total escrows and transaction volume
+- Success rates and verification times
+- Recent activity feed
+- Monthly statistics
+
+**Planned Response:**
 ```json
 {
   "totalEscrows": 15,
@@ -598,14 +621,16 @@ Get user dashboard analytics.
 
 ## Webhooks
 
-AetherLock supports webhooks for real-time notifications of escrow events.
+> **Implementation Status**: NOT YET IMPLEMENTED - Webhook system is planned for production deployment.
 
-### Configuration
+AetherLock will support webhooks for real-time notifications of escrow events in a future release.
 
-Configure webhook endpoints in your dashboard or via API:
+### Planned Configuration
+
+Configure webhook endpoints in your dashboard or via API (NOT YET AVAILABLE):
 
 ```typescript
-// Configure webhook endpoint
+// Configure webhook endpoint (PLANNED)
 const webhook = await fetch('/webhooks', {
   method: 'POST',
   headers: { 'Authorization': `Bearer ${token}` },
@@ -617,7 +642,7 @@ const webhook = await fetch('/webhooks', {
 });
 ```
 
-### Event Types
+### Planned Event Types
 
 - `escrow.created`: New escrow created
 - `escrow.funded`: Escrow funded by client
@@ -627,7 +652,7 @@ const webhook = await fetch('/webhooks', {
 - `dispute.created`: Dispute initiated
 - `dispute.resolved`: Dispute resolved
 
-### Webhook Payload
+### Planned Webhook Payload
 
 ```json
 {
@@ -702,13 +727,15 @@ evidence = api.evidence.submit(escrow['escrow_id'], {
 
 ### Testnet Endpoints
 
-- **Solana Devnet**: `https://api-devnet.aetherlock.io/v1`
-- **ZetaChain Testnet**: `https://api-testnet.aetherlock.io/v1`
-- **Somnia Testnet**: `https://api-somnia-testnet.aetherlock.io/v1`
+> **Current Deployment Status**: DEVNET/TESTNET ONLY - Mainnet deployment pending
+
+- **Solana Devnet**: `https://api-devnet.aetherlock.io/v1` (ACTIVE)
+- **ZetaChain Testnet**: `https://api-testnet.aetherlock.io/v1` (ACTIVE)
+- **Somnia Testnet**: `https://api-somnia-testnet.aetherlock.io/v1` (ACTIVE)
 
 ### Mock Data
 
-Use the `/mock` endpoints for testing without blockchain interactions:
+Use the `/mock` endpoints for testing without blockchain interactions (AVAILABLE):
 
 ```bash
 # Create mock escrow

@@ -5,7 +5,11 @@ description: "Get AetherLock Protocol running locally in under 10 minutes"
 
 # Quick Start Guide
 
-This guide will help you set up the complete AetherLock Protocol development environment on your local machine. Follow these steps to get all components running for development and testing.
+<Warning>
+**DEVNET ONLY**: This guide sets up AetherLock Protocol for development and testing on Solana Devnet and ZetaChain Testnet. Mainnet deployment is not yet available. The protocol is currently in active development.
+</Warning>
+
+This guide will help you set up the complete AetherLock Protocol development environment on your local machine. Follow these steps to get all components running for development and testing on devnet/testnet environments.
 
 ## Prerequisites
 
@@ -140,24 +144,30 @@ cp backend/.env.example backend/.env
 #### Configure Environment Variables
 Edit the `.env` files with your specific configuration:
 
+<Note>
+**Devnet Configuration**: All environment variables below are configured for Solana Devnet and ZetaChain Testnet. Do not use mainnet endpoints as mainnet deployment is not yet supported.
+</Note>
+
 ```bash
 # Root .env
-SOLANA_NETWORK=devnet
+SOLANA_NETWORK=devnet  # DEVNET ONLY - mainnet not supported
 ANCHOR_PROVIDER_URL=https://api.devnet.solana.com
 ANCHOR_WALLET=~/.config/solana/id.json
 
 # Frontend .env.local
-NEXT_PUBLIC_SOLANA_NETWORK=devnet
+NEXT_PUBLIC_SOLANA_NETWORK=devnet  # DEVNET ONLY
 NEXT_PUBLIC_RPC_ENDPOINT=https://api.devnet.solana.com
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
 
 # Backend .env
 PORT=3001
-SOLANA_RPC_URL=https://api.devnet.solana.com
+SOLANA_RPC_URL=https://api.devnet.solana.com  # DEVNET ONLY
 ARCANUM_API_KEY=your_arcanum_api_key_here
 ARCANUM_ENDPOINT=https://api.arcanum.ai/v1
-ZKME_API_KEY=your_zkme_api_key_here
+# zkMe integration is currently in progress - mock KYC flow used
+ZKME_API_KEY=your_zkme_api_key_here  # Optional - mock flow if not provided
 REDIS_URL=redis://localhost:6379
+DATABASE_URL=postgresql://localhost:5432/aetherlock_dev
 ```
 
 ## Build All Components
@@ -201,7 +211,11 @@ This will:
 - Generate static files
 - Create production bundle
 
-### 4. Build ZetaChain Contracts
+### 4. Build ZetaChain Contracts (Testnet Only)
+
+<Warning>
+**TESTNET ONLY**: ZetaChain integration is currently deployed on testnet only. Mainnet deployment is planned for Phase 3 of the roadmap.
+</Warning>
 
 ```bash
 cd zetachain-contracts
@@ -210,7 +224,7 @@ npx hardhat compile
 ```
 
 This will:
-- Compile Solidity contracts
+- Compile Solidity contracts for testnet deployment
 - Generate TypeScript bindings
 - Create deployment artifacts
 
@@ -230,24 +244,41 @@ Keep this running in a separate terminal.
 
 ### 2. Configure Solana CLI
 
+<Note>
+**Local Development**: For local testing, use the local validator. For devnet testing, use `solana config set --url devnet` instead.
+</Note>
+
 ```bash
 # Set CLI to use local validator
 solana config set --url localhost
+
+# OR for devnet testing (recommended for integration testing)
+# solana config set --url devnet
 
 # Create a new keypair (if needed)
 solana-keygen new --outfile ~/.config/solana/id.json
 
 # Airdrop SOL for testing
 solana airdrop 10
+
+# For devnet, you may need to use a faucet if airdrop fails
+# Visit https://faucet.solana.com for devnet SOL
 ```
 
-### 3. Deploy Solana Program
+### 3. Deploy Solana Program (Devnet)
+
+<Warning>
+**DEVNET DEPLOYMENT**: This deploys to Solana Devnet only. Mainnet deployment is not yet available.
+</Warning>
 
 ```bash
 cd solana-program
 
-# Deploy to local validator
+# Deploy to local validator for development
 anchor deploy
+
+# OR deploy to devnet for integration testing
+anchor deploy --provider.cluster devnet
 
 # Note the program ID and update Anchor.toml if needed
 ```
@@ -277,16 +308,20 @@ npm run dev
 
 The frontend will be available at `http://localhost:3000`
 
-### 6. Start ZetaChain Local Node (Optional)
+### 6. Deploy to ZetaChain Testnet (Optional)
+
+<Warning>
+**TESTNET ONLY**: ZetaChain contracts can only be deployed to testnet. Mainnet support is planned for future releases.
+</Warning>
 
 ```bash
 cd zetachain-contracts
 
-# Start local Hardhat node
-npx hardhat node
+# Deploy contracts to ZetaChain testnet
+npx hardhat run scripts/deploy.ts --network testnet
 
-# In another terminal, deploy contracts
-npx hardhat run scripts/deploy.ts --network localhost
+# Note: Local Hardhat node testing is available but limited
+# For full cross-chain testing, use ZetaChain testnet
 ```
 
 ## Verification Steps
@@ -321,33 +356,37 @@ curl -X POST http://localhost:3001/api/escrows \
 3. Verify wallet connection works
 4. Test creating a test escrow
 
-### 4. Check Cross-Chain Integration
+### 4. Check Cross-Chain Integration (Testnet)
+
+<Note>
+**Testnet Verification**: Cross-chain functionality is currently available on ZetaChain testnet only.
+</Note>
 
 ```bash
-# Test ZetaChain contract deployment
+# Test ZetaChain contract deployment on testnet
 cd zetachain-contracts
 npx hardhat verify --network testnet <CONTRACT_ADDRESS>
 ```
 
 ## Common Development Commands
 
-### Solana Development
+### Solana Development (Devnet Only)
 
 ```bash
 # Build program
 anchor build
 
-# Test program
+# Test program locally
 anchor test
 
-# Deploy to devnet
+# Deploy to devnet (DEVNET ONLY - mainnet not supported)
 anchor deploy --provider.cluster devnet
 
 # Generate new keypair
 solana-keygen new
 
-# Check program logs
-solana logs <PROGRAM_ID>
+# Check program logs on devnet
+solana logs <PROGRAM_ID> --url devnet
 ```
 
 ### Backend Development
@@ -382,41 +421,70 @@ npm run type-check
 npm run build
 ```
 
-### ZetaChain Development
+### ZetaChain Development (Testnet Only)
 
 ```bash
 # Compile contracts
 npx hardhat compile
 
-# Run tests
+# Run tests locally
 npx hardhat test
 
-# Deploy to testnet
+# Deploy to testnet (TESTNET ONLY - mainnet not supported)
 npx hardhat run scripts/deploy.ts --network testnet
 
-# Verify contract
+# Verify contract on testnet
 npx hardhat verify --network testnet <ADDRESS>
 ```
+
+## What's Actually Deployable
+
+<Info>
+**Current Deployment Status**: AetherLock Protocol is currently deployable to development and testing environments only:
+
+**✅ Available Now:**
+- Solana Devnet deployment (escrow smart contracts)
+- ZetaChain Testnet deployment (cross-chain messaging)
+- Local development environment
+- D-PoTV (Digital Proof-of-Task Verification) for digital tasks
+
+**⏳ In Progress:**
+- zkMe SDK integration (currently using mock KYC flow)
+- Chainlink Functions integration (planned)
+
+**🚫 Not Yet Available:**
+- Solana Mainnet deployment
+- ZetaChain Mainnet deployment
+- P-PoTV (Physical Proof-of-Task Verification)
+- Production-ready AI fallback chain
+- IPFS with Pinata pinning service
+</Info>
 
 ## Next Steps
 
 Once you have the local development environment running:
 
 1. **Explore the API**: Visit `http://localhost:3001/docs` for interactive API documentation
-2. **Test Escrow Flow**: Create a test escrow through the frontend interface
+2. **Test Escrow Flow**: Create a test escrow through the frontend interface (devnet only)
 3. **Review Smart Contracts**: Examine the Solana program code in `solana-program/programs/`
-4. **Check Integration**: Test the AI verification system with sample evidence
-5. **Deploy to Testnet**: Follow the deployment guides for testnet deployment
+4. **Check Integration**: Test the D-PoTV AI verification system with sample digital evidence
+5. **Deploy to Devnet**: Follow the deployment guides for devnet/testnet deployment
 
 ## Troubleshooting
 
 If you encounter issues during setup:
 
 1. **Check Prerequisites**: Ensure all required software is installed and up to date
-2. **Environment Variables**: Verify all environment variables are set correctly
-3. **Network Issues**: Ensure you're connected to the internet and can access RPC endpoints
+2. **Environment Variables**: Verify all environment variables are set correctly and pointing to devnet/testnet
+3. **Network Issues**: Ensure you're connected to the internet and can access devnet RPC endpoints
 4. **Port Conflicts**: Make sure ports 3000, 3001, and 8899 are available
 5. **Permissions**: Ensure you have write permissions in the project directory
+6. **Devnet SOL**: If airdrop fails, use the [Solana Faucet](https://faucet.solana.com) to get devnet SOL
+7. **zkMe Integration**: If zkMe API key is not available, the system will use a mock KYC flow for testing
+
+<Warning>
+**Important**: Do not attempt to deploy to mainnet. The protocol is not production-ready and mainnet deployment will fail or result in unexpected behavior.
+</Warning>
 
 For detailed troubleshooting, see the [Troubleshooting Guide](/implementation/troubleshooting).
 

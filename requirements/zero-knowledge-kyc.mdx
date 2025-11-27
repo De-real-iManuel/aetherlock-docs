@@ -4,9 +4,27 @@
 
 This document defines the functional requirements for AetherLock's privacy-preserving Know Your Customer (KYC) verification system powered by zkMe. The system enables regulatory compliance while maintaining user privacy through zero-knowledge cryptographic proofs.
 
+## Implementation Status
+
+### Current Features (Implemented - Devnet)
+- 🔄 **Mock KYC Flow**: Basic KYC verification flow for testing (mock implementation)
+- 🔄 **zkMe Integration In Progress**: Partner integration underway
+
+### Planned Features (Future Roadmap - Phase 2)
+- 🔄 **Real zkMe SDK Integration**: Full zero-knowledge proof verification
+- 🔄 **Multi-Level Verification**: Basic, enhanced, and premium verification tiers
+- 🔄 **Cross-Chain Identity**: Verification status sync across networks via ZetaChain
+- 🔄 **Privacy-Preserving Proofs**: Groth16 zero-knowledge proofs
+- 🔄 **Selective Disclosure**: Prove specific attributes without revealing others
+- 🔄 **Credential Management**: Issuance, renewal, and revocation
+
+**Note**: Current implementation uses a mock KYC flow for development and testing. Real zkMe SDK integration is in progress with the zkMe team.
+
 ## User Stories and Acceptance Criteria
 
 ### User Story 1: Privacy-Preserving Identity Verification
+
+**Implementation Status**: 🔄 **PLANNED** - Real zkMe integration in progress, mock flow currently
 
 **As a** privacy-conscious user  
 **I want to** complete identity verification without revealing my personal information to AetherLock  
@@ -14,11 +32,11 @@ This document defines the functional requirements for AetherLock's privacy-prese
 
 #### Acceptance Criteria
 
-1. **WHEN** I initiate KYC verification **THEN** the system SHALL launch zkMe's client-side verification widget without transmitting personal data to AetherLock servers
-2. **WHEN** I provide identity documents **THEN** the system SHALL generate zero-knowledge proofs locally on my device without uploading raw documents
-3. **WHEN** verification is complete **THEN** the system SHALL store only cryptographic commitments on-chain, never personal identifiable information
-4. **WHEN** I check my verification status **THEN** the system SHALL display my verification level without exposing the underlying personal data used for verification
-5. **WHEN** verification expires **THEN** the system SHALL require re-verification while maintaining the same privacy guarantees
+1. 🔄 **WHEN** I initiate KYC verification **THEN** the system SHALL launch zkMe's client-side verification widget without transmitting personal data to AetherLock servers *(PLANNED - Mock flow currently)*
+2. 🔄 **WHEN** I provide identity documents **THEN** the system SHALL generate zero-knowledge proofs locally on my device without uploading raw documents *(PLANNED)*
+3. 🔄 **WHEN** verification is complete **THEN** the system SHALL store only cryptographic commitments on-chain, never personal identifiable information *(PLANNED)*
+4. 🔄 **WHEN** I check my verification status **THEN** the system SHALL display my verification level without exposing the underlying personal data used for verification *(PLANNED)*
+5. 🔄 **WHEN** verification expires **THEN** the system SHALL require re-verification while maintaining the same privacy guarantees *(PLANNED)*
 
 ### User Story 2: Multi-Level Verification Options
 
@@ -36,17 +54,19 @@ This document defines the functional requirements for AetherLock's privacy-prese
 
 ### User Story 3: Cross-Chain Identity Portability
 
+**Implementation Status**: 🔄 **PLANNED** - Requires ZetaChain mainnet integration (Phase 3)
+
 **As a** multi-chain user  
 **I want** my KYC verification to work across different blockchain networks  
 **So that** I don't need to repeat verification for each network I use
 
 #### Acceptance Criteria
 
-1. **WHEN** I complete KYC on one network **THEN** the system SHALL automatically synchronize my verification status to all supported chains via ZetaChain
-2. **WHEN** I connect to a new supported blockchain **THEN** the system SHALL recognize my existing KYC status without requiring re-verification
-3. **WHEN** my verification status changes **THEN** the system SHALL propagate updates across all connected networks within 5 minutes
-4. **WHEN** I revoke my credentials **THEN** the system SHALL invalidate my verification status across all networks simultaneously
-5. **WHEN** network connectivity is restored after downtime **THEN** the system SHALL automatically sync any missed verification status updates
+1. 🔄 **WHEN** I complete KYC on one network **THEN** the system SHALL automatically synchronize my verification status to all supported chains via ZetaChain *(PLANNED - Phase 3)*
+2. 🔄 **WHEN** I connect to a new supported blockchain **THEN** the system SHALL recognize my existing KYC status without requiring re-verification *(PLANNED)*
+3. 🔄 **WHEN** my verification status changes **THEN** the system SHALL propagate updates across all connected networks within 5 minutes *(PLANNED)*
+4. 🔄 **WHEN** I revoke my credentials **THEN** the system SHALL invalidate my verification status across all networks simultaneously *(PLANNED)*
+5. 🔄 **WHEN** network connectivity is restored after downtime **THEN** the system SHALL automatically sync any missed verification status updates *(PLANNED)*
 
 ### User Story 4: Seamless User Experience
 

@@ -4,14 +4,26 @@
 
 AetherLock operates across multiple blockchains with specialized smart contracts for each network. This documentation covers the public interfaces, account structures, and integration patterns for all deployed contracts.
 
+## Implementation Status
+
+> **Current Deployment**: DEVNET/TESTNET ONLY - Mainnet deployment pending
+
+| Network | Status | Notes |
+|---------|--------|-------|
+| Solana | ✅ DEVNET | Core escrow functionality implemented |
+| ZetaChain | ⚠️ TESTNET ONLY | Cross-chain messaging available on testnet |
+| Somnia | ⚠️ TESTNET ONLY | Settlement layer on testnet |
+
 ## Contract Addresses
 
 ### Mainnet
-- **Solana Program**: `AEtherLockProgram1111111111111111111111111`
-- **ZetaChain Universal App**: `0x742d35Cc6634C0532925a3b8D4C9db96DfbB8E24`
-- **Somnia Settlement**: `0x1234567890123456789012345678901234567890`
+> **Status**: NOT YET DEPLOYED - Mainnet contracts pending production deployment
 
-### Testnet
+- **Solana Program**: NOT YET DEPLOYED
+- **ZetaChain Universal App**: NOT YET DEPLOYED
+- **Somnia Settlement**: NOT YET DEPLOYED
+
+### Testnet (ACTIVE)
 - **Solana Devnet**: `AEtherLockDevnet1111111111111111111111111`
 - **ZetaChain Athens**: `0x742d35Cc6634C0532925a3b8D4C9db96DfbB8E25`
 - **Somnia Testnet**: `0x1234567890123456789012345678901234567891`
@@ -364,9 +376,10 @@ pub struct ReleaseFunds<'info> {
 
 #### initiate_dispute
 
-Allows client to dispute AI verification results.
+Allows client to dispute AI verification results (NOT YET IMPLEMENTED - Planned for production).
 
 ```rust
+// PLANNED - Not yet implemented
 pub fn initiate_dispute(
     ctx: Context<InitiateDispute>,
     reason: String,
@@ -427,6 +440,8 @@ pub struct DisputeInitiated {
 ```
 
 ## ZetaChain Universal App
+
+> **Implementation Status**: TESTNET ONLY - Cross-chain functionality available on ZetaChain Athens testnet. Mainnet deployment pending.
 
 ### Contract Interface
 
@@ -513,6 +528,7 @@ contract AetherLockUniversalApp is zContract {
     
     function onRevert(RevertContext calldata revertContext) external override {
         // Handle failed cross-chain transactions
+        // NOTE: Full revert handling not yet implemented
         _handleRevert(revertContext);
     }
     
@@ -684,6 +700,8 @@ await tx.wait();
 ```
 
 ## Somnia Settlement Contract
+
+> **Implementation Status**: TESTNET ONLY - Settlement functionality available on Somnia testnet. Mainnet deployment pending.
 
 ### Contract Interface
 
@@ -1002,7 +1020,9 @@ describe('AetherLock Universal App', () => {
 
 ## AI Verification Integration
 
-Smart contracts receive AI verification results from Arcanum.ai through Chainlink oracles. The verification result structure includes:
+> **Implementation Status**: PARTIALLY IMPLEMENTED - Smart contracts currently receive AI verification results directly from Arcanum.ai. Chainlink oracle integration is planned for production.
+
+Smart contracts receive AI verification results from Arcanum.ai. The verification result structure includes:
 
 ```rust
 pub struct VerificationResult {
@@ -1023,9 +1043,12 @@ pub struct VerificationResult {
 
 ### Arcanum.ai Signature Verification
 
-The smart contract verifies that AI results are authentically signed by Arcanum.ai:
+> **Implementation Status**: NOT YET IMPLEMENTED - Ed25519 signature verification for AI results is planned for production.
+
+The smart contract will verify that AI results are authentically signed by Arcanum.ai (PLANNED):
 
 ```rust
+// PLANNED - Not yet implemented
 pub fn verify_ai_signature(
     result: &VerificationResult,
     ai_public_key: &Pubkey,

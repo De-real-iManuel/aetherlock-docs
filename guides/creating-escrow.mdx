@@ -21,6 +21,10 @@ Learn how to create secure escrow transactions on AetherLock Protocol. This guid
 
 ### Understanding Escrow Types
 
+<Note>
+**Current Implementation**: AetherLock currently supports Digital Proof-of-Task Verification (D-PoTV) for digital deliverables only. Physical goods verification (P-PoTV) is planned for future releases.
+</Note>
+
 <Tabs>
 <Tab title="Direct Escrow">
 **Use Case**: Working with a specific freelancer/service provider
@@ -28,6 +32,7 @@ Learn how to create secure escrow transactions on AetherLock Protocol. This guid
 **Security**: Higher - both parties pre-verified
 **Timeline**: Faster setup and execution
 **Best For**: Ongoing relationships, trusted providers
+**Supported Tasks**: Digital deliverables (code, design, writing, data analysis)
 </Tab>
 
 <Tab title="Open Escrow">
@@ -36,6 +41,7 @@ Learn how to create secure escrow transactions on AetherLock Protocol. This guid
 **Security**: Standard - providers verified during application
 **Timeline**: Longer due to selection process
 **Best For**: New projects, competitive bidding
+**Supported Tasks**: Digital deliverables (code, design, writing, data analysis)
 </Tab>
 
 <Tab title="Milestone Escrow">
@@ -44,6 +50,7 @@ Learn how to create secure escrow transactions on AetherLock Protocol. This guid
 **Security**: Highest - incremental verification
 **Timeline**: Extended over project duration
 **Best For**: Complex projects, long-term engagements
+**Supported Tasks**: Digital deliverables (code, design, writing, data analysis)
 </Tab>
 </Tabs>
 
@@ -79,7 +86,7 @@ Fill out the project overview:
 ❌ Bad: "Website stuff"
 ```
 
-**Category**: Select from predefined categories
+**Category**: Select from predefined categories (Digital Tasks Only)
 - Web Development
 - Mobile App Development  
 - Graphic Design
@@ -87,7 +94,11 @@ Fill out the project overview:
 - Marketing & SEO
 - Data Analysis
 - Consulting
-- Other (specify)
+- Other Digital Services
+
+<Note>
+**Supported Task Types**: Currently, AetherLock supports digital deliverables only (code, design files, documents, data). Physical goods delivery verification is planned for future releases.
+</Note>
 
 **Description**: Detailed project requirements (max 2000 characters)
 ```markdown
@@ -227,10 +238,11 @@ const escrowConfig = {
 - **Hybrid**: AI + human arbitrator if needed (balanced)
 - **Manual**: Human arbitrator required (highest security)
 
-**Verification Requirements**:
-- **Evidence Type**: Screenshots, videos, live demos, code repositories
+**Verification Requirements** (D-PoTV - Digital Tasks):
+- **Evidence Type**: Screenshots, videos, live demos, code repositories, documents
 - **Submission Deadline**: How long after delivery to submit evidence
 - **Review Period**: Time allowed for client review and approval
+- **AI Verification**: Powered by Arcanum.ai with 2.1s average verification time
 
 **Refund Policy**:
 - **Full Refund**: If project not started

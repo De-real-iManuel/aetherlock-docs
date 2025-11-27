@@ -1,16 +1,28 @@
 # Chainlink Functions Integration
 
+> **⚠️ IMPORTANT: NOT YET IMPLEMENTED**
+> 
+> This document describes the **planned architecture** for Chainlink Functions integration. This functionality is **NOT currently implemented** in the AetherLock Protocol.
+>
+> **Current Implementation**: AI verification results are sent directly from Arcanum.ai to smart contracts without oracle intermediation.
+>
+> **Planned Timeline**: Chainlink Functions integration is planned for Phase 2 (Production-Ready) deployment.
+
 ## Overview
 
-AetherLock leverages Chainlink Functions to enable decentralized off-chain computation for AI verification, cross-chain data retrieval, and external API integrations. This ensures that critical verification processes remain decentralized and tamper-proof while accessing external resources.
+AetherLock plans to leverage Chainlink Functions to enable decentralized off-chain computation for AI verification, cross-chain data retrieval, and external API integrations. This will ensure that critical verification processes remain decentralized and tamper-proof while accessing external resources.
 
-Chainlink Functions allows AetherLock to:
+Chainlink Functions will allow AetherLock to:
 - Execute AI verification logic on a Decentralized Oracle Network (DON)
 - Fetch evidence from IPFS in a decentralized manner
 - Integrate with external APIs (Arcanum.ai, zkMe) securely
 - Provide cryptographic proofs of computation results
 
-## Architecture
+**Status**: CONCEPTUAL - This integration is in the planning phase.
+
+## Planned Architecture
+
+> **Status**: CONCEPTUAL DESIGN - Not yet implemented
 
 ```mermaid
 graph TB
@@ -26,7 +38,7 @@ graph TB
     I --> B
     B --> A
     
-    subgraph "Off-Chain Computation"
+    subgraph "Off-Chain Computation (PLANNED)"
         C
         D
         E
@@ -34,15 +46,17 @@ graph TB
         G
     end
     
-    subgraph "On-Chain"
+    subgraph "On-Chain (PLANNED)"
         A
         B
     end
 ```
 
-## Consumer Contract
+## Planned Consumer Contract
 
-### Solana Implementation
+> **Status**: NOT YET IMPLEMENTED - These are proposed contract designs
+
+### Solana Implementation (PLANNED)
 
 ```rust
 use anchor_lang::prelude::*;
@@ -195,7 +209,9 @@ pub struct VerificationFulfilled {
 }
 ```
 
-### EVM Implementation
+### EVM Implementation (PLANNED)
+
+> **Status**: NOT YET IMPLEMENTED
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -439,9 +455,11 @@ contract AetherLockOracle is FunctionsClient, ConfirmedOwner {
 }
 ```
 
-## JavaScript Source Code for DON
+## Planned JavaScript Source Code for DON
 
-### Main Verification Function
+> **Status**: CONCEPTUAL - Example code for future implementation
+
+### Main Verification Function (PLANNED)
 
 ```javascript
 // AetherLock AI Verification Function for Chainlink DON
@@ -583,7 +601,9 @@ try {
 }
 ```
 
-### Advanced Verification with Multiple AI Providers
+### Advanced Verification with Multiple AI Providers (PLANNED)
+
+> **Status**: NOT YET IMPLEMENTED - Multi-provider consensus is planned for future releases
 
 ```javascript
 // Enhanced verification with fallback AI providers
@@ -719,9 +739,11 @@ try {
 }
 ```
 
-## DON Configuration
+## Planned DON Configuration
 
-### Subscription Management
+> **Status**: NOT YET IMPLEMENTED - Configuration examples for future deployment
+
+### Subscription Management (PLANNED)
 
 ```typescript
 import { ethers } from 'ethers';
@@ -783,7 +805,9 @@ await subscriptionManager.fundSubscription(subscriptionId, ethers.parseEther('10
 await subscriptionManager.addConsumer(subscriptionId, 'YOUR_CONSUMER_CONTRACT_ADDRESS');
 ```
 
-### Secrets Management
+### Secrets Management (PLANNED)
+
+> **Status**: NOT YET IMPLEMENTED
 
 ```typescript
 import { SecretsManager } from '@chainlink/functions-toolkit';
@@ -815,9 +839,11 @@ class AetherLockSecretsManager {
 }
 ```
 
-## Integration Examples
+## Planned Integration Examples
 
-### Frontend Integration
+> **Status**: CONCEPTUAL - Example code for future implementation
+
+### Frontend Integration (PLANNED)
 
 ```typescript
 import { ethers } from 'ethers';
@@ -924,7 +950,9 @@ const result = await oracleClient.waitForVerification('escrow_123');
 console.log('Verification result:', result);
 ```
 
-### Backend Integration
+### Backend Integration (PLANNED)
+
+> **Status**: NOT YET IMPLEMENTED
 
 ```typescript
 import { EventEmitter } from 'events';
@@ -1333,11 +1361,13 @@ class LinkTokenManager {
 
 ## Arcanum.ai Integration Details
 
+> **Current Status**: Direct integration without Chainlink oracle. Arcanum.ai is the primary AI provider.
+
 ### API Endpoints
 
-**Production**: `https://api.arcanum.ai/v1/verify`
-**Staging**: `https://staging-api.arcanum.ai/v1/verify`
-**Testnet**: `https://testnet-api.arcanum.ai/v1/verify`
+**Production**: `https://api.arcanum.ai/v1/verify` (ACTIVE - Direct integration)
+**Staging**: `https://staging-api.arcanum.ai/v1/verify` (ACTIVE)
+**Testnet**: `https://testnet-api.arcanum.ai/v1/verify` (ACTIVE)
 
 ### Authentication
 
@@ -1400,9 +1430,11 @@ headers: {
 | `ARCANUM_EVIDENCE_TOO_LARGE` | Evidence exceeds size limit | Reduce evidence size |
 | `ARCANUM_SERVICE_ERROR` | Internal service error | Fallback to next provider |
 
-### Fallback Provider Configuration
+### Fallback Provider Configuration (PLANNED)
 
-When Arcanum.ai is unavailable, the DON automatically falls back to alternative providers:
+> **Status**: NOT YET IMPLEMENTED - Currently using Arcanum.ai only
+
+When Arcanum.ai is unavailable, the DON will automatically fall back to alternative providers (PLANNED):
 
 ```javascript
 const fallbackProviders = [
@@ -1428,12 +1460,27 @@ async function verifyWithFallback(evidence, requirements) {
 }
 ```
 
+## Current vs. Planned Implementation
+
+### Current Implementation (MVP)
+- ✅ Direct Arcanum.ai integration for AI verification
+- ✅ AI results sent directly to smart contracts
+- ✅ Basic verification flow without oracle intermediation
+
+### Planned Implementation (Phase 2)
+- ❌ Chainlink Functions integration for decentralized oracle network
+- ❌ Multi-provider AI consensus (Arcanum.ai, OpenAI, Claude, Gemini)
+- ❌ Decentralized IPFS evidence fetching through DON
+- ❌ Cryptographic proof of computation results
+- ❌ Enhanced security through oracle-based verification
+
+**Timeline**: Chainlink Functions integration is planned for Phase 2 (Production-Ready) deployment, estimated 2-3 weeks with Kiro IDE assistance.
+
 ## Support and Resources
 
 - **Chainlink Functions Documentation**: [https://docs.chain.link/chainlink-functions](https://docs.chain.link/chainlink-functions)
 - **AetherLock Oracle Support**: [https://discord.gg/aetherlock-oracle](https://discord.gg/aetherlock-oracle)
 - **DON Status Dashboard**: [https://functions.chain.link](https://functions.chain.link)
 - **LINK Token Faucets**: Available on testnets for development
-- **Oracle Analytics**: [https://analytics.aetherlock.io/oracle](https://analytics.aetherlock.io/oracle)
-- **Arcanum.ai Documentation**: [https://docs.arcanum.ai](https://docs.arcanum.ai)
-- **Arcanum.ai Status**: [https://status.arcanum.ai](https://status.arcanum.ai)
+- **Arcanum.ai Documentation**: [https://docs.arcanum.ai](https://docs.arcanum.ai) (ACTIVE)
+- **Arcanum.ai Status**: [https://status.arcanum.ai](https://status.arcanum.ai) (ACTIVE)

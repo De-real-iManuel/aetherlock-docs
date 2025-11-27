@@ -2,24 +2,41 @@
 
 ## Overview
 
-AetherLock integrates with zkMe to provide privacy-preserving Know Your Customer (KYC) verification. This integration enables users to prove their identity without revealing personal information, maintaining compliance while preserving privacy through zero-knowledge cryptographic proofs.
+**Status**: ⚠️ MOCK KYC FLOW ONLY - REAL INTEGRATION IN PROGRESS
 
-zkMe serves as AetherLock's official Identity Partner, providing enterprise-grade zero-knowledge identity verification that operates seamlessly across multiple blockchain networks through ZetaChain's omnichain infrastructure.
+AetherLock is working with zkMe to provide privacy-preserving Know Your Customer (KYC) verification. **Current implementation uses a mock KYC flow for testing purposes.** Real zkMe SDK integration is in progress with the zkMe team.
+
+**Current Status**:
+- ✅ Mock KYC flow for testing
+- ⏳ zkMe SDK integration in progress (partner integration)
+- ❌ Zero-knowledge proofs not implemented
+- ❌ Cross-chain identity not implemented
+- ❌ Production KYC verification not available
+
+zkMe is intended to serve as AetherLock's Identity Partner, providing enterprise-grade zero-knowledge identity verification. Full integration is planned for future releases.
 
 ## Architecture
 
-### Zero-Knowledge Identity Verification Flow
+### Zero-Knowledge Identity Verification Flow (Planned, Not Implemented)
+
+**⚠️ NOTE**: This diagram shows the planned architecture. Current implementation uses a mock flow.
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Frontend
-    participant zkMe_SDK
-    participant zkMe_API
     participant Backend
-    participant ZetaChain
     participant Solana
 
+    Note over User,Solana: CURRENT MOCK FLOW (Implemented)
+    User->>Frontend: Click "Verify Identity"
+    Frontend->>Backend: Request mock KYC
+    Backend->>Backend: Generate mock verification
+    Backend->>Solana: Update KYC status (devnet)
+    Backend->>Frontend: Return mock success
+    Frontend->>User: Display "Verified" (mock)
+    
+    Note over User,Solana: PLANNED REAL FLOW (Not Implemented)
     User->>Frontend: Click "Verify Identity"
     Frontend->>zkMe_SDK: Initialize verification session
     zkMe_SDK->>User: Display KYC interface
@@ -44,7 +61,9 @@ sequenceDiagram
 
 ## Frontend Integration
 
-### React KYC Component
+### React KYC Component (Mock Implementation)
+
+**Current Status**: This component uses a mock KYC flow for testing. Real zkMe SDK integration is not yet implemented.
 
 ```typescript
 import React, { useState, useEffect } from 'react';
@@ -374,7 +393,9 @@ interface KYCSession {
 
 ## Backend Integration
 
-### Express Webhook Handler
+### Express Webhook Handler (NOT IMPLEMENTED)
+
+**⚠️ NOTE**: The webhook handler shown below is conceptual and NOT implemented. Current implementation uses a mock KYC flow without real zkMe webhooks.
 
 ```typescript
 import express from 'express';
@@ -1240,3 +1261,261 @@ npm run deploy:testnet
 ```
 
 This comprehensive zkMe integration provides enterprise-grade privacy-preserving KYC while maintaining seamless user experience and regulatory compliance across multiple blockchain networks.
+
+---
+
+
+## Current Mock Implementation
+
+### Mock KYC Flow (What's Actually Implemented)
+
+```typescript
+// Mock KYC Service (Current Implementation)
+class MockKYCService {
+  /**
+   * Simulate KYC verification for testing
+   * Returns mock verification result immediately
+   */
+  async mockVerifyKYC(walletAddress: string): Promise<MockKYCResult> {
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Generate mock verification result
+    return {
+      verified: true,
+      level: 'enhanced',
+      credentialHash: this.generateMockHash(walletAddress),
+      issuedAt: Math.floor(Date.now() / 1000),
+      expiresAt: Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60), // 1 year
+      isMock: true // Flag to indicate this is mock data
+    };
+  }
+  
+  private generateMockHash(walletAddress: string): string {
+    return createHash('sha256')
+      .update(`mock_kyc_${walletAddress}_${Date.now()}`)
+      .digest('hex');
+  }
+}
+
+// API Endpoint (Current Implementation)
+app.post('/api/kyc/verify-mock', async (req, res) => {
+  try {
+    const { walletAddress } = req.body;
+    
+    // Validate wallet address
+    if (!isValidSolanaAddress(walletAddress)) {
+      return res.status(400).json({ error: 'Invalid wallet address' });
+    }
+    
+    // Generate mock KYC result
+    const mockKYC = new MockKYCService();
+    const result = await mockKYC.mockVerifyKYC(walletAddress);
+    
+    // Store in database (marked as mock)
+    await storeKYCResult({
+      walletAddress,
+      ...result,
+      source: 'mock'
+    });
+    
+    // Update Solana devnet (optional)
+    if (process.env.UPDATE_DEVNET === 'true') {
+      await updateDevnetKYCStatus(walletAddress, result);
+    }
+    
+    res.json({
+      success: true,
+      result,
+      warning: 'This is a mock KYC result for testing purposes only'
+    });
+    
+  } catch (error) {
+    console.error('Mock KYC error:', error);
+    res.status(500).json({ error: 'Mock KYC failed' });
+  }
+});
+```
+
+### Frontend Mock Integration
+
+```typescript
+// Current mock KYC button
+const MockKYCButton: React.FC = () => {
+  const { publicKey } = useWallet();
+  const [loading, setLoading] = useState(false);
+  const [verified, setVerified] = useState(false);
+
+  const handleMockVerify = async () => {
+    if (!publicKey) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch('/api/kyc/verify-mock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          walletAddress: publicKey.toString()
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setVerified(true);
+        toast.success('Mock KYC verification successful!');
+      }
+    } catch (error) {
+      toast.error('Mock KYC failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="mock-kyc-container">
+      <button
+        onClick={handleMockVerify}
+        disabled={loading || verified}
+        className="mock-kyc-button"
+      >
+        {loading ? 'Verifying...' : verified ? '✓ Verified (Mock)' : 'Mock KYC Verify'}
+      </button>
+      {verified && (
+        <p className="mock-warning">
+          ⚠️ This is a mock verification for testing only
+        </p>
+      )}
+    </div>
+  );
+};
+```
+
+---
+
+## Roadmap: Real zkMe Integration
+
+### Phase 1: zkMe SDK Integration (4-6 weeks)
+
+**Partner Integration Status**: In progress with zkMe team
+
+**Tasks**:
+1. Complete zkMe SDK integration agreement
+2. Obtain production API keys and credentials
+3. Integrate zkMe React widget
+4. Implement real KYC verification flow
+5. Test on zkMe testnet
+6. Security review of integration
+
+**Deliverables**:
+- Real zkMe widget in frontend
+- Actual zero-knowledge proof generation
+- Production-ready KYC verification
+
+### Phase 2: Webhook Implementation (2-3 weeks)
+
+**Tasks**:
+1. Implement webhook endpoint for zkMe callbacks
+2. Add webhook signature verification
+3. Handle verification events (completed, failed, expired)
+4. Implement retry logic for failed webhooks
+5. Add webhook monitoring and alerting
+
+**Deliverables**:
+- Functional webhook handler
+- Event processing pipeline
+- Monitoring dashboard
+
+### Phase 3: Cross-Chain Identity (3-4 weeks)
+
+**Tasks**:
+1. Integrate with ZetaChain for cross-chain identity
+2. Implement credential storage on ZetaChain
+3. Add cross-chain KYC status synchronization
+4. Test cross-chain identity verification
+
+**Deliverables**:
+- Cross-chain identity verification
+- ZetaChain credential storage
+- Multi-chain KYC status
+
+### Phase 4: Production Deployment (2-3 weeks)
+
+**Tasks**:
+1. Complete security audit
+2. Load testing and performance optimization
+3. Deploy to production
+4. Monitor and iterate
+
+**Deliverables**:
+- Production zkMe integration
+- Real KYC verification
+- Zero-knowledge proofs
+
+---
+
+## Why Mock KYC Currently?
+
+### Reasons for Mock Implementation
+
+1. **Partner Integration Timeline**: zkMe SDK integration requires coordination with zkMe team and is in progress
+
+2. **Development Velocity**: Mock KYC allows frontend and smart contract development to proceed without blocking on partner integration
+
+3. **Testing**: Mock flow enables comprehensive testing of escrow functionality without requiring real identity verification
+
+4. **Cost**: Real KYC verification has per-verification costs; mock flow allows unlimited testing
+
+5. **Compliance**: Real KYC requires legal and compliance review; mock flow allows technical development to proceed
+
+### Transition Plan
+
+**Current State** (Mock KYC):
+- ✅ Frontend KYC UI
+- ✅ Mock verification flow
+- ✅ Database storage
+- ✅ Devnet integration
+
+**Target State** (Real zkMe):
+- ⏳ zkMe SDK integration (in progress)
+- ⏳ Real zero-knowledge proofs
+- ⏳ Webhook handlers
+- ⏳ Cross-chain identity
+- ⏳ Production deployment
+
+**Migration Path**:
+1. Complete zkMe SDK integration (Phase 1)
+2. Deploy to testnet with real zkMe
+3. Run parallel testing (mock + real)
+4. Gradually migrate users to real KYC
+5. Deprecate mock KYC flow
+6. Production deployment
+
+---
+
+## Summary
+
+**Current Implementation**:
+- ✅ Mock KYC flow for testing
+- ✅ Frontend KYC UI components
+- ✅ Database storage for KYC status
+- ✅ Devnet integration
+- ❌ Real zkMe SDK integration
+- ❌ Zero-knowledge proofs
+- ❌ Webhook handlers
+- ❌ Cross-chain identity
+
+**Timeline to Production**:
+- Phase 1 (zkMe SDK): 4-6 weeks
+- Phase 2 (Webhooks): 2-3 weeks
+- Phase 3 (Cross-Chain): 3-4 weeks
+- Phase 4 (Production): 2-3 weeks
+- **Total**: 11-16 weeks
+
+**Estimated Cost**:
+- zkMe integration fees: $10K-$20K
+- Development: $80K-$120K
+- Security audit: $30K-$50K
+- **Total**: $120K-$190K
+
+**Current Status**: Mock KYC flow is sufficient for devnet testing and MVP demonstration. Real zkMe integration is planned for production deployment after core escrow functionality is validated on mainnet.

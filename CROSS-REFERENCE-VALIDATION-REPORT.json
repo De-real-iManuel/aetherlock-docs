@@ -1,0 +1,1653 @@
+{
+  "links": [
+    {
+      "text": "Kiro IDE Screenshot",
+      "path": "/assets/kiro-screenshot.png",
+      "sourceFile": "amazon-q-usage.mdx",
+      "lineNumber": 47
+    },
+    {
+      "text": "VALIDATION-REPORT.md",
+      "path": "./VALIDATION-REPORT.md",
+      "sourceFile": "CHANGELOG.md",
+      "lineNumber": 123
+    },
+    {
+      "text": "CONTENT-REVIEW-REPORT.md",
+      "path": "./CONTENT-REVIEW-REPORT.md",
+      "sourceFile": "CHANGELOG.md",
+      "lineNumber": 123
+    },
+    {
+      "text": "Proof-of-Task Verification (PoTV)",
+      "path": "./potv-mechanism.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1971
+    },
+    {
+      "text": "Strategic Partners",
+      "path": "../partners.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1972
+    },
+    {
+      "text": "REST API",
+      "path": "../api/rest-api.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1975
+    },
+    {
+      "text": "Backend Setup",
+      "path": "../implementation/backend-setup.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1978
+    },
+    {
+      "text": "Environment Variables",
+      "path": "../implementation/environment-variables.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1979
+    },
+    {
+      "text": "AI-Powered Verification Requirements",
+      "path": "../requirements/ai-powered-verification.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1982
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1984
+    },
+    {
+      "text": "Wallet Connection Guide",
+      "path": "/guides/wallet-connection",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 15
+    },
+    {
+      "text": "KYC Guide",
+      "path": "/guides/kyc-verification",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 16
+    },
+    {
+      "text": "submitting evidence",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 708
+    },
+    {
+      "text": "understanding verification results",
+      "path": "/guides/understanding-verification",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 708
+    },
+    {
+      "text": "Wallet Connection Guide",
+      "path": "./wallet-connection.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 758
+    },
+    {
+      "text": "KYC Verification Guide",
+      "path": "./kyc-verification.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 759
+    },
+    {
+      "text": "Submitting Evidence Guide",
+      "path": "./submitting-evidence.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 762
+    },
+    {
+      "text": "Understanding Verification Results",
+      "path": "./understanding-verification.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 763
+    },
+    {
+      "text": "Solana Escrow Contract",
+      "path": "../design/solana-escrow-contract.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 766
+    },
+    {
+      "text": "Smart Contract API",
+      "path": "../api/smart-contracts.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 767
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 769
+    },
+    {
+      "text": "create your first escrow",
+      "path": "/guides/creating-escrow",
+      "sourceFile": "guides\\kyc-verification.mdx",
+      "lineNumber": 606
+    },
+    {
+      "text": "evidence submission",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\kyc-verification.mdx",
+      "lineNumber": 606
+    },
+    {
+      "text": "understanding verification results",
+      "path": "/guides/understanding-verification",
+      "sourceFile": "guides\\submitting-evidence.mdx",
+      "lineNumber": 824
+    },
+    {
+      "text": "Learn about fund release and ratings",
+      "path": "/guides/escrow-completion",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 893
+    },
+    {
+      "text": "Prepare your resubmission",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 894
+    },
+    {
+      "text": "File a dispute",
+      "path": "/guides/dispute-resolution",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 895
+    },
+    {
+      "text": "Contact AetherLock support",
+      "path": "/support",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 896
+    },
+    {
+      "text": "create your first escrow",
+      "path": "/guides/creating-escrow",
+      "sourceFile": "guides\\wallet-connection.mdx",
+      "lineNumber": 319
+    },
+    {
+      "text": "KYC verification",
+      "path": "/guides/kyc-verification",
+      "sourceFile": "guides\\wallet-connection.mdx",
+      "lineNumber": 319
+    },
+    {
+      "text": "/design/architecture",
+      "path": "/design/architecture",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 110
+    },
+    {
+      "text": "/design/potv-mechanism",
+      "path": "/design/potv-mechanism",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 111
+    },
+    {
+      "text": "/api/smart-contracts",
+      "path": "/api/smart-contracts",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 112
+    },
+    {
+      "text": "/design/ai-agent",
+      "path": "/design/ai-agent",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 113
+    },
+    {
+      "text": "/amazon-q-usage",
+      "path": "/amazon-q-usage",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 116
+    },
+    {
+      "text": "/partners",
+      "path": "/partners",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 121
+    },
+    {
+      "text": "/design/zetachain-integration",
+      "path": "/design/zetachain-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 122
+    },
+    {
+      "text": "/design/somnia-integration",
+      "path": "/design/somnia-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 123
+    },
+    {
+      "text": "/amazon-q-usage",
+      "path": "/amazon-q-usage",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 196
+    },
+    {
+      "text": "/partners",
+      "path": "/partners",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 212
+    },
+    {
+      "text": "/design/zetachain-integration",
+      "path": "/design/zetachain-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 232
+    },
+    {
+      "text": "/implementation/somnia-deployment",
+      "path": "/implementation/somnia-deployment",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 273
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 791
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 795
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 796
+    },
+    {
+      "text": "Deployment Guides",
+      "path": "/implementation",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 788
+    },
+    {
+      "text": "Backend Deployment",
+      "path": "/implementation/backend-setup",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 789
+    },
+    {
+      "text": "Frontend Deployment",
+      "path": "/implementation/frontend-setup",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 790
+    },
+    {
+      "text": "Common Issues",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 791
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 972
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 976
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 977
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 489
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 493
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 494
+    },
+    {
+      "text": "Contract Documentation",
+      "path": "/api/smart-contracts",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 495
+    },
+    {
+      "text": "Solana Program Deployment",
+      "path": "./solana-deployment.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 505
+    },
+    {
+      "text": "ZetaChain Deployment",
+      "path": "./zetachain-deployment.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 506
+    },
+    {
+      "text": "Backend Setup",
+      "path": "./backend-setup.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 507
+    },
+    {
+      "text": "Frontend Setup",
+      "path": "./frontend-setup.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 508
+    },
+    {
+      "text": "Environment Variables",
+      "path": "./environment-variables.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 511
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "./troubleshooting.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 514
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 516
+    },
+    {
+      "text": "Quick Start Guide",
+      "path": "/implementation/quick-start",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 16
+    },
+    {
+      "text": "Frontend Setup Guide",
+      "path": "/implementation/frontend-setup",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 550
+    },
+    {
+      "text": "Backend Setup Guide",
+      "path": "/implementation/backend-setup",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 551
+    },
+    {
+      "text": "Environment Variables Reference",
+      "path": "/implementation/environment-variables",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 552
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1311
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1312
+    },
+    {
+      "text": "Environment Variables",
+      "path": "/implementation/environment-variables",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1313
+    },
+    {
+      "text": "Implementation Guides",
+      "path": "/implementation",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1314
+    },
+    {
+      "text": "See Complete Protocol Specification →",
+      "path": "/specifications/protocol",
+      "sourceFile": "index.mdx",
+      "lineNumber": 584
+    },
+    {
+      "text": "Protocol Overview",
+      "path": "/specifications/protocol",
+      "sourceFile": "index.mdx",
+      "lineNumber": 714
+    },
+    {
+      "text": "Cryptography",
+      "path": "/specifications/cryptography",
+      "sourceFile": "index.mdx",
+      "lineNumber": 715
+    },
+    {
+      "text": "Consensus Mechanism",
+      "path": "/specifications/consensus",
+      "sourceFile": "index.mdx",
+      "lineNumber": 716
+    },
+    {
+      "text": "Security Model",
+      "path": "/specifications/security",
+      "sourceFile": "index.mdx",
+      "lineNumber": 717
+    },
+    {
+      "text": "System Architecture",
+      "path": "/architecture/overview",
+      "sourceFile": "index.mdx",
+      "lineNumber": 721
+    },
+    {
+      "text": "Solana Layer",
+      "path": "/architecture/solana-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 722
+    },
+    {
+      "text": "AI Verification Layer",
+      "path": "/architecture/ai-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 723
+    },
+    {
+      "text": "Identity Layer",
+      "path": "/architecture/identity-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 724
+    },
+    {
+      "text": "Omnichain Layer",
+      "path": "/architecture/omnichain-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 725
+    },
+    {
+      "text": "Smart Contracts",
+      "path": "/implementation/smart-contracts",
+      "sourceFile": "index.mdx",
+      "lineNumber": 729
+    },
+    {
+      "text": "AI Integration",
+      "path": "/implementation/ai-integration",
+      "sourceFile": "index.mdx",
+      "lineNumber": 730
+    },
+    {
+      "text": "Frontend Development",
+      "path": "/implementation/frontend",
+      "sourceFile": "index.mdx",
+      "lineNumber": 731
+    },
+    {
+      "text": "Backend Services",
+      "path": "/implementation/backend",
+      "sourceFile": "index.mdx",
+      "lineNumber": 732
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "index.mdx",
+      "lineNumber": 736
+    },
+    {
+      "text": "Smart Contract API",
+      "path": "/api/smart-contracts",
+      "sourceFile": "index.mdx",
+      "lineNumber": 737
+    },
+    {
+      "text": "WebSocket API",
+      "path": "/api/websocket",
+      "sourceFile": "index.mdx",
+      "lineNumber": 738
+    },
+    {
+      "text": "Chainlink Functions",
+      "path": "/api/chainlink",
+      "sourceFile": "index.mdx",
+      "lineNumber": 739
+    },
+    {
+      "text": "Quick Start",
+      "path": "/implementation/quick-start",
+      "sourceFile": "index.mdx",
+      "lineNumber": 743
+    },
+    {
+      "text": "Solana Deployment",
+      "path": "/implementation/solana-deployment",
+      "sourceFile": "index.mdx",
+      "lineNumber": 744
+    },
+    {
+      "text": "ZetaChain Deployment",
+      "path": "/implementation/zetachain-deployment",
+      "sourceFile": "index.mdx",
+      "lineNumber": 745
+    },
+    {
+      "text": "Production Deployment",
+      "path": "/implementation/production",
+      "sourceFile": "index.mdx",
+      "lineNumber": 746
+    },
+    {
+      "text": "Introduction",
+      "path": "./introduction.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 12
+    },
+    {
+      "text": "Quick Start",
+      "path": "./implementation/quick-start.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 13
+    },
+    {
+      "text": "Architecture",
+      "path": "./design/architecture.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 14
+    },
+    {
+      "text": "API Reference",
+      "path": "./api/rest-api.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 15
+    },
+    {
+      "text": "User Guides",
+      "path": "./guides/wallet-connection.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 16
+    },
+    {
+      "text": "Security",
+      "path": "./security/cryptographic-proofs.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 17
+    },
+    {
+      "text": "Business Model",
+      "path": "./business-model.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 18
+    },
+    {
+      "text": "TABLE-OF-CONTENTS.md",
+      "path": "./TABLE-OF-CONTENTS.md",
+      "sourceFile": "README.md",
+      "lineNumber": 22
+    },
+    {
+      "text": "VALIDATION-REPORT.md",
+      "path": "./VALIDATION-REPORT.md",
+      "sourceFile": "README.md",
+      "lineNumber": 57
+    },
+    {
+      "text": "CONTENT-REVIEW-REPORT.md",
+      "path": "./CONTENT-REVIEW-REPORT.md",
+      "sourceFile": "README.md",
+      "lineNumber": 57
+    },
+    {
+      "text": "Hackathon Submission",
+      "path": "./hackathon.md",
+      "sourceFile": "README.md",
+      "lineNumber": 61
+    },
+    {
+      "text": "Amazon Q Usage",
+      "path": "./amazon-q-usage.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 62
+    },
+    {
+      "text": "How It Works",
+      "path": "./how-it-works.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 63
+    },
+    {
+      "text": "PoTv Mechanism",
+      "path": "./design/potv-mechanism.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 64
+    },
+    {
+      "text": "Quick Start Guide",
+      "path": "./implementation/quick-start.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 68
+    },
+    {
+      "text": "API Documentation",
+      "path": "./api/rest-api.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 69
+    },
+    {
+      "text": "Smart Contracts",
+      "path": "./api/smart-contracts.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 70
+    },
+    {
+      "text": "Deployment Guides",
+      "path": "./implementation/solana-deployment.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 71
+    },
+    {
+      "text": "Troubleshooting",
+      "path": "./implementation/troubleshooting.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 72
+    },
+    {
+      "text": "Business Model",
+      "path": "./business-model.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 76
+    },
+    {
+      "text": "Market Analysis",
+      "path": "./market-analysis.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 77
+    },
+    {
+      "text": "Partnerships",
+      "path": "./partners.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 78
+    },
+    {
+      "text": "Traction",
+      "path": "./traction.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 79
+    },
+    {
+      "text": "Wallet Connection",
+      "path": "./guides/wallet-connection.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 83
+    },
+    {
+      "text": "KYC Verification",
+      "path": "./guides/kyc-verification.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 84
+    },
+    {
+      "text": "Creating Escrow",
+      "path": "./guides/creating-escrow.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 85
+    },
+    {
+      "text": "Submitting Evidence",
+      "path": "./guides/submitting-evidence.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 86
+    },
+    {
+      "text": "Understanding Verification",
+      "path": "./guides/understanding-verification.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 87
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "./implementation/troubleshooting.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 110
+    }
+  ],
+  "brokenLinks": [
+    {
+      "text": "VALIDATION-REPORT.md",
+      "path": "./VALIDATION-REPORT.md",
+      "sourceFile": "CHANGELOG.md",
+      "lineNumber": 123,
+      "resolvedPath": "VALIDATION-REPORT.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "CONTENT-REVIEW-REPORT.md",
+      "path": "./CONTENT-REVIEW-REPORT.md",
+      "sourceFile": "CHANGELOG.md",
+      "lineNumber": 123,
+      "resolvedPath": "CONTENT-REVIEW-REPORT.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1984,
+      "resolvedPath": "CROSS-REFERENCES.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "Wallet Connection Guide",
+      "path": "/guides/wallet-connection",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 15,
+      "resolvedPath": "guides/guides/wallet-connection",
+      "reason": "File not found"
+    },
+    {
+      "text": "KYC Guide",
+      "path": "/guides/kyc-verification",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 16,
+      "resolvedPath": "guides/guides/kyc-verification",
+      "reason": "File not found"
+    },
+    {
+      "text": "submitting evidence",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 708,
+      "resolvedPath": "guides/guides/submitting-evidence",
+      "reason": "File not found"
+    },
+    {
+      "text": "understanding verification results",
+      "path": "/guides/understanding-verification",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 708,
+      "resolvedPath": "guides/guides/understanding-verification",
+      "reason": "File not found"
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 769,
+      "resolvedPath": "CROSS-REFERENCES.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "create your first escrow",
+      "path": "/guides/creating-escrow",
+      "sourceFile": "guides\\kyc-verification.mdx",
+      "lineNumber": 606,
+      "resolvedPath": "guides/guides/creating-escrow",
+      "reason": "File not found"
+    },
+    {
+      "text": "evidence submission",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\kyc-verification.mdx",
+      "lineNumber": 606,
+      "resolvedPath": "guides/guides/submitting-evidence",
+      "reason": "File not found"
+    },
+    {
+      "text": "understanding verification results",
+      "path": "/guides/understanding-verification",
+      "sourceFile": "guides\\submitting-evidence.mdx",
+      "lineNumber": 824,
+      "resolvedPath": "guides/guides/understanding-verification",
+      "reason": "File not found"
+    },
+    {
+      "text": "Learn about fund release and ratings",
+      "path": "/guides/escrow-completion",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 893,
+      "resolvedPath": "guides/guides/escrow-completion",
+      "reason": "File not found"
+    },
+    {
+      "text": "Prepare your resubmission",
+      "path": "/guides/submitting-evidence",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 894,
+      "resolvedPath": "guides/guides/submitting-evidence",
+      "reason": "File not found"
+    },
+    {
+      "text": "File a dispute",
+      "path": "/guides/dispute-resolution",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 895,
+      "resolvedPath": "guides/guides/dispute-resolution",
+      "reason": "File not found"
+    },
+    {
+      "text": "Contact AetherLock support",
+      "path": "/support",
+      "sourceFile": "guides\\understanding-verification.mdx",
+      "lineNumber": 896,
+      "resolvedPath": "guides/support",
+      "reason": "File not found"
+    },
+    {
+      "text": "create your first escrow",
+      "path": "/guides/creating-escrow",
+      "sourceFile": "guides\\wallet-connection.mdx",
+      "lineNumber": 319,
+      "resolvedPath": "guides/guides/creating-escrow",
+      "reason": "File not found"
+    },
+    {
+      "text": "KYC verification",
+      "path": "/guides/kyc-verification",
+      "sourceFile": "guides\\wallet-connection.mdx",
+      "lineNumber": 319,
+      "resolvedPath": "guides/guides/kyc-verification",
+      "reason": "File not found"
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 791,
+      "resolvedPath": "implementation/implementation/troubleshooting",
+      "reason": "File not found"
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 796,
+      "resolvedPath": "implementation/api/rest-api",
+      "reason": "File not found"
+    },
+    {
+      "text": "Deployment Guides",
+      "path": "/implementation",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 788,
+      "resolvedPath": "implementation/implementation",
+      "reason": "File not found"
+    },
+    {
+      "text": "Backend Deployment",
+      "path": "/implementation/backend-setup",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 789,
+      "resolvedPath": "implementation/implementation/backend-setup",
+      "reason": "File not found"
+    },
+    {
+      "text": "Frontend Deployment",
+      "path": "/implementation/frontend-setup",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 790,
+      "resolvedPath": "implementation/implementation/frontend-setup",
+      "reason": "File not found"
+    },
+    {
+      "text": "Common Issues",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\environment-variables.mdx",
+      "lineNumber": 791,
+      "resolvedPath": "implementation/implementation/troubleshooting",
+      "reason": "File not found"
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 972,
+      "resolvedPath": "implementation/implementation/troubleshooting",
+      "reason": "File not found"
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 977,
+      "resolvedPath": "implementation/api/rest-api",
+      "reason": "File not found"
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "/implementation/troubleshooting",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 489,
+      "resolvedPath": "implementation/implementation/troubleshooting",
+      "reason": "File not found"
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 494,
+      "resolvedPath": "implementation/api/rest-api",
+      "reason": "File not found"
+    },
+    {
+      "text": "Contract Documentation",
+      "path": "/api/smart-contracts",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 495,
+      "resolvedPath": "implementation/api/smart-contracts",
+      "reason": "File not found"
+    },
+    {
+      "text": "CROSS-REFERENCES.md",
+      "path": "../CROSS-REFERENCES.md",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 516,
+      "resolvedPath": "CROSS-REFERENCES.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "Quick Start Guide",
+      "path": "/implementation/quick-start",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 16,
+      "resolvedPath": "implementation/implementation/quick-start",
+      "reason": "File not found"
+    },
+    {
+      "text": "Frontend Setup Guide",
+      "path": "/implementation/frontend-setup",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 550,
+      "resolvedPath": "implementation/implementation/frontend-setup",
+      "reason": "File not found"
+    },
+    {
+      "text": "Backend Setup Guide",
+      "path": "/implementation/backend-setup",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 551,
+      "resolvedPath": "implementation/implementation/backend-setup",
+      "reason": "File not found"
+    },
+    {
+      "text": "Environment Variables Reference",
+      "path": "/implementation/environment-variables",
+      "sourceFile": "implementation\\solana-deployment.mdx",
+      "lineNumber": 552,
+      "resolvedPath": "implementation/implementation/environment-variables",
+      "reason": "File not found"
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1312,
+      "resolvedPath": "implementation/api/rest-api",
+      "reason": "File not found"
+    },
+    {
+      "text": "Environment Variables",
+      "path": "/implementation/environment-variables",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1313,
+      "resolvedPath": "implementation/implementation/environment-variables",
+      "reason": "File not found"
+    },
+    {
+      "text": "Implementation Guides",
+      "path": "/implementation",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1314,
+      "resolvedPath": "implementation/implementation",
+      "reason": "File not found"
+    },
+    {
+      "text": "See Complete Protocol Specification →",
+      "path": "/specifications/protocol",
+      "sourceFile": "index.mdx",
+      "lineNumber": 584,
+      "resolvedPath": "specifications/protocol",
+      "reason": "File not found"
+    },
+    {
+      "text": "Protocol Overview",
+      "path": "/specifications/protocol",
+      "sourceFile": "index.mdx",
+      "lineNumber": 714,
+      "resolvedPath": "specifications/protocol",
+      "reason": "File not found"
+    },
+    {
+      "text": "Cryptography",
+      "path": "/specifications/cryptography",
+      "sourceFile": "index.mdx",
+      "lineNumber": 715,
+      "resolvedPath": "specifications/cryptography",
+      "reason": "File not found"
+    },
+    {
+      "text": "Consensus Mechanism",
+      "path": "/specifications/consensus",
+      "sourceFile": "index.mdx",
+      "lineNumber": 716,
+      "resolvedPath": "specifications/consensus",
+      "reason": "File not found"
+    },
+    {
+      "text": "Security Model",
+      "path": "/specifications/security",
+      "sourceFile": "index.mdx",
+      "lineNumber": 717,
+      "resolvedPath": "specifications/security",
+      "reason": "File not found"
+    },
+    {
+      "text": "System Architecture",
+      "path": "/architecture/overview",
+      "sourceFile": "index.mdx",
+      "lineNumber": 721,
+      "resolvedPath": "architecture/overview",
+      "reason": "File not found"
+    },
+    {
+      "text": "Solana Layer",
+      "path": "/architecture/solana-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 722,
+      "resolvedPath": "architecture/solana-layer",
+      "reason": "File not found"
+    },
+    {
+      "text": "AI Verification Layer",
+      "path": "/architecture/ai-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 723,
+      "resolvedPath": "architecture/ai-layer",
+      "reason": "File not found"
+    },
+    {
+      "text": "Identity Layer",
+      "path": "/architecture/identity-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 724,
+      "resolvedPath": "architecture/identity-layer",
+      "reason": "File not found"
+    },
+    {
+      "text": "Omnichain Layer",
+      "path": "/architecture/omnichain-layer",
+      "sourceFile": "index.mdx",
+      "lineNumber": 725,
+      "resolvedPath": "architecture/omnichain-layer",
+      "reason": "File not found"
+    },
+    {
+      "text": "Smart Contracts",
+      "path": "/implementation/smart-contracts",
+      "sourceFile": "index.mdx",
+      "lineNumber": 729,
+      "resolvedPath": "implementation/smart-contracts",
+      "reason": "File not found"
+    },
+    {
+      "text": "AI Integration",
+      "path": "/implementation/ai-integration",
+      "sourceFile": "index.mdx",
+      "lineNumber": 730,
+      "resolvedPath": "implementation/ai-integration",
+      "reason": "File not found"
+    },
+    {
+      "text": "Frontend Development",
+      "path": "/implementation/frontend",
+      "sourceFile": "index.mdx",
+      "lineNumber": 731,
+      "resolvedPath": "implementation/frontend",
+      "reason": "File not found"
+    },
+    {
+      "text": "Backend Services",
+      "path": "/implementation/backend",
+      "sourceFile": "index.mdx",
+      "lineNumber": 732,
+      "resolvedPath": "implementation/backend",
+      "reason": "File not found"
+    },
+    {
+      "text": "WebSocket API",
+      "path": "/api/websocket",
+      "sourceFile": "index.mdx",
+      "lineNumber": 738,
+      "resolvedPath": "api/websocket",
+      "reason": "File not found"
+    },
+    {
+      "text": "Chainlink Functions",
+      "path": "/api/chainlink",
+      "sourceFile": "index.mdx",
+      "lineNumber": 739,
+      "resolvedPath": "api/chainlink",
+      "reason": "File not found"
+    },
+    {
+      "text": "Production Deployment",
+      "path": "/implementation/production",
+      "sourceFile": "index.mdx",
+      "lineNumber": 746,
+      "resolvedPath": "implementation/production",
+      "reason": "File not found"
+    },
+    {
+      "text": "TABLE-OF-CONTENTS.md",
+      "path": "./TABLE-OF-CONTENTS.md",
+      "sourceFile": "README.md",
+      "lineNumber": 22,
+      "resolvedPath": "TABLE-OF-CONTENTS.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "VALIDATION-REPORT.md",
+      "path": "./VALIDATION-REPORT.md",
+      "sourceFile": "README.md",
+      "lineNumber": 57,
+      "resolvedPath": "VALIDATION-REPORT.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "CONTENT-REVIEW-REPORT.md",
+      "path": "./CONTENT-REVIEW-REPORT.md",
+      "sourceFile": "README.md",
+      "lineNumber": 57,
+      "resolvedPath": "CONTENT-REVIEW-REPORT.md",
+      "reason": "File not found"
+    },
+    {
+      "text": "Hackathon Submission",
+      "path": "./hackathon.md",
+      "sourceFile": "README.md",
+      "lineNumber": 61,
+      "resolvedPath": "hackathon.md",
+      "reason": "File not found"
+    }
+  ],
+  "validLinks": [
+    {
+      "text": "Kiro IDE Screenshot",
+      "path": "/assets/kiro-screenshot.png",
+      "sourceFile": "amazon-q-usage.mdx",
+      "lineNumber": 47,
+      "resolvedPath": "assets/kiro-screenshot.png"
+    },
+    {
+      "text": "Proof-of-Task Verification (PoTV)",
+      "path": "./potv-mechanism.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1971,
+      "resolvedPath": "design/potv-mechanism.mdx"
+    },
+    {
+      "text": "Strategic Partners",
+      "path": "../partners.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1972,
+      "resolvedPath": "partners.mdx"
+    },
+    {
+      "text": "REST API",
+      "path": "../api/rest-api.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1975,
+      "resolvedPath": "api/rest-api.mdx"
+    },
+    {
+      "text": "Backend Setup",
+      "path": "../implementation/backend-setup.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1978,
+      "resolvedPath": "implementation/backend-setup.mdx"
+    },
+    {
+      "text": "Environment Variables",
+      "path": "../implementation/environment-variables.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1979,
+      "resolvedPath": "implementation/environment-variables.mdx"
+    },
+    {
+      "text": "AI-Powered Verification Requirements",
+      "path": "../requirements/ai-powered-verification.mdx",
+      "sourceFile": "design\\ai-agent.mdx",
+      "lineNumber": 1982,
+      "resolvedPath": "requirements/ai-powered-verification.mdx"
+    },
+    {
+      "text": "Wallet Connection Guide",
+      "path": "./wallet-connection.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 758,
+      "resolvedPath": "guides/wallet-connection.mdx"
+    },
+    {
+      "text": "KYC Verification Guide",
+      "path": "./kyc-verification.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 759,
+      "resolvedPath": "guides/kyc-verification.mdx"
+    },
+    {
+      "text": "Submitting Evidence Guide",
+      "path": "./submitting-evidence.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 762,
+      "resolvedPath": "guides/submitting-evidence.mdx"
+    },
+    {
+      "text": "Understanding Verification Results",
+      "path": "./understanding-verification.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 763,
+      "resolvedPath": "guides/understanding-verification.mdx"
+    },
+    {
+      "text": "Solana Escrow Contract",
+      "path": "../design/solana-escrow-contract.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 766,
+      "resolvedPath": "design/solana-escrow-contract.mdx"
+    },
+    {
+      "text": "Smart Contract API",
+      "path": "../api/smart-contracts.mdx",
+      "sourceFile": "guides\\creating-escrow.mdx",
+      "lineNumber": 767,
+      "resolvedPath": "api/smart-contracts.mdx"
+    },
+    {
+      "text": "/design/architecture",
+      "path": "/design/architecture",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 110,
+      "resolvedPath": "design/architecture"
+    },
+    {
+      "text": "/design/potv-mechanism",
+      "path": "/design/potv-mechanism",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 111,
+      "resolvedPath": "design/potv-mechanism"
+    },
+    {
+      "text": "/api/smart-contracts",
+      "path": "/api/smart-contracts",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 112,
+      "resolvedPath": "api/smart-contracts"
+    },
+    {
+      "text": "/design/ai-agent",
+      "path": "/design/ai-agent",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 113,
+      "resolvedPath": "design/ai-agent"
+    },
+    {
+      "text": "/amazon-q-usage",
+      "path": "/amazon-q-usage",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 116,
+      "resolvedPath": "amazon-q-usage"
+    },
+    {
+      "text": "/partners",
+      "path": "/partners",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 121,
+      "resolvedPath": "partners"
+    },
+    {
+      "text": "/design/zetachain-integration",
+      "path": "/design/zetachain-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 122,
+      "resolvedPath": "design/zetachain-integration"
+    },
+    {
+      "text": "/design/somnia-integration",
+      "path": "/design/somnia-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 123,
+      "resolvedPath": "design/somnia-integration"
+    },
+    {
+      "text": "/amazon-q-usage",
+      "path": "/amazon-q-usage",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 196,
+      "resolvedPath": "amazon-q-usage"
+    },
+    {
+      "text": "/partners",
+      "path": "/partners",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 212,
+      "resolvedPath": "partners"
+    },
+    {
+      "text": "/design/zetachain-integration",
+      "path": "/design/zetachain-integration",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 232,
+      "resolvedPath": "design/zetachain-integration"
+    },
+    {
+      "text": "/implementation/somnia-deployment",
+      "path": "/implementation/somnia-deployment",
+      "sourceFile": "hackathon.mdx",
+      "lineNumber": 273,
+      "resolvedPath": "implementation/somnia-deployment"
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\backend-setup.mdx",
+      "lineNumber": 795,
+      "resolvedPath": "implementation"
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\frontend-setup.mdx",
+      "lineNumber": 976,
+      "resolvedPath": "implementation"
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 493,
+      "resolvedPath": "implementation"
+    },
+    {
+      "text": "Solana Program Deployment",
+      "path": "./solana-deployment.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 505,
+      "resolvedPath": "implementation/solana-deployment.mdx"
+    },
+    {
+      "text": "ZetaChain Deployment",
+      "path": "./zetachain-deployment.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 506,
+      "resolvedPath": "implementation/zetachain-deployment.mdx"
+    },
+    {
+      "text": "Backend Setup",
+      "path": "./backend-setup.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 507,
+      "resolvedPath": "implementation/backend-setup.mdx"
+    },
+    {
+      "text": "Frontend Setup",
+      "path": "./frontend-setup.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 508,
+      "resolvedPath": "implementation/frontend-setup.mdx"
+    },
+    {
+      "text": "Environment Variables",
+      "path": "./environment-variables.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 511,
+      "resolvedPath": "implementation/environment-variables.mdx"
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "./troubleshooting.mdx",
+      "sourceFile": "implementation\\quick-start.mdx",
+      "lineNumber": 514,
+      "resolvedPath": "implementation/troubleshooting.mdx"
+    },
+    {
+      "text": "Full Documentation",
+      "path": "/",
+      "sourceFile": "implementation\\troubleshooting.mdx",
+      "lineNumber": 1311,
+      "resolvedPath": "implementation"
+    },
+    {
+      "text": "REST API",
+      "path": "/api/rest-api",
+      "sourceFile": "index.mdx",
+      "lineNumber": 736,
+      "resolvedPath": "api/rest-api"
+    },
+    {
+      "text": "Smart Contract API",
+      "path": "/api/smart-contracts",
+      "sourceFile": "index.mdx",
+      "lineNumber": 737,
+      "resolvedPath": "api/smart-contracts"
+    },
+    {
+      "text": "Quick Start",
+      "path": "/implementation/quick-start",
+      "sourceFile": "index.mdx",
+      "lineNumber": 743,
+      "resolvedPath": "implementation/quick-start"
+    },
+    {
+      "text": "Solana Deployment",
+      "path": "/implementation/solana-deployment",
+      "sourceFile": "index.mdx",
+      "lineNumber": 744,
+      "resolvedPath": "implementation/solana-deployment"
+    },
+    {
+      "text": "ZetaChain Deployment",
+      "path": "/implementation/zetachain-deployment",
+      "sourceFile": "index.mdx",
+      "lineNumber": 745,
+      "resolvedPath": "implementation/zetachain-deployment"
+    },
+    {
+      "text": "Introduction",
+      "path": "./introduction.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 12,
+      "resolvedPath": "introduction.mdx"
+    },
+    {
+      "text": "Quick Start",
+      "path": "./implementation/quick-start.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 13,
+      "resolvedPath": "implementation/quick-start.mdx"
+    },
+    {
+      "text": "Architecture",
+      "path": "./design/architecture.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 14,
+      "resolvedPath": "design/architecture.mdx"
+    },
+    {
+      "text": "API Reference",
+      "path": "./api/rest-api.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 15,
+      "resolvedPath": "api/rest-api.mdx"
+    },
+    {
+      "text": "User Guides",
+      "path": "./guides/wallet-connection.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 16,
+      "resolvedPath": "guides/wallet-connection.mdx"
+    },
+    {
+      "text": "Security",
+      "path": "./security/cryptographic-proofs.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 17,
+      "resolvedPath": "security/cryptographic-proofs.mdx"
+    },
+    {
+      "text": "Business Model",
+      "path": "./business-model.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 18,
+      "resolvedPath": "business-model.mdx"
+    },
+    {
+      "text": "Amazon Q Usage",
+      "path": "./amazon-q-usage.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 62,
+      "resolvedPath": "amazon-q-usage.mdx"
+    },
+    {
+      "text": "How It Works",
+      "path": "./how-it-works.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 63,
+      "resolvedPath": "how-it-works.mdx"
+    },
+    {
+      "text": "PoTv Mechanism",
+      "path": "./design/potv-mechanism.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 64,
+      "resolvedPath": "design/potv-mechanism.mdx"
+    },
+    {
+      "text": "Quick Start Guide",
+      "path": "./implementation/quick-start.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 68,
+      "resolvedPath": "implementation/quick-start.mdx"
+    },
+    {
+      "text": "API Documentation",
+      "path": "./api/rest-api.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 69,
+      "resolvedPath": "api/rest-api.mdx"
+    },
+    {
+      "text": "Smart Contracts",
+      "path": "./api/smart-contracts.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 70,
+      "resolvedPath": "api/smart-contracts.mdx"
+    },
+    {
+      "text": "Deployment Guides",
+      "path": "./implementation/solana-deployment.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 71,
+      "resolvedPath": "implementation/solana-deployment.mdx"
+    },
+    {
+      "text": "Troubleshooting",
+      "path": "./implementation/troubleshooting.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 72,
+      "resolvedPath": "implementation/troubleshooting.mdx"
+    },
+    {
+      "text": "Business Model",
+      "path": "./business-model.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 76,
+      "resolvedPath": "business-model.mdx"
+    },
+    {
+      "text": "Market Analysis",
+      "path": "./market-analysis.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 77,
+      "resolvedPath": "market-analysis.mdx"
+    },
+    {
+      "text": "Partnerships",
+      "path": "./partners.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 78,
+      "resolvedPath": "partners.mdx"
+    },
+    {
+      "text": "Traction",
+      "path": "./traction.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 79,
+      "resolvedPath": "traction.mdx"
+    },
+    {
+      "text": "Wallet Connection",
+      "path": "./guides/wallet-connection.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 83,
+      "resolvedPath": "guides/wallet-connection.mdx"
+    },
+    {
+      "text": "KYC Verification",
+      "path": "./guides/kyc-verification.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 84,
+      "resolvedPath": "guides/kyc-verification.mdx"
+    },
+    {
+      "text": "Creating Escrow",
+      "path": "./guides/creating-escrow.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 85,
+      "resolvedPath": "guides/creating-escrow.mdx"
+    },
+    {
+      "text": "Submitting Evidence",
+      "path": "./guides/submitting-evidence.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 86,
+      "resolvedPath": "guides/submitting-evidence.mdx"
+    },
+    {
+      "text": "Understanding Verification",
+      "path": "./guides/understanding-verification.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 87,
+      "resolvedPath": "guides/understanding-verification.mdx"
+    },
+    {
+      "text": "Troubleshooting Guide",
+      "path": "./implementation/troubleshooting.mdx",
+      "sourceFile": "README.md",
+      "lineNumber": 110,
+      "resolvedPath": "implementation/troubleshooting.mdx"
+    }
+  ],
+  "navigationIssues": [],
+  "errors": []
+}
