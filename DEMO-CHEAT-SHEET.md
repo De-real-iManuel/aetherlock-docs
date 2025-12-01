@@ -24,7 +24,7 @@
 
 ### 4. Architecture (45s) - TAB 2
 **Show:** System architecture diagram
-> "Solana Devnet + Anchor. Sub-second finality. PDAs for custody. State machine enforcement.
+> "Solana Devnet + Anchor. Live contract at 2kkNXo...5b6N - verifiable on Solana Explorer. Sub-second finality. PDAs for custody. State machine enforcement.
 > ZetaChain for omnichain. Cross-chain escrows.
 > Node.js backend, PostgreSQL, Redis, Socket.io for real-time updates."
 
@@ -69,6 +69,13 @@
 - **90%** - Freelancer payment
 - **10%** - Protocol fee
 - **$34 trillion** - Total addressable market
+
+## 🔗 Live Contract (Optional to Show)
+
+**Solana Devnet**: `2kkNXo7nJ5WikLP64eZZbAiNDzdGj7d2B7XL3YqK5b6N`
+**Explorer**: https://explorer.solana.com/address/2kkNXo7nJ5WikLP64eZZbAiNDzdGj7d2B7XL3YqK5b6N?cluster=devnet
+
+*Only show if judges ask "Is this actually deployed?" - opens in new tab*
 
 ---
 

@@ -40,7 +40,7 @@ This happens in 2.1 seconds with cryptographic signatures proving the AI's decis
 "Let me show you the technical stack. 
 
 [Point to Blockchain Layer]
-At the blockchain layer, we're deployed on Solana Devnet using Anchor framework. Why Solana? Sub-second finality and low fees - critical for escrow operations. The smart contract uses Program Derived Addresses for deterministic escrow custody and enforces a strict state machine: Created, Funded, Evidence Submitted, Verified, and Released.
+At the blockchain layer, we're deployed on Solana Devnet using Anchor framework. The contract is live at address 2kkNXo7nJ5WikLP64eZZbAiNDzdGj7d2B7XL3YqK5b6N - you can verify it on Solana Explorer right now. Why Solana? Sub-second finality and low fees - critical for escrow operations. The smart contract uses Program Derived Addresses for deterministic escrow custody and enforces a strict state machine: Created, Funded, Evidence Submitted, Verified, and Released.
 
 [Point to Verification Layer]
 For omnichain capabilities, we integrate ZetaChain's Universal Apps on testnet. This lets us handle cross-chain escrows - imagine locking funds on Solana but verifying tasks on Ethereum.
@@ -129,6 +129,16 @@ Kiro also audited our entire documentation for consistency, validating cross-ref
 - Omnichain escrow
 - State machine enforcement
 - IPFS content addressing
+
+## 🔗 Live Deployment Links
+
+**Solana Smart Contract (Devnet)**:
+- Address: `2kkNXo7nJ5WikLP64eZZbAiNDzdGj7d2B7XL3YqK5b6N`
+- Explorer: https://explorer.solana.com/address/2kkNXo7nJ5WikLP64eZZbAiNDzdGj7d2B7XL3YqK5b6N?cluster=devnet
+- Network: Devnet
+- Framework: Anchor
+
+**Optional: Show this link during demo if you want to prove it's live**
 
 ## 🎯 Pre-Demo Checklist
 
